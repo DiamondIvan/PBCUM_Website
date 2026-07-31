@@ -4,10 +4,10 @@ export function AnimatedSection({ children, className = '', id }) {
   return (
     <motion.section
       id={id}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.18 }}
-      transition={{ duration: 0.7, ease: 'easeOut' }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.75, ease: 'easeOut' }}
       className={className}
     >
       {children}
@@ -18,9 +18,17 @@ export function AnimatedSection({ children, className = '', id }) {
 export function SectionHeading({ eyebrow, title, description }) {
   return (
     <div className="max-w-3xl">
-      {eyebrow ? <p className="text-xs font-semibold uppercase tracking-[0.32em] text-umred/70">{eyebrow}</p> : null}
-      <h2 className="mt-4 text-3xl font-semibold tracking-[-0.05em] text-ink sm:text-5xl">{title}</h2>
-      {description ? <p className="mt-5 max-w-2xl text-base leading-8 text-black/60">{description}</p> : null}
+      {eyebrow ? (
+        <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
+          {eyebrow}
+        </p>
+      ) : null}
+      <h2 className="mt-4 text-3xl font-semibold leading-[1.25] tracking-[-0.04em] text-ink sm:text-5xl">
+        {title}
+      </h2>
+      {description ? (
+        <p className="mt-5 max-w-2xl text-base leading-[1.8] text-black/58">{description}</p>
+      ) : null}
     </div>
   );
 }

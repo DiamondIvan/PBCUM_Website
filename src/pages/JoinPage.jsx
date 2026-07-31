@@ -2,42 +2,58 @@ import { ArrowRight, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const steps = [
-  'Fill in the membership form and share your interests.',
-  'Meet the committee and get matched to activities.',
-  'Join events, contribute ideas, and grow your network.',
+  '填写会员申请表，分享你的兴趣与期望。',
+  '与委员会成员见面，配对最适合你的活动。',
+  '参与活动、贡献创意，拓展你的人脉圈子。',
 ];
 
 export function JoinPage() {
   return (
     <main className="min-h-screen bg-soft-radial px-4 py-8 text-ink sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl pt-16">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-black/55 transition hover:text-umred">
+      <div className="mx-auto max-w-4xl pt-18">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 transition duration-200 hover:text-umred"
+        >
           <ChevronLeft className="h-4 w-4" />
-          Back to home
+          返回首页
         </Link>
-        <div className="mt-8 rounded-[40px] border border-black/6 bg-white p-8 shadow-soft sm:p-12">
-          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-umred/70">Join PBCUM</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.06em] sm:text-6xl">Start your PBCUM journey.</h1>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-black/60">
-            Become part of a premium, culture-forward student community focused on leadership, language, and campus impact.
+
+        <div className="mt-9 rounded-[42px] border border-black/6 bg-white p-9 shadow-soft sm:p-14">
+          <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
+            加入 PBCUM
           </p>
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          <h1 className="mt-5 text-4xl font-semibold leading-[1.18] tracking-[-0.05em] sm:text-6xl">
+            开启你的 PBCUM 旅程。
+          </h1>
+          <p className="mt-7 max-w-2xl text-base leading-[1.85] text-black/58">
+            成为这个精致、以文化为核心的学生社群的一份子，专注于领导力培养、语言传承与校园正面影响力。
+          </p>
+
+          <div className="mt-11 grid gap-4 sm:grid-cols-3">
             {steps.map((step, index) => (
-              <div key={step} className="rounded-[28px] border border-black/6 bg-[#fafafa] p-5">
+              <div
+                key={step}
+                className="rounded-[28px] border border-black/6 bg-[#fafafa] p-7 transition duration-250 hover:-translate-y-1 hover:shadow-soft"
+              >
                 <CheckCircle2 className="h-5 w-5 text-umred" />
-                <p className="mt-4 text-sm leading-7 text-black/65">
-                  <span className="font-semibold text-ink">0{index + 1}.</span> {step}
+                <p className="mt-5 text-sm leading-[1.85] text-black/62">
+                  <span className="font-latin mr-1 font-semibold text-ink">0{index + 1}.</span>{step}
                 </p>
               </div>
             ))}
           </div>
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-            <a href="mailto:pbcum@um.edu.my" className="inline-flex items-center justify-center gap-2 rounded-full bg-umred px-6 py-4 text-sm font-semibold text-white shadow-glow transition hover:-translate-y-0.5">
-              Email the committee
+
+          <div className="mt-11 flex flex-col gap-4 sm:flex-row">
+            <a
+              href="mailto:pbcum@um.edu.my"
+              className="btn-primary"
+            >
+              发送邮件给委员会
               <ArrowRight className="h-4 w-4" />
             </a>
-            <Link to="/" className="inline-flex items-center justify-center gap-2 rounded-full border border-black/10 bg-white px-6 py-4 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-umred/20 hover:text-umred">
-              Explore the website
+            <Link to="/" className="btn-secondary">
+              浏览学会网站
             </Link>
           </div>
         </div>
