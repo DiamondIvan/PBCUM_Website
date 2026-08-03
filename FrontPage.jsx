@@ -439,13 +439,8 @@ function JoinCtaSection() {
 /* ─── HomePage ──────────────────────────────────────────────────────── */
 
 function HomePage() {
-  const progress = useScrollProgress();
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-soft-radial text-ink">
-      {/* Scroll progress indicator */}
-      <div className="fixed left-0 top-0 z-50 h-[2.5px] w-full bg-black/5">
-        <motion.div className="h-full origin-left bg-umred" style={{ scaleX: progress }} />
-      </div>
       <Navbar />
       <HeroSection />
       <AboutSection />
