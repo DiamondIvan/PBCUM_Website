@@ -19,8 +19,6 @@ import { Footer } from './src/components/Footer';
 import { Navbar } from './src/components/Navbar';
 import { ActivityShowcase } from './src/components/ActivityShowcase';
 import { WuteSection, QixiaozuSection } from './src/components/ProgramsGrid';
-import { useMousePosition } from './src/hooks/useMousePosition';
-import { useScrollProgress } from './src/hooks/useScrollProgress';
 
 /* ─── Hero static data ─────────────────────────────────────────────── */
 
@@ -58,13 +56,13 @@ function IconCard({ icon: Icon, title, description }) {
 /* ─── HeroSection ───────────────────────────────────────────────────── */
 
 function HeroSection() {
-  const { x, y } = useMousePosition();
   return (
     <section className="relative isolate overflow-hidden pt-28 sm:pt-34 lg:pt-38">
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-72"
         style={{
-          background: `radial-gradient(circle at ${x}% ${y}%, rgba(161,18,23,0.15), transparent 20%), linear-gradient(180deg, rgba(255,255,255,0.97), rgba(245,245,247,0.92))`,
+          background:
+            'radial-gradient(circle at 20% 18%, rgba(161,18,23,0.14), transparent 22%), radial-gradient(circle at 82% 30%, rgba(17,24,39,0.08), transparent 18%), linear-gradient(180deg, rgba(255,255,255,0.97), rgba(245,245,247,0.92))',
         }}
       />
       <GradientOrbs />

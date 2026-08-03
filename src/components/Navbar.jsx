@@ -18,7 +18,8 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
-    setScrolled(latest > 20);
+    const nextScrolled = latest > 20;
+    setScrolled((current) => (current === nextScrolled ? current : nextScrolled));
   });
 
   return (

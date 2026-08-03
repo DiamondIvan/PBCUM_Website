@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Expand, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export function GalleryLightbox({ items }) {
   const [activeIndex, setActiveIndex] = useState(null);
-  const activeItem = useMemo(() => (activeIndex === null ? null : items[activeIndex]), [activeIndex, items]);
+  const activeItem = activeIndex === null ? null : items[activeIndex];
 
   return (
     <>

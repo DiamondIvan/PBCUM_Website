@@ -6,11 +6,19 @@ export function TestimonialsCarousel({ testimonials }) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    if (testimonials.length < 2) {
+      return undefined;
+    }
+
     const timer = window.setInterval(() => {
       setIndex((current) => (current + 1) % testimonials.length);
     }, 5500);
     return () => window.clearInterval(timer);
   }, [testimonials.length]);
+
+  if (testimonials.length === 0) {
+    return null;
+  }
 
   const current = testimonials[index];
 
