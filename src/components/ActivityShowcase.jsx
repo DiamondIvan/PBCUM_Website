@@ -8,7 +8,7 @@ export function ActivityShowcase({ events }) {
       {events.map((event, index) => (
         <MotionCard
           key={event.title}
-          className="group overflow-hidden rounded-[34px] border border-black/6 bg-white shadow-soft transition duration-350 hover:-translate-y-1.5 hover:shadow-card-hover"
+          className="group overflow-hidden rounded-[34px] border border-black/6 bg-white shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
         >
           <div className={`h-60 bg-gradient-to-br ${event.accent} p-7 text-white`}>
             <div className="flex items-center justify-between text-sm text-white/75">

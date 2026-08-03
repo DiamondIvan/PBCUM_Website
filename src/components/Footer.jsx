@@ -27,21 +27,21 @@ export function Footer() {
             <a
               href="#"
               aria-label="Instagram"
-              className="rounded-full border border-black/8 bg-white p-3 transition duration-250 hover:border-umred hover:text-umred hover:shadow-sm"
+              className="rounded-full border border-black/8 bg-white p-3 transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
               <Instagram className="h-4 w-4" />
             </a>
             <a
               href="#"
               aria-label="Facebook"
-              className="rounded-full border border-black/8 bg-white p-3 transition duration-250 hover:border-umred hover:text-umred hover:shadow-sm"
+              className="rounded-full border border-black/8 bg-white p-3 transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
               <Facebook className="h-4 w-4" />
             </a>
             <a
               href="mailto:pbcum@um.edu.my"
               aria-label="发送电邮"
-              className="rounded-full border border-black/8 bg-white p-3 transition duration-250 hover:border-umred hover:text-umred hover:shadow-sm"
+              className="rounded-full border border-black/8 bg-white p-3 transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
               <Mail className="h-4 w-4" />
             </a>
@@ -58,7 +58,7 @@ export function Footer() {
               <a
                 key={link.label}
                 href={link.href}
-                className="inline-flex items-center gap-2 text-sm font-medium text-black/55 transition duration-200 hover:text-umred"
+                className="inline-flex items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
               >
                 <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
                 {link.label}
@@ -66,7 +66,7 @@ export function Footer() {
             ))}
             <Link
               to="/join"
-              className="inline-flex items-center gap-2 text-sm font-medium text-black/55 transition duration-200 hover:text-umred"
+              className="inline-flex items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
             >
               <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
               加入我们

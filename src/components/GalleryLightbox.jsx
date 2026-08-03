@@ -18,14 +18,14 @@ export function GalleryLightbox({ items }) {
             onClick={() => setActiveIndex(index)}
             className={`group relative overflow-hidden rounded-[32px] ${item.span} border border-black/6 bg-black text-left shadow-soft`}
           >
-            <div className={`absolute inset-0 bg-gradient-to-br ${item.tone} transition-transform duration-700 group-hover:scale-106`} />
+            <div className={`absolute inset-0 bg-gradient-to-br ${item.tone} transition-transform duration-300 group-hover:scale-106`} />
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(0,0,0,0.52))]" />
             <div className="relative flex h-full flex-col justify-between p-6 text-white">
               <div className="flex items-center justify-between text-sm text-white/70">
                 <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-medium backdrop-blur-sm">
                   {item.category}
                 </span>
-                <Expand className="h-4 w-4 opacity-70 transition duration-200 group-hover:opacity-100" />
+                <Expand className="h-4 w-4 opacity-70 transition duration-300 group-hover:opacity-100" />
               </div>
               <div>
                 <p className="font-latin text-[10px] uppercase tracking-widest3 text-white/55">PBCUM</p>

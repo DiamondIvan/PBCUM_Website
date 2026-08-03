@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { MOTION } from './animations';
 
 export function AnimatedSection({ children, className = '', id }) {
   return (
@@ -7,7 +8,7 @@ export function AnimatedSection({ children, className = '', id }) {
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.75, ease: 'easeOut' }}
+      transition={{ duration: MOTION.duration, ease: MOTION.ease }}
       className={className}
     >
       {children}

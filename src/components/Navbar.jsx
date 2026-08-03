@@ -2,6 +2,7 @@ import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 import { Menu, Sparkles, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MOTION } from './ui/animations';
 
 const navItems = [
   { label: '关于我们', href: '#about' },
@@ -25,8 +26,8 @@ export function Navbar() {
       <motion.div
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: -16, opacity: 0 }}
-        transition={{ duration: 0.65, ease: 'easeOut' }}
-        className={`mx-auto max-w-7xl rounded-full border transition-all duration-400 ${
+        transition={{ duration: MOTION.duration * 0.8, ease: MOTION.ease }}
+        className={`mx-auto max-w-7xl rounded-full border transition-all duration-300 ${
           scrolled
             ? 'border-black/8 bg-white/90 shadow-nav backdrop-blur-2xl'
             : 'border-white/35 bg-white/60 shadow-[0_8px_32px_rgba(17,24,39,0.05)] backdrop-blur-xl'
@@ -35,7 +36,7 @@ export function Navbar() {
         {/* Desktop bar */}
         <div className="flex items-center justify-between gap-5 px-6 py-4 sm:px-8 sm:py-4.5">
           <Link to="/" className="group inline-flex items-center gap-4">
-            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-glow transition duration-350 group-hover:rotate-6 group-hover:scale-105">
+            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-glow transition duration-300 group-hover:rotate-6 group-hover:scale-105">
               <img src="/pbcum.jpg" alt="PBCUM logo" className="h-full w-full object-cover" />
             </div>
             <div className="leading-snug">
@@ -49,7 +50,7 @@ export function Navbar() {
               <a
                 key={item.label}
                 href={item.href}
-                className="rounded-full px-5 py-3 text-lg font-medium text-black/58 transition duration-200 hover:bg-black/5 hover:text-ink"
+                className="rounded-full px-5 py-3 text-lg font-medium text-black/58 transition duration-300 hover:bg-black/5 hover:text-ink"
               >
                 {item.label}
               </a>
@@ -59,7 +60,7 @@ export function Navbar() {
           <div className="hidden items-center gap-4 md:flex">
             <Link
               to="/join"
-              className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white px-6 py-3 text-lg font-semibold text-ink shadow-sm transition duration-250 hover:-translate-y-0.5 hover:border-umred/25 hover:text-umred hover:shadow-md"
+              className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white px-6 py-3 text-lg font-semibold text-ink shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-umred/25 hover:text-umred hover:shadow-md"
             >
               <Sparkles className="h-4 w-4" />
               加入我们

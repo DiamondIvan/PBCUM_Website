@@ -16,12 +16,12 @@ export function CommitteeGrid({ members }) {
     <div className="mt-14 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
       {members.map((member, index) => (
         <motion.article
-          key={member.name}
+          key={index}
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.18 }}
           transition={{ duration: 0.6, delay: index * 0.07 }}
-          className="group rounded-[32px] border border-black/6 bg-white p-7 shadow-soft transition duration-350 hover:-translate-y-1.5 hover:shadow-card-hover"
+          className="group rounded-[32px] border border-black/6 bg-white p-7 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
         >
           <div className="flex items-start justify-between gap-4">
             <Avatar initials={member.image} color={member.color} />
@@ -37,21 +37,21 @@ export function CommitteeGrid({ members }) {
             <a
               href="#"
               aria-label={`${member.name} 的 Instagram`}
-              className="rounded-full border border-black/6 p-2.5 transition duration-200 hover:border-umred hover:text-umred"
+              className="rounded-full border border-black/6 p-2.5 transition duration-300 hover:border-umred hover:text-umred"
             >
               <Instagram className="h-3.5 w-3.5" />
             </a>
             <a
               href="#"
               aria-label={`${member.name} 的 LinkedIn`}
-              className="rounded-full border border-black/6 p-2.5 transition duration-200 hover:border-umred hover:text-umred"
+              className="rounded-full border border-black/6 p-2.5 transition duration-300 hover:border-umred hover:text-umred"
             >
               <Linkedin className="h-3.5 w-3.5" />
             </a>
             <a
               href="#"
               aria-label={`发邮件给 ${member.name}`}
-              className="rounded-full border border-black/6 p-2.5 transition duration-200 hover:border-umred hover:text-umred"
+              className="rounded-full border border-black/6 p-2.5 transition duration-300 hover:border-umred hover:text-umred"
             >
               <Mail className="h-3.5 w-3.5" />
             </a>

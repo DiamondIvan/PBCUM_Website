@@ -52,7 +52,7 @@ export function TestimonialsCarousel({ testimonials }) {
             type="button"
             aria-label="上一条评价"
             onClick={() => setIndex((i) => (i - 1 + testimonials.length) % testimonials.length)}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-ink transition duration-200 hover:border-umred hover:text-umred"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-ink transition duration-300 hover:border-umred hover:text-umred"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -60,7 +60,7 @@ export function TestimonialsCarousel({ testimonials }) {
             type="button"
             aria-label="下一条评价"
             onClick={() => setIndex((i) => (i + 1) % testimonials.length)}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-ink transition duration-200 hover:border-umred hover:text-umred"
+            className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-ink transition duration-300 hover:border-umred hover:text-umred"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -71,7 +71,7 @@ export function TestimonialsCarousel({ testimonials }) {
               key={testimonial.name}
               type="button"
               onClick={() => setIndex(testimonialIndex)}
-              className={`w-full rounded-[22px] border px-5 py-4 text-left transition duration-200 ${
+              className={`w-full rounded-[22px] border px-5 py-4 text-left transition duration-300 ${
                 testimonialIndex === index
                   ? 'border-umred/22 bg-umred/6 shadow-sm'
                   : 'border-black/6 bg-white hover:border-black/12 hover:shadow-sm'

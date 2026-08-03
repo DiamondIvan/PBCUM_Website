@@ -13,7 +13,7 @@ export function JoinPage() {
       <div className="mx-auto max-w-4xl pt-18">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 transition duration-200 hover:text-umred"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 transition duration-300 hover:text-umred"
         >
           <ChevronLeft className="h-4 w-4" />
           返回首页
@@ -34,7 +34,7 @@ export function JoinPage() {
             {steps.map((step, index) => (
               <div
                 key={step}
-                className="rounded-[28px] border border-black/6 bg-[#fafafa] p-7 transition duration-250 hover:-translate-y-1 hover:shadow-soft"
+                className="rounded-[28px] border border-black/6 bg-[#fafafa] p-7 transition duration-300 hover:-translate-y-1 hover:shadow-soft"
               >
                 <CheckCircle2 className="h-5 w-5 text-umred" />
                 <p className="mt-5 text-sm leading-[1.85] text-black/62">

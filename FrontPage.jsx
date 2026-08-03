@@ -18,6 +18,7 @@ import { SponsorMarquee } from './src/components/SponsorMarquee';
 import { Footer } from './src/components/Footer';
 import { Navbar } from './src/components/Navbar';
 import { ActivityShowcase } from './src/components/ActivityShowcase';
+import { WuteSection, QixiaozuSection } from './src/components/ProgramsGrid';
 import { useMousePosition } from './src/hooks/useMousePosition';
 import { useScrollProgress } from './src/hooks/useScrollProgress';
 
@@ -39,10 +40,10 @@ const joinHighlights = [
 
 function IconCard({ icon: Icon, title, description }) {
   return (
-    <MotionCard className="group relative overflow-hidden rounded-[30px] border border-white/62 bg-white p-8 shadow-soft backdrop-blur-xl transition duration-350 hover:-translate-y-1.5 hover:shadow-card-hover">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.07),transparent_45%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+    <MotionCard className="group relative overflow-hidden rounded-[30px] border border-white/62 bg-white p-8 shadow-soft backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.07),transparent_45%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="relative flex h-full flex-col gap-6">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-umred/10 text-umred transition duration-400 group-hover:scale-110 group-hover:bg-umred group-hover:text-white">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-umred/10 text-umred transition duration-300 group-hover:scale-110 group-hover:bg-umred group-hover:text-white">
           <Icon className="h-6 w-6" />
         </div>
         <div>
@@ -83,7 +84,7 @@ function HeroSection() {
           <motion.h1
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, ease: 'easeOut' }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
             className="max-w-4xl text-5xl font-semibold leading-[1.12] tracking-[-0.05em] text-ink sm:text-7xl lg:text-[5.2rem]"
           >
             扎实为经<br />·
@@ -92,7 +93,7 @@ function HeroSection() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, ease: 'easeOut', delay: 0.12 }}
+            transition={{ duration: 0.8, ease: 'easeOut', delay: 0.12 }}
             className="mt-8 max-w-2xl text-base leading-[1.85] text-black/58 sm:text-lg"
           >
             PBCUM 汇聚一群珍视语言、认同文化、追求有意义校园生活的学子。我们为文化、领导力与现代学生生活，打造一个精致的数字家园。
@@ -232,7 +233,7 @@ function AboutSection() {
           {sectionData.aboutStats.map((stat) => (
             <MotionCard
               key={stat.label}
-              className="rounded-[32px] border border-black/6 bg-[linear-gradient(180deg,#fff,#f8f8f8)] p-8 shadow-soft transition duration-350 hover:-translate-y-1 hover:shadow-card-hover"
+              className="rounded-[32px] border border-black/6 bg-[linear-gradient(180deg,#fff,#f8f8f8)] p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-card-hover"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -279,22 +280,39 @@ function WhyJoinSection() {
   );
 }
 
-/* ─── ActivitiesSection ─────────────────────────────────────────────── */
+/* ─── ActivitiesSection (五特活 / 七小组) ─────────────────────────────────────────────── */
 
 function ActivitiesSection() {
   return (
-    <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="精彩活动"
-          title="每一场活动，都是优质文化品牌的精彩呈现。"
-          description="工作坊、展演、论坛与社交活动，以清晰的视觉识别精心策划。"
-        />
-        <div className="mt-14">
-          <ActivityShowcase events={sectionData.activities} />
+    <>
+      {/* ── 五特活 ── editorial grid, white background ──────────────── */}
+      <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="五大特色活动"
+            title="每一项活动，都是一段难以忘怀的体验。"
+            description="从舞台演出到文化探索，五特活是 PBCUM 最具代表性的年度项目。点击任意卡片，了解更多。"
+          />
+          <div className="mt-14">
+            <WuteSection items={sectionData.wuteActivities} />
+          </div>
         </div>
-      </div>
-    </AnimatedSection>
+      </AnimatedSection>
+
+      {/* ── 七小组 ── dense directory grid, tinted background ───────── */}
+      <AnimatedSection id="groups" className="bg-[#fafafa] py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeading
+            eyebrow="七大工作小组"
+            title="找到属于你的位置，发现你的舞台。"
+            description="七小组涵盖创意、技术、公关等多元领域，总有一个团队等待你的加入。"
+          />
+          <div className="mt-14">
+            <QixiaozuSection items={sectionData.qixiaozuGroups} />
+          </div>
+        </div>
+      </AnimatedSection>
+    </>
   );
 }
 
