@@ -24,7 +24,7 @@ export function JoinPage() {
             加入 PBCUM
           </p>
           <h1 className="mt-5 text-4xl font-semibold leading-[1.18] tracking-[-0.05em] sm:text-6xl">
-            开启你的 PBCUM 旅程。
+            开启与马大华文学会的旅程。
           </h1>
           <p className="mt-7 max-w-2xl text-base leading-[1.85] text-black/58">
             成为这个精致、以文化为核心的学生社群的一份子，专注于领导力培养、语言传承与校园正面影响力。
@@ -46,10 +46,11 @@ export function JoinPage() {
 
           <div className="mt-11 flex flex-col gap-4 sm:flex-row">
             <a
-              href="mailto:pbcum@um.edu.my"
+              target="_blank"
+              href="https://docs.google.com/forms/d/e/1FAIpQLScwxdpARvJlyls5h1IqQwcXGZcf5MSGtQ6EmQoQ4C9nngRkwQ/closedform"
               className="btn-primary"
             >
-              发送邮件给委员会
+              立即报名加入
               <ArrowRight className="h-4 w-4" />
             </a>
             <Link to="/" className="btn-secondary">
