@@ -2,7 +2,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Expand, X } from 'lucide-react';
 import { useState } from 'react';
 
-export function GalleryLightbox({ items }) {
+/**
+ * @param {{
+ *   items: Array<{ title: string, category: string, span?: string, tone: string }>,
+ *   calendarSlot?: React.ReactNode  — optional node rendered as the last grid tile
+ * }} props
+ */
+export function GalleryLightbox({ items, calendarSlot }) {
   const [activeIndex, setActiveIndex] = useState(null);
   const activeItem = activeIndex === null ? null : items[activeIndex];
 
@@ -34,6 +40,14 @@ export function GalleryLightbox({ items }) {
             </div>
           </motion.button>
         ))}
+
+        {/* ── Calendar tile — col 3, rows 3–4 (fills the blank above) ── */}
+        {calendarSlot && (
+          <div className="relative overflow-visible md:col-start-3 md:row-start-3 md:row-end-5">
+            {calendarSlot}
+          </div>
+        )}
+
       </div>
 
       <AnimatePresence>

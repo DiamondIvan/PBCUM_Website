@@ -19,6 +19,7 @@ import { Footer } from './src/components/Footer';
 import { Navbar } from './src/components/Navbar';
 import { ActivityShowcase } from './src/components/ActivityShowcase';
 import { WuteSection, QixiaozuSection } from './src/components/ProgramsGrid';
+import { EventCalendar } from './src/components/EventCalendar';
 
 /* ─── Hero static data ─────────────────────────────────────────────── */
 
@@ -343,7 +344,10 @@ function GallerySection() {
           description="用影像讲述每一个珍贵时刻，以精致的空间节奏展现视觉故事。"
         />
         <div className="mt-14">
-          <GalleryLightbox items={sectionData.gallery} />
+          <GalleryLightbox
+            items={sectionData.gallery}
+            calendarSlot={<EventCalendar events={sectionData.calendarEvents} />}
+          />
         </div>
       </div>
     </AnimatedSection>
