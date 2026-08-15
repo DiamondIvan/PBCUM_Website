@@ -7,7 +7,7 @@ import { MOTION } from './ui/animations';
 const navItems = [
   { label: '关于我们', href: '#about' },
   { label: '精彩活动', href: '#activities' },
-  { label: '委员会', href: '#committee' },
+  { label: '执委会', href: '#committee' },
   { label: '相册', href: '#gallery' },
   { label: '联系我们', href: '#footer' },
 ];
@@ -28,11 +28,10 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: -16, opacity: 0 }}
         transition={{ duration: MOTION.duration * 0.8, ease: MOTION.ease }}
-        className={`mx-auto max-w-7xl rounded-full border transition-all duration-300 ${
-          scrolled
+        className={`mx-auto max-w-7xl rounded-full border transition-all duration-300 ${scrolled
             ? 'border-black/8 bg-white/90 shadow-nav backdrop-blur-2xl'
             : 'border-white/35 bg-white/60 shadow-[0_8px_32px_rgba(17,24,39,0.05)] backdrop-blur-xl'
-        }`}
+          }`}
       >
         {/* Desktop bar */}
         <div className="flex items-center justify-between gap-5 px-6 py-4 sm:px-8 sm:py-4.5">

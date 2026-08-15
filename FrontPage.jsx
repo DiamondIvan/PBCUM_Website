@@ -147,7 +147,7 @@ function HeroSection() {
                 {[
                   { title: '语言圈子', description: '沉浸式语言练习，增强表达信心与文化流利度。' },
                   { title: '品牌化活动', description: '精心策划的活动，以高水准视觉呈现打造独特体验。' },
-                  { title: '领导力成长', description: '通过委员会工作与项目统筹，承担真实责任与挑战。' },
+                  { title: '领导力成长', description: '通过执委会工作与项目统筹，承担真实责任与挑战。' },
                   { title: '校园人脉网络', description: '以共同志向与相互支持为基础建立的校园社群。' },
                 ].map((item) => (
                   <div key={item.title} className="rounded-[22px] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
@@ -322,7 +322,7 @@ function CommitteeSection() {
     <AnimatedSection id="committee" className="bg-[#fafafa] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="委员会"
+          eyebrow="执委会"
           title="认识我们清晰、温暖、精致呈现的领导团队。"
           description="每个职位都有充裕的展示空间，每张个人卡片都经过精心设计，而非仓促拼凑。"
         />
@@ -414,7 +414,7 @@ function JoinCtaSection() {
               </p>
               <div className="mt-9 flex flex-col gap-4 sm:flex-row">
                 <a href="mailto:pbcum@um.edu.my" className="btn-primary bg-white text-umred hover:bg-white/95 shadow-none">
-                  联系委员会
+                  联系执委会
                   <MessageCircleMore className="h-4 w-4" />
                 </a>
                 <a href="#footer" className="btn-ghost-white">

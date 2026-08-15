@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const footerLinks = [
   { label: '关于我们', href: '#about' },
   { label: '精彩活动', href: '#activities' },
-  { label: '委员会', href: '#committee' },
+  { label: '执委会', href: '#committee' },
   { label: '相册', href: '#gallery' },
 ];
 

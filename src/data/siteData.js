@@ -20,11 +20,150 @@ import {
   Wand2,
 } from 'lucide-react';
 
+/* ─── 五特活 — Five Signature Activities ────────────────────────────
+ * Extract these arrays here so the stats counter can reference their
+ * lengths at build time. Add/remove items freely — the '精彩活动'
+ * value on the homepage will update automatically.
+ * ─────────────────────────────────────────────────────────────────── */
+export const wuteActivities = [
+  {
+    id: 'wute-01',
+    slug: 'event-01',
+    title: '活动一 [PLACEHOLDER]',
+    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+    icon: Star,
+    accent: 'from-[#A11217] to-[#6D0E12]',
+    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+    cta: '了解更多',
+  },
+  {
+    id: 'wute-02',
+    slug: 'event-02',
+    title: '活动二 [PLACEHOLDER]',
+    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+    icon: MicVocal,
+    accent: 'from-[#1f2937] to-[#111827]',
+    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+    cta: '了解更多',
+  },
+  {
+    id: 'wute-03',
+    slug: 'event-03',
+    title: '活动三 [PLACEHOLDER]',
+    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+    icon: Theater,
+    accent: 'from-[#b91c1c] to-[#f97316]',
+    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+    cta: '了解更多',
+  },
+  {
+    id: 'wute-04',
+    slug: 'event-04',
+    title: '活动四 [PLACEHOLDER]',
+    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+    icon: Trophy,
+    accent: 'from-[#7c3aed] to-[#4f46e5]',
+    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+    cta: '了解更多',
+  },
+  {
+    id: 'wute-05',
+    slug: 'event-05',
+    title: '活动五 [PLACEHOLDER]',
+    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+    icon: Music,
+    accent: 'from-[#0369a1] to-[#0c4a6e]',
+    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+    cta: '了解更多',
+  },
+];
+
+/* ─── 七小组 — Seven Sub-Groups / Departments ───────────────────────
+ * Shape: { id, title, teaser, icon, accent, detail, cta }
+ * ─────────────────────────────────────────────────────────────────── */
+export const qixiaozuGroups = [
+  {
+    id: 'qxz-01',
+    slug: 'dept-01',
+    title: '小组一 [PLACEHOLDER]',
+    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+    icon: Megaphone,
+    accent: 'from-[#A11217] to-[#6D0E12]',
+    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+    cta: '了解小组',
+  },
+  {
+    id: 'qxz-02',
+    slug: 'dept-02',
+    title: '小组二 [PLACEHOLDER]',
+    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+    icon: Palette,
+    accent: 'from-[#0d9488] to-[#0f766e]',
+    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+    cta: '了解小组',
+  },
+  {
+    id: 'qxz-03',
+    slug: 'dept-03',
+    title: '小组三 [PLACEHOLDER]',
+    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+    icon: Camera,
+    accent: 'from-[#7c3aed] to-[#4f46e5]',
+    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+    cta: '了解小组',
+  },
+  {
+    id: 'qxz-04',
+    slug: 'dept-04',
+    title: '小组四 [PLACEHOLDER]',
+    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+    icon: PenLine,
+    accent: 'from-[#b45309] to-[#92400e]',
+    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+    cta: '了解小组',
+  },
+  {
+    id: 'qxz-05',
+    slug: 'dept-05',
+    title: '小组五 [PLACEHOLDER]',
+    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+    icon: HeartHandshake,
+    accent: 'from-[#0369a1] to-[#0c4a6e]',
+    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+    cta: '了解小组',
+  },
+  {
+    id: 'qxz-06',
+    slug: 'dept-06',
+    title: '小组六 [PLACEHOLDER]',
+    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+    icon: Globe2,
+    accent: 'from-[#374151] to-[#111827]',
+    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+    cta: '了解小组',
+  },
+  {
+    id: 'qxz-07',
+    slug: 'dept-07',
+    title: '小组七 [PLACEHOLDER]',
+    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+    icon: BookOpen,
+    accent: 'from-[#be185d] to-[#9d174d]',
+    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+    cta: '了解小组',
+  },
+];
+
+// ─── Derived counter ───────────────────────────────────────────────────
+// Auto-computed from the actual program arrays above. Adding or removing
+// a card here automatically updates the '精彩活动' stat on the homepage.
+const totalPrograms = wuteActivities.length + qixiaozuGroups.length;
+
 export const sectionData = {
   stats: [
     { label: '活跃会员', value: '1,200+', icon: Users },
     { label: '创立年份', value: '60+', icon: Crown },
-    { label: '精彩活动', value: '180+', icon: Sparkles },
+    { label: '精彩活动', value: `${totalPrograms}+`, icon: Sparkles },
     { label: '荣誉奖项', value: '25+', icon: Award },
   ],
   aboutPoints: [
@@ -154,139 +293,11 @@ export const sectionData = {
   ],
   partners: ['马来亚大学', 'UM 学生事务处', 'PBCUM 校友会', '校园文化实验室', 'Redline Print', 'Moonstage Media'],
 
-  /* ─── 五特活 — Five Signature Activities ────────────────────────────
-   * Replace every [PLACEHOLDER] with your real copy before launch.
-   * Shape: { id, title, teaser, icon, accent, detail, cta }
-   * ─────────────────────────────────────────────────────────────────── */
-  wuteActivities: [
-    {
-      id: 'wute-01',
-      slug: 'event-01',
-      title: '活动一 [PLACEHOLDER]',
-      teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-      icon: Star,
-      accent: 'from-[#A11217] to-[#6D0E12]',
-      detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-      cta: '了解更多',
-    },
-    {
-      id: 'wute-02',
-      slug: 'event-02',
-      title: '活动二 [PLACEHOLDER]',
-      teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-      icon: MicVocal,
-      accent: 'from-[#1f2937] to-[#111827]',
-      detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-      cta: '了解更多',
-    },
-    {
-      id: 'wute-03',
-      slug: 'event-03',
-      title: '活动三 [PLACEHOLDER]',
-      teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-      icon: Theater,
-      accent: 'from-[#b91c1c] to-[#f97316]',
-      detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-      cta: '了解更多',
-    },
-    {
-      id: 'wute-04',
-      slug: 'event-04',
-      title: '活动四 [PLACEHOLDER]',
-      teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-      icon: Trophy,
-      accent: 'from-[#7c3aed] to-[#4f46e5]',
-      detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-      cta: '了解更多',
-    },
-    {
-      id: 'wute-05',
-      slug: 'event-05',
-      title: '活动五 [PLACEHOLDER]',
-      teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-      icon: Music,
-      accent: 'from-[#0369a1] to-[#0c4a6e]',
-      detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-      cta: '了解更多',
-    },
-  ],
-
-  /* ─── 七小组 — Seven Sub-Groups / Departments ───────────────────────
-   * Replace every [PLACEHOLDER] with your real copy before launch.
-   * Shape: { id, title, teaser, icon, accent, detail, cta }
-   * ─────────────────────────────────────────────────────────────────── */
-  qixiaozuGroups: [
-    {
-      id: 'qxz-01',
-      slug: 'dept-01',
-      title: '小组一 [PLACEHOLDER]',
-      teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-      icon: Megaphone,
-      accent: 'from-[#A11217] to-[#6D0E12]',
-      detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-      cta: '了解小组',
-    },
-    {
-      id: 'qxz-02',
-      slug: 'dept-02',
-      title: '小组二 [PLACEHOLDER]',
-      teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-      icon: Palette,
-      accent: 'from-[#0d9488] to-[#0f766e]',
-      detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-      cta: '了解小组',
-    },
-    {
-      id: 'qxz-03',
-      slug: 'dept-03',
-      title: '小组三 [PLACEHOLDER]',
-      teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-      icon: Camera,
-      accent: 'from-[#7c3aed] to-[#4f46e5]',
-      detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-      cta: '了解小组',
-    },
-    {
-      id: 'qxz-04',
-      slug: 'dept-04',
-      title: '小组四 [PLACEHOLDER]',
-      teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-      icon: PenLine,
-      accent: 'from-[#b45309] to-[#92400e]',
-      detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-      cta: '了解小组',
-    },
-    {
-      id: 'qxz-05',
-      slug: 'dept-05',
-      title: '小组五 [PLACEHOLDER]',
-      teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-      icon: HeartHandshake,
-      accent: 'from-[#0369a1] to-[#0c4a6e]',
-      detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-      cta: '了解小组',
-    },
-    {
-      id: 'qxz-06',
-      slug: 'dept-06',
-      title: '小组六 [PLACEHOLDER]',
-      teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-      icon: Globe2,
-      accent: 'from-[#374151] to-[#111827]',
-      detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-      cta: '了解小组',
-    },
-    {
-      id: 'qxz-07',
-      slug: 'dept-07',
-      title: '小组七 [PLACEHOLDER]',
-      teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-      icon: BookOpen,
-      accent: 'from-[#be185d] to-[#9d174d]',
-      detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-      cta: '了解小组',
-    },
-  ],
+  // ─── 五特活 & 七小组 are now top-level named exports above sectionData.
+  // They are referenced here so FrontPage / ProgramsGrid can still consume
+  // them from sectionData as before.
+  wuteActivities,
+  qixiaozuGroups,
 
   /* ─── 活动日历 — Calendar Events ────────────────────────────────────
    * Each entry maps to a clickable day on the EventCalendar component.
