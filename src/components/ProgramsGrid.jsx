@@ -121,7 +121,7 @@ function ProgramModal({ item, type, onClose }) {
         <div className="px-8 pt-5 pb-8">
           <p className="text-base leading-[1.8] text-black/58">{item.teaser}</p>
           <div className="mt-5 rounded-[18px] border border-black/6 bg-[#fafafa] px-6 py-5">
-            <p className="text-sm leading-[1.85] text-black/55">{item.detail}</p>
+            <p className="whitespace-pre-line text-sm leading-[1.85] text-black/55">{item.detail}</p>
           </div>
           <Link
             to={isEvent ? `/events/${item.slug}` : `/departments/${item.slug}`}
@@ -176,7 +176,7 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
 
       {/* Copy */}
       <div className="relative mt-5 flex flex-1 flex-col">
-        <h3 className="text-lg font-semibold leading-snug text-ink">{item.title}</h3>
+        <h3 className="whitespace-pre-line text-lg font-semibold leading-snug text-ink">{item.title}</h3>
         <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">{item.teaser}</p>
       </div>
 

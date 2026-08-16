@@ -53,7 +53,7 @@ export const events = [
   },
   {
     slug: 'event-02',
-    title: '活动二 [PLACEHOLDER]',
+    title: '第21届全国中学华文学会生活营 \n 续章·扬帆',
     eyebrow: '五特活 · 02',
     accent: 'from-[#1f2937] to-[#111827]',
     icon: MicVocal,
@@ -73,7 +73,7 @@ export const events = [
       { label: '// TODO', caption: '// TODO' },
       { label: '// TODO', caption: '// TODO' },
     ],
-    closingLine: '// TODO',
+    closingLine: '贰续华章，以梦为帆',
     ctaLabel: '关注下一场活动',
     ctaHref: '#footer',
   },

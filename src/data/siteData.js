@@ -39,11 +39,11 @@ export const wuteActivities = [
   {
     id: 'wute-02',
     slug: 'event-02',
-    title: '活动二 [PLACEHOLDER]',
-    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+    title: '活动二 全中华',
+    teaser: '贰续华章，以梦为帆',
     icon: MicVocal,
     accent: 'from-[#1f2937] to-[#111827]',
-    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+    detail: '第21届全国中学华文学会生活营 \n 续章•扬帆',
     cta: '了解更多',
   },
   {
@@ -290,6 +290,11 @@ export const sectionData = {
       name: '欣怡',
       role: '项目义工',
     },
+    {
+      quote: '人生短短三万天，不敬自由等何年',
+      name: '骏涛',
+      role: '外务副主席',
+    }
   ],
   partners: ['马来亚大学', 'UM 学生事务处', 'PBCUM 校友会', '校园文化实验室', 'Redline Print', 'Moonstage Media'],
 

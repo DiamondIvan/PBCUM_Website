@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import {
   ArrowRight,
   ChevronRight,
@@ -34,6 +35,63 @@ const joinHighlights = [
   '领导力路径、语言沉浸式体验，以及高水准的校园活动。',
   '一个充满热情、用心经营、值得期待的温馨社群。',
 ];
+
+/* ─── HeroGallerySlider — auto-cycles through sectionData.gallery ──── */
+
+function HeroGallerySlider({ items }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (items.length < 2) return;
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % items.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [items.length]);
+
+  const current = items[index];
+
+  return (
+    <div className="relative mt-10 overflow-hidden rounded-[22px]" style={{ height: '13rem' }}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.45, ease: 'easeOut' }}
+          className={`absolute inset-0 bg-gradient-to-br ${current.tone} rounded-[22px]`}
+        >
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(0,0,0,0.48))] rounded-[22px]" />
+          {/* Text */}
+          <div className="absolute inset-0 flex flex-col justify-between p-5 text-white">
+            <span className="self-start rounded-full bg-white/14 px-3 py-1 text-[10px] uppercase tracking-widest2 backdrop-blur-sm">
+              {current.category}
+            </span>
+            <div>
+              <p className="font-latin text-[9px] uppercase tracking-widest3 text-white/55">PBCUM</p>
+              <h3 className="mt-1.5 text-lg font-semibold tracking-[-0.03em]">{current.title}</h3>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+      {/* Dot indicators */}
+      <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => setIndex(i)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${
+              i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/45'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ─── IconCard ──────────────────────────────────────────────────────── */
 
@@ -143,19 +201,7 @@ function HeroSection() {
                   <Languages className="h-7 w-7" />
                 </div>
               </div>
-              <div className="mt-10 grid gap-4 sm:grid-cols-2">
-                {[
-                  { title: '语言圈子', description: '沉浸式语言练习，增强表达信心与文化流利度。' },
-                  { title: '品牌化活动', description: '精心策划的活动，以高水准视觉呈现打造独特体验。' },
-                  { title: '领导力成长', description: '通过执委会工作与项目统筹，承担真实责任与挑战。' },
-                  { title: '校园人脉网络', description: '以共同志向与相互支持为基础建立的校园社群。' },
-                ].map((item) => (
-                  <div key={item.title} className="rounded-[22px] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
-                    <h3 className="font-semibold">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-[1.7] text-white/72">{item.description}</p>
-                  </div>
-                ))}
-              </div>
+              <HeroGallerySlider items={sectionData.gallery} />
             </div>
             {/* Stats row */}
             <div className="relative mt-4 grid gap-4 md:grid-cols-[1.15fr_0.85fr]">

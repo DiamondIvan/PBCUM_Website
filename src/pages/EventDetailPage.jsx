@@ -62,11 +62,11 @@ export function EventDetailPage() {
               返回活动列表
             </button>
 
-            <div className="mt-10 max-w-4xl">
+            <div className="mt-10 max-w-5xl">
               <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-white/58">
                 {event.eyebrow}
               </p>
-              <h1 className="mt-4 text-4xl font-semibold leading-[1.1] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+              <h1 className="mt-4 whitespace-pre-line text-4xl font-semibold leading-[1.1] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
                 {event.title}
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-[1.8] text-white/75 sm:text-xl">
@@ -135,7 +135,7 @@ export function EventDetailPage() {
                       <span className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br ${event.accent} font-latin text-sm font-bold text-white`}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <h3 className="mt-5 text-lg font-semibold leading-snug text-ink">{h.label}</h3>
+                      <h3 className="whitespace-pre-line mt-5 text-lg font-semibold leading-snug text-ink">{h.label}</h3>
                       <p className="mt-2 text-sm leading-[1.8] text-black/55">{h.caption}</p>
                     </div>
                   </div>
