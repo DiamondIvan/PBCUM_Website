@@ -55,7 +55,8 @@ const backdropVariants = {
 function ProgramModal({ item, type, onClose }) {
   const closeRef = useRef(null);
   const isEvent = type === 'event';
-  const Icon = item.icon;
+  const isImgIcon = typeof item.icon === 'string';
+  const Icon = isImgIcon ? null : item.icon;
 
   useEffect(() => { closeRef.current?.focus(); }, []);
 
@@ -95,9 +96,11 @@ function ProgramModal({ item, type, onClose }) {
         {/* Header row */}
         <div className="flex items-start justify-between gap-4 px-8 pt-7 pb-0">
           <div className="flex items-center gap-4">
-            <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} text-white shadow-sm`}>
-              <Icon className="h-5 w-5" />
-            </div>
+            {!isImgIcon && (
+              <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm`}>
+                <Icon className="h-5 w-5 text-white" />
+              </div>
+            )}
             <div>
               <p className="font-latin text-[10px] font-semibold uppercase tracking-widest3 text-black/38">
                 {isEvent ? '五特活' : '七小组'}
@@ -116,6 +119,13 @@ function ProgramModal({ item, type, onClose }) {
             <X className="h-4 w-4" />
           </button>
         </div>
+
+        {/* Centered logo (image icons only) */}
+        {isImgIcon && (
+          <div className="flex justify-center px-8 pt-6 pb-2">
+            <img src={item.icon} alt="" className="h-28 w-28 object-contain drop-shadow-lg" />
+          </div>
+        )}
 
         {/* Body */}
         <div className="px-8 pt-5 pb-8">
@@ -139,11 +149,33 @@ function ProgramModal({ item, type, onClose }) {
 
 /* ────────────────────────────────────────────────────────────────────────
  * ProgramCard — single card atom
+ *
+ * Color & motif system (per-logo extraction):
+ *
+ *  五特活 (events):
+ *    item.themeColor → bottom gradient wash (45% card height, fades from
+ *    ~30% colour at the base to transparent at top) + bottom-right corner
+ *    回纹 L-bar fragment. Card background stays white; all text stays dark.
+ *
+ *  七小组 (departments):
+ *    item.accentHex → 5px top accent bar + top-right corner 回纹 L-bar
+ *    fragment. White card body, dark text, unchanged from previous.
+ *    (Will switch to item.themeColor once dept logos are processed.)
+ *
+ *  Both corner motifs share the same nested-L-bar SVG shape; only their
+ *  corner anchor (bottom-right vs top-right) differs. All decorative layers
+ *  are aria-hidden and pointer-events-none.
  * ──────────────────────────────────────────────────────────────────────── */
 
 function ProgramCard({ item, index, type, onOpen, variants }) {
   const isEvent = type === 'event';
-  const Icon = item.icon;
+  const isImgIcon = typeof item.icon === 'string';
+  const Icon = isImgIcon ? null : item.icon;
+
+  // Color source per section:
+  //   Events      → item.themeColor (extracted from each event's own logo)
+  //   Departments → item.accentHex  (temp palette; replaced after logo extraction)
+  const color = isEvent ? item.themeColor : item.accentHex;
 
   return (
     <motion.article
@@ -159,31 +191,126 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen(item)}
       className="group relative flex cursor-pointer flex-col overflow-hidden rounded-[28px] border border-black/6 bg-white p-7 shadow-soft outline-none transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[6px] hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-umred focus-visible:ring-offset-2"
     >
-      {/* Hover wash */}
+      {/* ── Hover colour wash (subtle red radial — both sections) ── */}
       <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.06),transparent_50%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-      {/* Icon bubble + optional sequence number */}
-      <div className="relative flex items-center justify-between">
-        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} text-white shadow-sm transition-transform duration-300 group-hover:scale-110`}>
-          <Icon className="h-5 w-5" />
+      {/* ── 五特活: bottom gradient wash ──────────────────────────────────
+       *  Semi-transparent gradient rising from the card's bottom edge,
+       *  covering the title/teaser zone (~45% of card height).
+       *  Fades from ~30% colour at bottom → transparent at top.
+       *  Dark text on the white-backed gradient stays fully readable.
+       *  Slightly intensifies on hover as part of the lift animation.
+       * ─────────────────────────────────────────────────────────────────── */}
+      {color && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-[45%] rounded-b-[28px] opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background: `linear-gradient(to top, ${color}4D 0%, ${color}1A 55%, transparent 100%)`,
+          }}
+        />
+      )}
+
+      {/* ── 七小组: top accent bar (5px) ─────────────────────────────────── */}
+      {!isEvent && color && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 left-0 right-0 h-[5px]"
+          style={{ backgroundColor: color }}
+        />
+      )}
+
+      {/* ── Corner 回纹 fragment (both sections) ──────────────────────────
+       *  Three nested filled L-bars stepping inward from the card corner,
+       *  evoking a meander / 回纹 inlay. Same SVG shape for both sections;
+       *  only the corner anchor changes:
+       *    Events      → bottom-right (matches the bottom gradient zone)
+       *    Departments → top-right    (matches the top accent bar zone)
+       *  Opacity: 12% rest → 24% hover. overflow-hidden clips to border-radius.
+       * ─────────────────────────────────────────────────────────────────── */}
+      {color && (
+        <svg
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="44"
+          height="44"
+          viewBox="0 0 44 44"
+          className={`pointer-events-none absolute ${
+            isEvent ? 'bottom-0 right-0' : 'top-0 right-0'
+          } opacity-[0.12] transition-opacity duration-300 group-hover:opacity-[0.24]`}
+          style={{ color }}
+        >
+          {isEvent ? (
+            /* Bottom-right L-bars: bars run along bottom and right edges, step inward */
+            <>
+              {/* Outer L — bottom + right, 3px */}
+              <rect x="0"  y="41" width="44" height="3" fill="currentColor" />
+              <rect x="41" y="0"  width="3"  height="44" fill="currentColor" />
+              {/* Middle L — inset 9px, 3px thick, 55% */}
+              <rect x="0"  y="32" width="35" height="3" fill="currentColor" fillOpacity="0.55" />
+              <rect x="32" y="0"  width="3"  height="35" fill="currentColor" fillOpacity="0.55" />
+              {/* Inner L — inset 18px, 2px thick, 30% */}
+              <rect x="0"  y="24" width="26" height="2" fill="currentColor" fillOpacity="0.30" />
+              <rect x="24" y="0"  width="2"  height="26" fill="currentColor" fillOpacity="0.30" />
+            </>
+          ) : (
+            /* Top-right L-bars: bars run along top and right edges, step inward */
+            <>
+              {/* Outer L — top + right, 3px */}
+              <rect x="0"  y="0" width="44" height="3" fill="currentColor" />
+              <rect x="41" y="0" width="3"  height="44" fill="currentColor" />
+              {/* Middle L — inset 9px, 3px thick, 55% */}
+              <rect x="9"  y="9" width="29" height="3" fill="currentColor" fillOpacity="0.55" />
+              <rect x="35" y="9" width="3"  height="29" fill="currentColor" fillOpacity="0.55" />
+              {/* Inner L — inset 18px, 2px thick, 30% */}
+              <rect x="18" y="18" width="16" height="2" fill="currentColor" fillOpacity="0.30" />
+              <rect x="30" y="18" width="2"  height="16" fill="currentColor" fillOpacity="0.30" />
+            </>
+          )}
+        </svg>
+      )}
+
+      {/* ── Icon / logo ── */}
+      {isImgIcon ? (
+        <div className="relative flex w-full justify-center">
+          <img
+            src={item.icon}
+            alt=""
+            className="h-28 w-28 object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+          />
+          {isEvent && (
+            <span className="absolute right-0 top-0 font-latin text-[11px] font-bold tracking-widest2 text-black/22">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+          )}
         </div>
-        {isEvent && (
-          <span className="font-latin text-[11px] font-bold tracking-widest2 text-black/22">
-            {String(index + 1).padStart(2, '0')}
-          </span>
-        )}
-      </div>
+      ) : (
+        <div className="relative flex items-center justify-between">
+          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+            <Icon className="h-5 w-5 text-white" />
+          </div>
+          {isEvent && (
+            <span className="font-latin text-[11px] font-bold tracking-widest2 text-black/22">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+          )}
+        </div>
+      )}
 
-      {/* Copy */}
+      {/* ── Copy ── */}
       <div className="relative mt-5 flex flex-1 flex-col">
-        <h3 className="whitespace-pre-line text-lg font-semibold leading-snug text-ink">{item.title}</h3>
-        <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">{item.teaser}</p>
+        <h3 className="whitespace-pre-line text-lg font-semibold leading-snug text-ink">
+          {item.title}
+        </h3>
+        <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">
+          {item.teaser}
+        </p>
       </div>
 
-      {/* Divider */}
+      {/* ── Divider ── */}
       <div className="relative mt-5 h-px w-full bg-black/6 transition-colors duration-300 group-hover:bg-umred/20" />
 
-      {/* 了解更多 — slides up on hover */}
+      {/* ── 了解更多 — slides up on hover ── */}
       <div className="relative mt-4 flex items-center gap-1.5">
         <span className="translate-y-1 text-sm font-medium text-umred opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100">
           {item.cta}
@@ -193,6 +320,7 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
     </motion.article>
   );
 }
+
 
 /* ────────────────────────────────────────────────────────────────────────
  * WuteSection — 五特活 (editorial 3 + 2 grid)
