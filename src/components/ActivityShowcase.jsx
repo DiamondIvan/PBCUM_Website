@@ -21,7 +21,7 @@ export function ActivityShowcase({ events }) {
               <p className="font-latin text-[11px] uppercase tracking-widest3 text-white/60">
                 0{index + 1}
               </p>
-              <h3 className="mt-2 text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">
+              <h3 className="mt-2 whitespace-pre-line text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">
                 {event.title}
               </h3>
             </div>

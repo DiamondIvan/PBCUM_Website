@@ -211,8 +211,8 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
         />
       )}
 
-      {/* ── 七小组: top accent bar (5px) ─────────────────────────────────── */}
-      {!isEvent && color && (
+      {/* ── Top accent bar (5px) — both sections ─────────────────────────── */}
+      {color && (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute top-0 left-0 right-0 h-[5px]"
