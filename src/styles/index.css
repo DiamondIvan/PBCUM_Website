@@ -311,6 +311,17 @@ textarea::placeholder {
   display: none;
 }
 
+/* ─── Anchor targets — clear the fixed navbar ───────────────────────────── */
+/* The navbar is fixed (~92px tall incl. its top padding), and AnimatedSection
+   animates y:32→0 as it enters — so a raw scrollIntoView lands ~124px too high
+   and the section heading ends up hidden behind the navbar. scroll-margin-top
+   makes the browser account for both when scrolling to #about, #gallery, etc. */
+
+section[id],
+footer[id] {
+  scroll-margin-top: 8.5rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
