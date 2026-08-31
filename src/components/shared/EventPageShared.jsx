@@ -1,4 +1,4 @@
-﻿/**
+/**
  * EventPageShared.jsx
  *
  * Shared sub-components imported by every per-event detail page.
@@ -119,25 +119,31 @@ export function TourSchedule({
           return (
             <div
               key={i}
-              className={`group flex items-center gap-5 px-7 py-5 transition-colors duration-200 hover:bg-black/[0.015] ${isPast ? 'opacity-45' : ''}`}
+              className={`group flex items-center gap-3.5 sm:gap-5 px-4 py-4 sm:px-7 sm:py-5 transition-colors duration-200 hover:bg-black/[0.015] ${isPast ? 'opacity-45' : ''}`}
             >
-              <span className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${accent} font-latin text-sm font-bold text-white shadow-sm`}>
+              <span className={`flex h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-gradient-to-br ${accent} font-latin text-xs sm:text-sm font-bold text-white shadow-sm`}>
                 {String(i + 1).padStart(2, '0')}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-base font-semibold text-ink">{stop.label}</p>
-                {hasLocation && (
-                  <p className="mt-0.5 flex items-center gap-1.5 truncate text-sm text-black/45">
-                    <MapPin className="h-3.5 w-3.5 flex-shrink-0 opacity-60" />
-                    {stop.location}
-                  </p>
-                )}
+                <p className="truncate text-sm sm:text-base font-semibold text-ink">{stop.label}</p>
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs sm:text-sm text-black/45">
+                  {hasLocation && (
+                    <span className="flex items-center gap-1 truncate">
+                      <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0 opacity-60" />
+                      {stop.location}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1 sm:hidden text-black/55">
+                    <CalendarDays className="h-3 w-3 flex-shrink-0 text-black/35" />
+                    {stop.date}
+                  </span>
+                </div>
               </div>
               <div className="hidden flex-shrink-0 items-center gap-1.5 sm:flex">
                 <CalendarDays className="h-4 w-4 text-black/28" />
                 <span className="text-sm text-black/55">{stop.date}</span>
               </div>
-              <span className={`ml-2 flex flex-shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${cfg.pill}`}>
+              <span className={`ml-1 sm:ml-2 flex flex-shrink-0 items-center gap-1 sm:gap-1.5 rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold ${cfg.pill}`}>
                 <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
                 {cfg.label}
               </span>

@@ -62,6 +62,23 @@ function ScrollToTop() {
   useEffect(() => {
     if (!hash) {
       window.scrollTo(0, 0);
+    } else {
+      const id = hash.replace('#', '');
+      let attempts = 0;
+      const maxAttempts = 15;
+
+      const tryScroll = () => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        } else if (attempts < maxAttempts) {
+          attempts++;
+          setTimeout(tryScroll, 50);
+        }
+      };
+
+      const timer = setTimeout(tryScroll, 50);
+      return () => clearTimeout(timer);
     }
   }, [pathname, hash]);
 

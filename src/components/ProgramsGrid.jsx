@@ -93,54 +93,56 @@ function ProgramModal({ item, type, onClose }) {
         {/* Top accent bar */}
         <div className={`h-2 w-full bg-gradient-to-r ${item.accent}`} />
 
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-4 px-8 pt-7 pb-0">
-          <div className="flex items-center gap-4">
-            {!isImgIcon && (
-              <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm`}>
-                <Icon className="h-5 w-5 text-white" />
+        <div className="max-h-[85dvh] overflow-y-auto">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-4 px-6 sm:px-8 pt-6 sm:pt-7 pb-0">
+            <div className="flex items-center gap-3.5 sm:gap-4">
+              {!isImgIcon && (
+                <div className={`flex h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm`}>
+                  <Icon className="h-5 w-5 text-white" />
+                </div>
+              )}
+              <div>
+                <p className="font-latin text-[10px] font-semibold uppercase tracking-widest3 text-black/38">
+                  {isEvent ? '五特活' : '七小组'}
+                </p>
+                <h2 className="mt-0.5 text-lg sm:text-xl font-semibold leading-tight text-ink">
+                  {item.title}
+                </h2>
               </div>
-            )}
-            <div>
-              <p className="font-latin text-[10px] font-semibold uppercase tracking-widest3 text-black/38">
-                {isEvent ? '五特活' : '七小组'}
-              </p>
-              <h2 className="mt-0.5 text-xl font-semibold leading-tight text-ink">
-                {item.title}
-              </h2>
             </div>
+            <button
+              ref={closeRef}
+              onClick={onClose}
+              className="group flex h-10 w-10 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/50 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80"
+              aria-label="关闭"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
-          <button
-            ref={closeRef}
-            onClick={onClose}
-            className="group flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/50 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80"
-            aria-label="关闭"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
 
-        {/* Centered logo (image icons only) */}
-        {isImgIcon && (
-          <div className="flex justify-center px-8 pt-6 pb-2">
-            <img src={item.icon} alt="" className="h-28 w-28 object-contain drop-shadow-lg" />
-          </div>
-        )}
+          {/* Centered logo (image icons only) */}
+          {isImgIcon && (
+            <div className="flex justify-center px-6 sm:px-8 pt-5 sm:pt-6 pb-2">
+              <img src={item.icon} alt="" className="h-24 w-24 sm:h-28 sm:w-28 object-contain drop-shadow-lg" />
+            </div>
+          )}
 
-        {/* Body */}
-        <div className="px-8 pt-5 pb-8">
-          <p className="text-base leading-[1.8] text-black/58">{item.teaser}</p>
-          <div className="mt-5 rounded-[18px] border border-black/6 bg-[#fafafa] px-6 py-5">
-            <p className="whitespace-pre-line text-sm leading-[1.85] text-black/55">{item.detail}</p>
+          {/* Body */}
+          <div className="px-6 sm:px-8 pt-4 sm:pt-5 pb-7 sm:pb-8">
+            <p className="text-sm sm:text-base leading-[1.8] text-black/58">{item.teaser}</p>
+            <div className="mt-4 sm:mt-5 rounded-[18px] border border-black/6 bg-[#fafafa] px-5 sm:px-6 py-4 sm:py-5">
+              <p className="whitespace-pre-line text-xs sm:text-sm leading-[1.85] text-black/55">{item.detail}</p>
+            </div>
+            <Link
+              to={isEvent ? `/events/${item.slug}` : `/departments/${item.slug}`}
+              onClick={onClose}
+              className="mt-6 inline-flex items-center gap-2 rounded-full bg-umred px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#881116] active:translate-y-0"
+            >
+              查看完整详情
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
           </div>
-          <Link
-            to={isEvent ? `/events/${item.slug}` : `/departments/${item.slug}`}
-            onClick={onClose}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-umred px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#881116] active:translate-y-0"
-          >
-            查看完整详情
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
         </div>
       </motion.div>
     </motion.div>
@@ -310,12 +312,12 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
       {/* ── Divider ── */}
       <div className="relative mt-5 h-px w-full bg-black/6 transition-colors duration-300 group-hover:bg-umred/20" />
 
-      {/* ── 了解更多 — slides up on hover ── */}
+      {/* ── 了解更多 — visible on touch/mobile, slides up on desktop hover ── */}
       <div className="relative mt-4 flex items-center gap-1.5">
-        <span className="translate-y-1 text-sm font-medium text-umred opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+        <span className="text-sm font-medium text-umred opacity-100 sm:translate-y-1 sm:opacity-0 transition-[transform,opacity] duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
           {item.cta}
         </span>
-        <ArrowUpRight className="h-4 w-4 translate-y-1 text-umred opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
+        <ArrowUpRight className="h-4 w-4 text-umred opacity-100 sm:translate-y-1 sm:opacity-0 transition-[transform,opacity] duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100" />
       </div>
     </motion.article>
   );
@@ -341,10 +343,7 @@ export function WuteSection({ items }) {
           ))}
         </div>
         {row2.length > 0 && (
-          <div
-            className="mx-auto grid gap-5 sm:grid-cols-2"
-            style={{ maxWidth: row2.length === 1 ? '33.5%' : '67%' }}
-          >
+          <div className="mx-auto grid w-full gap-5 sm:grid-cols-2 lg:max-w-[67%]">
             {row2.map((item, i) => (
               <ProgramCard key={item.id} item={item} index={row1.length + i} type="event" onOpen={setActive} variants={variants} />
             ))}

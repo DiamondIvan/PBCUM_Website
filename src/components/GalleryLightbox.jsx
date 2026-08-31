@@ -32,10 +32,10 @@ export function ImageDetailModal({ item, onClose }) {
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 20, opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="relative w-full max-w-4xl overflow-hidden rounded-[36px] border border-white/12 bg-white shadow-[0_30px_120px_rgba(0,0,0,0.38)]"
+        className="relative max-h-[90dvh] overflow-y-auto w-full max-w-4xl rounded-[28px] sm:rounded-[36px] border border-white/12 bg-white shadow-[0_30px_120px_rgba(0,0,0,0.38)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative h-[42vh] overflow-hidden sm:h-[52vh]">
+        <div className="relative h-[32dvh] overflow-hidden sm:h-[48dvh]">
           {imageSrc ? (
             <img
               src={imageSrc}
@@ -46,22 +46,22 @@ export function ImageDetailModal({ item, onClose }) {
             <div className={`h-full bg-gradient-to-br ${tone}`} />
           )}
           {/* Overlay controls + caption always on top */}
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.28),rgba(0,0,0,0.0)_40%,rgba(0,0,0,0.65))] p-7 sm:p-10">
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.28),rgba(0,0,0,0.0)_40%,rgba(0,0,0,0.65))] p-5 sm:p-10">
             <div className="flex justify-end">
               <button
                 type="button"
                 aria-label="关闭图片"
                 onClick={onClose}
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/14 text-white backdrop-blur-md transition hover:bg-white/22"
+                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white/14 text-white backdrop-blur-md transition hover:bg-white/22"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="absolute bottom-7 left-7 right-7 sm:bottom-10 sm:left-10 sm:right-10">
-              <span className="inline-block rounded-full bg-white/14 px-3 py-1 text-[11px] uppercase tracking-widest2 text-white/80 backdrop-blur-sm">
+            <div className="absolute bottom-5 left-5 right-5 sm:bottom-10 sm:left-10 sm:right-10">
+              <span className="inline-block rounded-full bg-white/14 px-3 py-1 text-[10px] sm:text-[11px] uppercase tracking-widest2 text-white/80 backdrop-blur-sm">
                 {category}
               </span>
-              <h3 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
+              <h3 className="mt-2 sm:mt-3 text-xl sm:text-4xl font-semibold tracking-[-0.04em] text-white">
                 {title}
               </h3>
             </div>
@@ -69,15 +69,15 @@ export function ImageDetailModal({ item, onClose }) {
         </div>
 
         {/* Content body with custom description & optional detail note */}
-        <div className={`grid gap-5 p-7 ${detail ? 'sm:grid-cols-[1.3fr_0.7fr]' : ''} sm:p-9`}>
-          <div className="space-y-2">
-            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest2 text-umred/70">照片故事</p>
-            <p className="text-base leading-[1.85] text-black/68">
+        <div className={`grid gap-4 sm:gap-5 p-5 sm:p-9 ${detail ? 'sm:grid-cols-[1.3fr_0.7fr]' : ''}`}>
+          <div className="space-y-1.5 sm:space-y-2">
+            <p className="font-latin text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest2 text-umred/70">照片故事</p>
+            <p className="text-sm sm:text-base leading-[1.85] text-black/68">
               {description}
             </p>
           </div>
           {detail && (
-            <div className="flex flex-col justify-center rounded-[22px] border border-black/5 bg-[#f8f8f8] p-5 text-sm leading-[1.75] text-black/55">
+            <div className="flex flex-col justify-center rounded-[20px] sm:rounded-[22px] border border-black/5 bg-[#f8f8f8] p-4 sm:p-5 text-xs sm:text-sm leading-[1.75] text-black/55">
               <p className="font-latin text-[10px] font-semibold uppercase tracking-widest2 text-black/35 mb-1">详细说明</p>
               <p>{detail}</p>
             </div>
@@ -109,7 +109,7 @@ export function GalleryLightbox({ items, calendarSlot }) {
             whileHover={{ y: -6, scale: 1.015 }}
             transition={{ duration: 0.28, ease: 'easeOut' }}
             onClick={() => setActiveIndex(index)}
-            className={`group relative overflow-hidden rounded-[32px] ${item.span} border border-black/6 bg-black text-left shadow-soft`}
+            className={`group relative overflow-hidden rounded-[28px] sm:rounded-[32px] ${item.span} border border-black/6 bg-black text-left shadow-soft`}
           >
             {/* Photo or gradient background */}
             {item.src ? (
@@ -122,7 +122,7 @@ export function GalleryLightbox({ items, calendarSlot }) {
               <div className={`absolute inset-0 bg-gradient-to-br ${item.tone} transition-transform duration-300 group-hover:scale-106`} />
             )}
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(0,0,0,0.52))]" />
-            <div className="relative flex h-full flex-col justify-between p-6 text-white">
+            <div className="relative flex h-full flex-col justify-between p-5 sm:p-6 text-white">
               <div className="flex items-center justify-between text-sm text-white/70">
                 <span className="rounded-full bg-white/12 px-3 py-1 text-xs font-medium backdrop-blur-sm">
                   {item.category}
@@ -131,15 +131,15 @@ export function GalleryLightbox({ items, calendarSlot }) {
               </div>
               <div>
                 <p className="font-latin text-[10px] uppercase tracking-widest3 text-white/55">PBCUM</p>
-                <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] sm:text-2xl">{item.alt}</h3>
+                <h3 className="mt-1.5 sm:mt-2 text-lg sm:text-2xl font-semibold tracking-[-0.03em]">{item.alt}</h3>
               </div>
             </div>
           </motion.button>
         ))}
 
-        {/* ── Calendar tile — col 3, rows 3–4 (fills the blank above) ── */}
+        {/* ── Calendar tile — row-span-2 on mobile so it doesn't get clipped in 190px ── */}
         {calendarSlot && (
-          <div className="relative overflow-visible md:col-start-3 md:row-start-3 md:row-end-5">
+          <div className="relative row-span-2 min-h-[380px] overflow-visible md:min-h-0 md:col-start-3 md:row-start-3 md:row-end-5">
             {calendarSlot}
           </div>
         )}

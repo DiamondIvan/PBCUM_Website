@@ -27,17 +27,17 @@ export function StatCounter({ value, label, icon: Icon }) {
   return (
     <div
       ref={nodeRef}
-      className="rounded-[22px] border border-black/6 bg-white/82 p-4 shadow-[0_10px_32px_rgba(17,24,39,0.06)] backdrop-blur-md"
+      className="rounded-[22px] border border-black/6 bg-white/82 p-3 sm:p-4 shadow-[0_10px_32px_rgba(17,24,39,0.06)] backdrop-blur-md"
     >
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-umred/10 text-umred">
-          <Icon className="h-5 w-5" />
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        <div className="flex h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-umred/10 text-umred">
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
-        <div>
-          <motion.div className="font-latin text-[1.6rem] font-bold leading-none tracking-[-0.04em] text-ink">
+        <div className="min-w-0">
+          <motion.div className="font-latin text-xl sm:text-[1.6rem] font-bold leading-none tracking-[-0.04em] text-ink">
             {rounded}
           </motion.div>
-          <p className="mt-1 text-[11px] uppercase tracking-widest2 text-black/40">{label}</p>
+          <p className="mt-1 truncate text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest2 text-black/40">{label}</p>
         </div>
       </div>
     </div>

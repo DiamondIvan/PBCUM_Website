@@ -134,36 +134,36 @@ export function EventCalendar({ events = [] }) {
           type="button"
           id="cal-prev-month"
           onClick={prevMonth}
-          className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-black/6 active:scale-95"
+          className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-black/6 active:scale-95"
           aria-label="上一月"
         >
-          <ChevronLeft className="h-4 w-4 text-black/50" />
+          <ChevronLeft className="h-4 w-4 text-black/60" />
         </button>
-        <span className="text-xs font-semibold tracking-[-0.01em] text-ink">
+        <span className="text-xs sm:text-sm font-semibold tracking-[-0.01em] text-ink">
           {monthLabel}
         </span>
         <button
           type="button"
           id="cal-next-month"
           onClick={nextMonth}
-          className="flex h-7 w-7 items-center justify-center rounded-full transition hover:bg-black/6 active:scale-95"
+          className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-black/6 active:scale-95"
           aria-label="下一月"
         >
-          <ChevronRight className="h-4 w-4 text-black/50" />
+          <ChevronRight className="h-4 w-4 text-black/60" />
         </button>
       </div>
 
       {/* ── Weekday labels ────────────────────────────────────────── */}
       <div className="grid grid-cols-7 px-3 pb-1">
         {WEEKDAYS.map((w) => (
-          <div key={w} className="py-0.5 text-center font-latin text-[9px] font-semibold uppercase tracking-wider text-black/30">
+          <div key={w} className="py-0.5 text-center font-latin text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-black/30">
             {w}
           </div>
         ))}
       </div>
 
       {/* ── Day grid ──────────────────────────────────────────────── */}
-      <div className="grid flex-1 grid-cols-7 content-start gap-y-0.5 px-3 pb-3">
+      <div className="grid flex-1 grid-cols-7 content-start gap-y-1 px-3 pb-3">
         {cells.map((day, idx) => {
           if (day === null) {
             return <div key={`pad-${idx}`} />;
@@ -176,9 +176,6 @@ export function EventCalendar({ events = [] }) {
             selectedDay?.month === viewMonth &&
             selectedDay?.year === viewYear;
 
-          // Dominant event type for dot colouring
-          const dominantType = hasEvents ? dayEvents[0].type : null;
-
           return (
             <button
               type="button"
@@ -187,7 +184,7 @@ export function EventCalendar({ events = [] }) {
               onClick={() => handleDayClick(day)}
               disabled={!hasEvents}
               className={[
-                'relative flex flex-col items-center justify-center rounded-xl py-1 text-[11px] transition-all duration-200',
+                'relative flex min-h-[32px] flex-col items-center justify-center rounded-xl py-1 text-[11px] sm:text-xs transition-all duration-200',
                 hasEvents
                   ? 'cursor-pointer hover:bg-black/5 active:scale-95'
                   : 'cursor-default',
@@ -228,7 +225,7 @@ export function EventCalendar({ events = [] }) {
           { type: 'qixiaozu', label: '七小组' },
           { type: 'other', label: '其他' },
         ].map(({ type, label }) => (
-          <span key={type} className="flex items-center gap-1 text-[9px] text-black/45">
+          <span key={type} className="flex items-center gap-1 text-[9px] sm:text-[10px] text-black/45">
             <span className={`h-1.5 w-1.5 rounded-full ${TYPE_STYLES[type].dot}`} />
             {label}
           </span>
@@ -249,7 +246,6 @@ export function EventCalendar({ events = [] }) {
             transition={{ duration: 0.2, ease: 'easeOut' }}
             className="absolute inset-x-3 bottom-[56px] z-20 overflow-hidden rounded-[22px] border border-black/8 bg-white shadow-[0_12px_48px_rgba(0,0,0,0.16)] backdrop-blur-xl"
           >
-            {/* Popup header */}
             <div className="flex items-center justify-between border-b border-black/6 px-4 py-3">
               <p className="text-xs font-semibold text-ink">
                 {viewYear}年{viewMonth + 1}月{selectedDay.day}日
@@ -258,10 +254,10 @@ export function EventCalendar({ events = [] }) {
                 type="button"
                 id="cal-popup-close"
                 onClick={() => setSelectedDay(null)}
-                className="flex h-6 w-6 items-center justify-center rounded-full hover:bg-black/6"
+                className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-black/6"
                 aria-label="关闭"
               >
-                <X className="h-3.5 w-3.5 text-black/50" />
+                <X className="h-4 w-4 text-black/50" />
               </button>
             </div>
 

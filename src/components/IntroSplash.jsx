@@ -176,7 +176,8 @@ export function IntroSplash({ onDone }) {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    width: '140px',
+    width: 'clamp(100px, 18vw, 140px)',
+    maxWidth: '80vw',
     height: 'auto',
     // Own bounding-box center as origin — shield is not top-bottom symmetric.
     // No rotation — logo shrinks and fades in place only.
@@ -218,6 +219,8 @@ export function IntroSplash({ onDone }) {
       style={{
         position: 'fixed',
         inset: 0,
+        width: '100vw',
+        height: '100dvh',
         zIndex: 9999,
         overflow: 'hidden',
         // Disable pointer events once animating — never traps clicks or scroll

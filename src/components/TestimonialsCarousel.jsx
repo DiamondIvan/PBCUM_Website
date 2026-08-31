@@ -25,7 +25,7 @@ export function TestimonialsCarousel({ testimonials }) {
   return (
     <div className="grid gap-5 lg:grid-cols-[1.25fr_0.75fr]">
       {/* Main quote card */}
-      <div className="rounded-[36px] border border-black/6 bg-white p-8 shadow-soft sm:p-10">
+      <div className="rounded-[32px] sm:rounded-[36px] border border-black/6 bg-white p-6 sm:p-10 shadow-soft">
         <AnimatePresence mode="wait">
           <motion.div
             key={current.quote}
@@ -35,17 +35,17 @@ export function TestimonialsCarousel({ testimonials }) {
             transition={{ duration: 0.38, ease: 'easeOut' }}
             className="relative"
           >
-            <Quote className="h-9 w-9 text-umred/28" />
-            <p className="mt-7 text-2xl font-medium leading-[1.65] tracking-[-0.02em] text-ink sm:text-3xl">
+            <Quote className="h-8 w-8 sm:h-9 sm:w-9 text-umred/28" />
+            <p className="mt-5 sm:mt-7 text-xl font-medium leading-[1.65] tracking-[-0.02em] text-ink sm:text-2xl lg:text-3xl">
               {current.quote}
             </p>
-            <div className="mt-9 flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-umred text-base font-semibold text-white shadow-glow">
+            <div className="mt-7 sm:mt-9 flex items-center gap-3.5 sm:gap-4">
+              <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-umred text-base font-semibold text-white shadow-glow">
                 {current.name[0]}
               </div>
               <div>
                 <p className="font-semibold text-ink">{current.name}</p>
-                <p className="mt-0.5 text-sm text-black/48">{current.role}</p>
+                <p className="mt-0.5 text-xs sm:text-sm text-black/48">{current.role}</p>
               </div>
             </div>
           </motion.div>

@@ -2,29 +2,25 @@ import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Instagram, Mail } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Utilities Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── Utilities ─────────────────────────────────────────────────────────── */
 
 function copyToClipboard(text) {
   if (!text) return;
   navigator.clipboard?.writeText(text);
 }
 
-/** Returns true when the user has enabled the "prefer reduced motion" OS setting. */
+/** Returns true when the user has enabled the 'prefer reduced motion' OS setting. */
 function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Auto-scroll speed Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
-// 0.6 px per frame @ 60 fps Ã¢â€°Ë† 36 px/s.
-// A 320px card takes ~9 s to pass Ã¢â‚¬â€ slow enough to read comfortably.
+/* ─── Auto-scroll constants ─────────────────────────────────────────────── */
 const SCROLL_SPEED = 0.6; // px / frame — baseline auto-scroll pace
 const RESUME_DELAY = 2500; // ms idle before resuming after wheel/arrow pause
-// Throw inertia constants:
 const THROW_FRICTION = 0.92; // velocity multiplier per frame (~1.5s to decay)
-const MAX_THROW = 25;        // max throw px/frame (caps wild flicks)
+const MAX_THROW = 25; // max throw px/frame (caps wild flicks)
 
-
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Avatar Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── Avatar ────────────────────────────────────────────────────────────── */
 
 function Avatar({ image, initials, color }) {
   const imageSrc = image ? `/committee_photo/${image}` : null;
@@ -56,7 +52,7 @@ function getAvatarState(member) {
   };
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ MemberCard Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── MemberCard ────────────────────────────────────────────────────────── */
 
 function MemberCard({
   member,
@@ -66,7 +62,6 @@ function MemberCard({
   activeCardRef,
   copiedEmail,
   onCopy,
-  // isClone: cloned cards are aria-hidden and not interactive
   isClone,
 }) {
   const avatar = getAvatarState(member);
@@ -77,18 +72,9 @@ function MemberCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.18 }}
       transition={{ duration: 0.6, delay: Math.min(index * 0.07, 0.42) }}
-      /*
-       * Card sizing:
-       *  mobile  Ã¢â€ â€™ 82vw  (1.2 cards visible Ã¢â‚¬â€ clear swipe signal)
-       *  sm      Ã¢â€ â€™ 46vw  (2 cards visible)
-       *  md+     Ã¢â€ â€™ 320px fixed (3 cards + partial peek)
-       * flex-shrink-0 prevents squishing inside the flex track.
-       */
-      className="group flex-shrink-0 w-[82vw] sm:w-[46vw] md:w-[320px] rounded-[32px] border border-black/6 bg-white p-7 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
+      className="group flex-shrink-0 w-[82vw] max-w-[340px] sm:w-[46vw] md:w-[320px] rounded-[32px] border border-black/6 bg-white p-6 sm:p-7 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
       style={{ scrollSnapAlign: 'start' }}
       aria-hidden={isClone ? 'true' : undefined}
-      // Cloned cards are purely visual duplicates Ã¢â‚¬â€ they must not be
-      // reachable by keyboard or assistive tech
       inert={isClone ? '' : undefined}
     >
       <div className="flex items-start justify-between gap-4">
@@ -97,22 +83,22 @@ function MemberCard({
           {member.role}
         </div>
       </div>
-      <h3 className="mt-7 text-2xl font-semibold tracking-[-0.03em] text-ink">
+      <h3 className="mt-6 sm:mt-7 text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-ink">
         {member.name}
       </h3>
-      <p className="mt-2.5 text-sm leading-[1.8] text-black/55">
-        placeholder
+      <p className="mt-2 text-sm leading-[1.8] text-black/55">
+        PBCUM 执委会成员
       </p>
-      <div className="mt-7 flex items-center gap-2.5 text-black/35">
+      <div className="mt-6 sm:mt-7 flex items-center gap-3 text-black/35">
         <a
           href={member.instagram || '#'}
           target={member.instagram ? '_blank' : undefined}
           rel={member.instagram ? 'noreferrer' : undefined}
-          aria-label={`${member.name} Ã§Å¡â€ž Instagram`}
-          className="rounded-full border border-black/6 p-2.5 transition duration-300 hover:border-umred hover:text-umred"
+          aria-label={`${member.name} 的 Instagram`}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 transition duration-300 hover:border-umred hover:text-umred"
           tabIndex={isClone ? -1 : undefined}
         >
-          <Instagram className="h-3.5 w-3.5" />
+          <Instagram className="h-4 w-4" />
         </a>
         <div className="relative flex items-center justify-center">
           <button
@@ -126,11 +112,11 @@ function MemberCard({
                 setActiveEmail(activeEmail === member.email ? null : member.email);
               }
             }}
-            aria-label={`Ã¥Ââ€˜Ã©â€šÂ®Ã¤Â»Â¶Ã§Â»â„¢ ${member.name}`}
+            aria-label={`发邮件给 ${member.name}`}
             tabIndex={isClone ? -1 : undefined}
-            className="group inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/6 p-0 transition duration-300 hover:border-umred hover:text-umred"
+            className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/6 p-0 transition duration-300 hover:border-umred hover:text-umred"
           >
-            <Mail className="h-3.5 w-3.5" />
+            <Mail className="h-4 w-4" />
           </button>
 
           {!isClone && member.email && activeEmail === member.email && (
@@ -139,18 +125,18 @@ function MemberCard({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 0.98 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="absolute left-1/2 top-full z-20 mt-3 w-[220px] -translate-x-1/2 rounded-2xl border border-black/8 bg-white p-3 text-left shadow-[0_16px_40px_rgba(17,24,39,0.12)]"
+              className="absolute left-1/2 top-full z-20 mt-3 w-[min(240px,calc(100vw-3rem))] -translate-x-1/2 rounded-2xl border border-black/8 bg-white p-3.5 text-left shadow-[0_16px_40px_rgba(17,24,39,0.14)]"
             >
               <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/40">
-                Contact
+                联系方式
               </p>
               <div className="mt-2 rounded-xl border border-black/6 bg-[#fafafa] px-3 py-2">
-                <p className="select-text break-all text-sm font-medium text-ink">
+                <p className="select-text break-all text-xs sm:text-sm font-medium text-ink">
                   {member.email}
                 </p>
               </div>
               <p className="mt-2 text-[11px] leading-5 text-black/55">
-                Highlight the address and copy it manually, or use the button below.
+                长按可复制地址，或点击下方按钮。
               </p>
               <button
                 type="button"
@@ -160,7 +146,7 @@ function MemberCard({
                 }}
                 className="mt-3 inline-flex items-center rounded-full bg-[#111827] px-3.5 py-2 text-[11px] font-semibold text-white transition hover:bg-[#1f2937]"
               >
-                {copiedEmail === member.email ? 'Copied!' : 'Copy email'}
+                {copiedEmail === member.email ? '已复制！' : '复制电邮'}
               </button>
             </motion.div>
           )}
@@ -170,7 +156,7 @@ function MemberCard({
   );
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ ArrowButton Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── ArrowButton ───────────────────────────────────────────────────────── */
 
 function ArrowButton({ direction, disabled, onClick }) {
   return (
@@ -178,9 +164,8 @@ function ArrowButton({ direction, disabled, onClick }) {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      aria-label={direction === 'left' ? 'Ã¥Ââ€˜Ã¥Â·Â¦Ã¦Â»Å¡Ã¥Å Â¨' : 'Ã¥Ââ€˜Ã¥ÂÂ³Ã¦Â»Å¡Ã¥Å Â¨'}
+      aria-label={direction === 'left' ? '向左滚动' : '向右滚动'}
       className={[
-        // Hidden on touch screens Ã¢â‚¬â€ swipe handles navigation there
         'hidden md:flex',
         'items-center justify-center',
         'h-11 w-11 rounded-full',
@@ -200,7 +185,7 @@ function ArrowButton({ direction, disabled, onClick }) {
   );
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ ScrollIndicator Ã¢â‚¬â€ thin progress bar, mobile only Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── ScrollIndicator — thin progress bar on mobile ─────────────────────── */
 
 function ScrollIndicator({ trackRef, count }) {
   const [progress, setProgress] = useState(0);
@@ -220,8 +205,6 @@ function ScrollIndicator({ trackRef, count }) {
     return () => el.removeEventListener('scroll', update);
   }, [trackRef]);
 
-  // Thumb occupies a fraction of the bar proportional to visible cards
-  // Use original count (not doubled) for the thumb size calculation
   const thumbPct = Math.min(60, Math.max(10, Math.round((1 / count) * 100) * 3));
   const maxTranslate = (100 / thumbPct - 1) * thumbPct;
 
@@ -240,7 +223,7 @@ function ScrollIndicator({ trackRef, count }) {
   );
 }
 
-/* Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CommitteeGrid (carousel + marquee auto-scroll) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ */
+/* ─── CommitteeGrid (carousel + marquee auto-scroll) ────────────────────── */
 
 export function CommitteeGrid({ members }) {
   const [activeEmail, setActiveEmail] = useState(null);
@@ -251,31 +234,26 @@ export function CommitteeGrid({ members }) {
   const activeCardRef = useRef(null);
   const trackRef = useRef(null);
 
-  // â”€â”€ Scroll loop refs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const rafId        = useRef(null);  // rAF handle
-  const firstSetWidth = useRef(0);   // px width of original card set
-  // throwVelocity: extra px/frame injected by a drag-throw; decays to 0
-  // via FRICTION each frame, blending back into SCROLL_SPEED seamlessly.
+  // Scroll loop refs
+  const rafId = useRef(null);
+  const firstSetWidth = useRef(0);
   const throwVelocity = useRef(0);
-  // isPaused: ONLY for wheel-scroll and arrow-button interactions â€”
-  // never set during normal drag/release (those use throwVelocity instead).
   const isPaused = useRef(false);
   const resumeTimer = useRef(null);
 
-  // â”€â”€ Drag state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  const drag = useRef({ active: false, startX: 0, scrollLeft: 0, moved: false });
-  // Velocity sampler: track cursor speed during drag for throw calculation
+  // Drag state
+  const drag = useRef({ active: false, startX: 0, scrollLeft: 0, moved: false, isTouch: false });
   const lastMove = useRef({ x: 0, t: 0 });
-  const dragVelocity = useRef(0); // smoothed px/ms (positive = moving left = scroll right)
+  const dragVelocity = useRef(0);
 
-  /* â”€â”€â”€ Measure first-set width after mount â”€â”€â”€ */
+  /* Measure first-set width after mount */
   useEffect(() => {
     const el = trackRef.current;
     if (!el || prefersReducedMotion()) return;
 
     const raf = requestAnimationFrame(() => {
       const cards = el.querySelectorAll('article');
-      const gap = 20; // gap-5 = 1.25rem â‰ˆ 20px
+      const gap = 20; // gap-5 = 1.25rem ≈ 20px
       let total = 0;
       for (let i = 0; i < members.length; i++) {
         if (cards[i]) total += cards[i].getBoundingClientRect().width + gap;
@@ -285,16 +263,10 @@ export function CommitteeGrid({ members }) {
     return () => cancelAnimationFrame(raf);
   }, [members.length]);
 
-  /* â”€â”€â”€ Unified rAF loop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   * Net velocity per frame = SCROLL_SPEED (baseline) + throwVelocity (decaying).
-   * After a throw, throwVelocity decays via FRICTION until it's negligible,
-   * at which point the carousel has smoothly blended back to its normal pace.
-   * The loop is only stopped for: prefers-reduced-motion, tab hidden,
-   * wheel-scroll (isPaused), and active drag (user directly sets scrollLeft).
-   */
+  /* Unified rAF loop */
   const startLoop = useCallback(() => {
     if (prefersReducedMotion()) return;
-    if (rafId.current) return; // already running
+    if (rafId.current) return;
 
     const tick = () => {
       const el = trackRef.current;
@@ -303,14 +275,12 @@ export function CommitteeGrid({ members }) {
         return;
       }
 
-      // Decay throw velocity by friction each frame
       throwVelocity.current *= THROW_FRICTION;
       if (Math.abs(throwVelocity.current) < 0.05) throwVelocity.current = 0;
 
       const net = SCROLL_SPEED + throwVelocity.current;
       el.scrollLeft += net;
 
-      // Seamless infinite loop reset
       const setWidth = firstSetWidth.current;
       if (setWidth > 0) {
         if (el.scrollLeft >= setWidth) el.scrollLeft -= setWidth;
@@ -330,7 +300,6 @@ export function CommitteeGrid({ members }) {
     }
   }, []);
 
-  /* â”€â”€â”€ Wheel / arrow pause helpers (these ARE timed, drag is NOT) â”€â”€â”€ */
   const interruptForWheel = useCallback(() => {
     isPaused.current = true;
     throwVelocity.current = 0;
@@ -348,14 +317,14 @@ export function CommitteeGrid({ members }) {
     }, RESUME_DELAY);
   }, [startLoop]);
 
-  /* â”€â”€â”€ Start loop on mount â”€â”€â”€ */
+  /* Start loop on mount */
   useEffect(() => {
     if (prefersReducedMotion()) return;
     const t = setTimeout(() => { startLoop(); }, 300);
     return () => { clearTimeout(t); stopLoop(); if (resumeTimer.current) clearTimeout(resumeTimer.current); };
   }, [startLoop, stopLoop]);
 
-  /* â”€â”€â”€ Pause loop when tab hidden; resume on return â”€â”€â”€ */
+  /* Pause loop when tab hidden; resume on return */
   useEffect(() => {
     const onChange = () => {
       if (document.visibilityState === 'hidden') {
@@ -368,7 +337,7 @@ export function CommitteeGrid({ members }) {
     return () => document.removeEventListener('visibilitychange', onChange);
   }, [startLoop, stopLoop]);
 
-  /* â”€â”€â”€ Email popup: close on outside click â”€â”€â”€ */
+  /* Email popup: close on outside click */
   useEffect(() => {
     if (!activeEmail) return;
     const handleClickOutside = (event) => {
@@ -381,7 +350,7 @@ export function CommitteeGrid({ members }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [activeEmail]);
 
-  /* â”€â”€â”€ Arrow disabled state â”€â”€â”€ */
+  /* Arrow disabled state */
   const updateArrows = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
@@ -398,7 +367,7 @@ export function CommitteeGrid({ members }) {
     return () => el.removeEventListener('scroll', updateArrows);
   }, [updateArrows]);
 
-  /* â”€â”€â”€ Arrow click: one-card jump (uses timed pause, not inertia) â”€â”€â”€ */
+  /* Arrow click */
   const scrollByCard = useCallback((direction) => {
     interruptForWheel();
     scheduleResume();
@@ -411,11 +380,12 @@ export function CommitteeGrid({ members }) {
     el.scrollBy({ left: direction === 'right' ? cardWidth : -cardWidth, behavior });
   }, [interruptForWheel, scheduleResume]);
 
-  /* â”€â”€â”€ Wheel â†’ horizontal (timed pause then auto-resume) â”€â”€â”€ */
+  /* Wheel → horizontal (desktop) */
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
     const onWheel = (e) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
       e.preventDefault();
       interruptForWheel();
       el.scrollBy({ left: e.deltaY, behavior: 'instant' });
@@ -425,22 +395,24 @@ export function CommitteeGrid({ members }) {
     return () => el.removeEventListener('wheel', onWheel);
   }, [interruptForWheel, scheduleResume]);
 
-  /* â”€â”€â”€ Drag: stop loop, track velocity, restart with throw on release â”€â”€â”€ */
+  /* Pointer / Drag handlers */
   const onPointerDown = useCallback((e) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
     const el = trackRef.current;
     if (!el) return;
 
-    // Stop the loop â€” user now directly controls scrollLeft
     stopLoop();
 
-    drag.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft, moved: false };
+    const isTouch = e.pointerType === 'touch';
+    drag.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft, moved: false, isTouch };
     dragVelocity.current = 0;
     lastMove.current = { x: e.clientX, t: performance.now() };
 
-    el.setPointerCapture(e.pointerId);
-    el.style.cursor = 'grabbing';
-    el.style.userSelect = 'none';
+    if (!isTouch) {
+      el.setPointerCapture(e.pointerId);
+      el.style.cursor = 'grabbing';
+      el.style.userSelect = 'none';
+    }
   }, [stopLoop]);
 
   const onPointerMove = useCallback((e) => {
@@ -452,13 +424,10 @@ export function CommitteeGrid({ members }) {
     if (Math.abs(delta) > 4) drag.current.moved = true;
     if (drag.current.moved) el.scrollLeft = drag.current.scrollLeft - delta;
 
-    // Sample velocity: exponential moving average in px/ms
-    // Positive dragVelocity = cursor moving right = scrollLeft decreasing
     const now = performance.now();
     const dt = now - lastMove.current.t;
     if (dt > 0) {
       const rawVel = (e.clientX - lastMove.current.x) / dt;
-      // Blend: 30% history, 70% new sample for responsiveness
       dragVelocity.current = dragVelocity.current * 0.3 + rawVel * 0.7;
     }
     lastMove.current = { x: e.clientX, t: now };
@@ -469,26 +438,19 @@ export function CommitteeGrid({ members }) {
     const el = trackRef.current;
     drag.current.active = false;
 
-    if (el) {
+    if (el && !drag.current.isTouch && el.hasPointerCapture?.(e.pointerId)) {
       el.releasePointerCapture(e.pointerId);
       el.style.cursor = '';
       el.style.userSelect = '';
     }
 
-    // Convert drag velocity (px/ms, cursor direction) to scroll-space px/frame.
-    // Cursor moving right (positive dragVelocity) means scrollLeft was decreasing,
-    // so the throw should continue decreasing scrollLeft â†’ negative throwVelocity.
-    // Clamp to Â±MAX_THROW so a wild flick can't fling it uncontrollably.
-    const pxPerFrame = dragVelocity.current * 16.67; // assume 60 fps
+    const pxPerFrame = dragVelocity.current * 16.67;
     throwVelocity.current = Math.max(-MAX_THROW, Math.min(MAX_THROW, -pxPerFrame));
 
-    // Restart the loop immediately â€” it picks up throwVelocity and decays it
-    // back to SCROLL_SPEED over the next ~1â€“2 seconds, feeling like inertia.
     isPaused.current = false;
     startLoop();
   }, [startLoop]);
 
-  // Suppress click events that were actually drag-scrolls
   const onClickCapture = useCallback((e) => {
     if (drag.current.moved) {
       e.stopPropagation();
@@ -503,10 +465,9 @@ export function CommitteeGrid({ members }) {
   };
 
   return (
-    <div className="mt-14">
-      {/* Outer wrapper â€” positions arrow buttons at the edges */}
+    <div className="mt-10 sm:mt-14">
       <div className="relative">
-        {/* â”€â”€ Left arrow â”€â”€ */}
+        {/* Left arrow */}
         <div className="absolute left-0 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
           <ArrowButton
             direction="left"
@@ -514,8 +475,7 @@ export function CommitteeGrid({ members }) {
             onClick={() => scrollByCard('left')}
           />
         </div>
-
-        {/* â”€â”€ Right arrow â”€â”€ */}
+        {/* Right arrow */}
         <div className="absolute right-0 top-1/2 z-10 translate-x-1/2 -translate-y-1/2">
           <ArrowButton
             direction="right"
@@ -523,28 +483,25 @@ export function CommitteeGrid({ members }) {
             onClick={() => scrollByCard('right')}
           />
         </div>
-
-        {/* â”€â”€ Right-edge gradient fade â€” signals more content ahead â”€â”€ */}
+        {/* Right-edge gradient fade */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute right-0 top-0 z-[5] h-full w-28 transition-opacity duration-300"
+          className="pointer-events-none absolute right-0 top-0 z-[5] h-full w-20 sm:w-28 transition-opacity duration-300"
           style={{
             background: 'linear-gradient(to left, #fafafa 10%, transparent 100%)',
             opacity: canScrollRight ? 1 : 0,
           }}
         />
-
-        {/* â”€â”€ Left-edge gradient â€” appears once user has scrolled away from start â”€â”€ */}
+        {/* Left-edge gradient */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-[5] h-full w-28 transition-opacity duration-300"
+          className="pointer-events-none absolute left-0 top-0 z-[5] h-full w-20 sm:w-28 transition-opacity duration-300"
           style={{
             background: 'linear-gradient(to right, #fafafa 10%, transparent 100%)',
             opacity: canScrollLeft ? 1 : 0,
           }}
         />
-
-        {/* â”€â”€ Scroll track â”€â”€ */}
+        {/* Scroll track */}
         <div
           ref={trackRef}
           onPointerDown={onPointerDown}
@@ -552,15 +509,16 @@ export function CommitteeGrid({ members }) {
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           onClickCapture={onClickCapture}
-          className="committee-carousel flex gap-5 overflow-x-auto pb-4 md:cursor-grab active:cursor-grabbing"
+          className="committee-carousel flex gap-4 sm:gap-5 overflow-x-auto pb-4 md:cursor-grab active:cursor-grabbing"
           style={{
             scrollSnapType: 'none',
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
+            touchAction: 'pan-y',
           }}
         >
-          {/* Original set â€” fully interactive */}
+          {/* Original set */}
           {members.map((member, index) => (
             <MemberCard
               key={`orig-${index}`}
@@ -574,8 +532,7 @@ export function CommitteeGrid({ members }) {
               isClone={false}
             />
           ))}
-
-          {/* Clone set â€” aria-hidden, inert, purely visual for seamless loop */}
+          {/* Clone set */}
           {members.map((member, index) => (
             <MemberCard
               key={`clone-${index}`}
@@ -589,15 +546,10 @@ export function CommitteeGrid({ members }) {
               isClone={true}
             />
           ))}
-
-          {/* Trailing spacer keeps last card from being obscured by the gradient on mobile */}
           <div className="flex-shrink-0 w-4 md:hidden" aria-hidden="true" />
         </div>
       </div>
-
-      {/* Mobile-only scroll progress bar â€” uses original count for thumb size */}
       <ScrollIndicator trackRef={trackRef} count={members.length} />
     </div>
   );
 }
-

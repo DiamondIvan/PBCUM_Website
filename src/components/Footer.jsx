@@ -1,14 +1,30 @@
 import { ArrowUpRight, Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const footerLinks = [
-  { label: '关于我们', href: '#about' },
-  { label: '精彩活动', href: '#activities' },
-  { label: '执委会', href: '#committee' },
-  { label: '相册', href: '#gallery' },
+  { label: '关于我们', id: 'about' },
+  { label: '精彩活动', id: 'activities' },
+  { label: '执委会', id: 'committee' },
+  { label: '相册', id: 'gallery' },
 ];
 
 export function Footer() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLinkClick = (e, item) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const el = document.getElementById(item.id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#${item.id}`);
+      }
+    } else {
+      navigate(`/#${item.id}`);
+    }
+  };
+
   return (
     <footer id="footer" className="border-t border-black/6 bg-[#fafafa]">
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.4fr_0.7fr_0.9fr] lg:gap-16 lg:px-8">
@@ -27,21 +43,21 @@ export function Footer() {
             <a
               href="#"
               aria-label="Instagram"
-              className="rounded-full border border-black/8 bg-white p-3 transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
               <Instagram className="h-4 w-4" />
             </a>
             <a
               href="#"
               aria-label="Facebook"
-              className="rounded-full border border-black/8 bg-white p-3 transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
               <Facebook className="h-4 w-4" />
             </a>
             <a
               href="mailto:pbcum@um.edu.my"
               aria-label="发送电邮"
-              className="rounded-full border border-black/8 bg-white p-3 transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
               <Mail className="h-4 w-4" />
             </a>
@@ -57,8 +73,9 @@ export function Footer() {
             {footerLinks.map((link) => (
               <a
                 key={link.label}
-                href={link.href}
-                className="inline-flex items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
+                href={`/#${link.id}`}
+                onClick={(e) => handleLinkClick(e, link)}
+                className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
               >
                 <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
                 {link.label}
@@ -98,7 +115,7 @@ export function Footer() {
 
       {/* Copyright strip */}
       <div className="border-t border-black/5 px-4 py-5 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+        <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-center sm:text-left">
           <p className="text-xs text-black/35">
             © {new Date().getFullYear()} 马来亚大学华文学会（PBCUM）。版权所有。
           </p>
