@@ -1,4 +1,4 @@
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { Menu, Sparkles, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -54,20 +54,23 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: -16, opacity: 0 }}
         transition={{ duration: MOTION.duration * 0.8, ease: MOTION.ease }}
-        className={`mx-auto max-w-7xl rounded-full border transition-all duration-300 ${scrolled
-            ? 'border-black/8 bg-white/90 shadow-nav backdrop-blur-2xl'
-            : 'border-white/35 bg-white/60 shadow-[0_8px_32px_rgba(17,24,39,0.05)] backdrop-blur-xl'
-          }`}
+        className={`mx-auto max-w-7xl border transition-all duration-300 ${
+          mobileOpen
+            ? 'rounded-[28px] sm:rounded-[32px] border-black/8 bg-white/95 shadow-xl backdrop-blur-2xl'
+            : scrolled
+            ? 'rounded-full border-black/8 bg-white/90 shadow-nav backdrop-blur-2xl'
+            : 'rounded-full border-white/35 bg-white/60 shadow-[0_8px_32px_rgba(17,24,39,0.05)] backdrop-blur-xl'
+        }`}
       >
-        {/* Desktop bar */}
-        <div className="flex items-center justify-between gap-5 px-6 py-4 sm:px-8 sm:py-4.5">
-          <Link to="/" onClick={handleLogoClick} className="group inline-flex items-center gap-4">
-            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-glow transition duration-300 group-hover:rotate-6 group-hover:scale-105">
+        {/* Desktop & Main Header bar */}
+        <div className="flex items-center justify-between gap-5 px-5 py-3.5 sm:px-8 sm:py-4.5">
+          <Link to="/" onClick={handleLogoClick} className="group inline-flex items-center gap-3.5 sm:gap-4">
+            <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-glow transition duration-300 group-hover:rotate-6 group-hover:scale-105">
               <img src="/pbcum.jpg" alt="PBCUM logo" className="h-full w-full object-cover" />
             </div>
             <div className="leading-snug">
-              <div className="font-latin text-lg font-bold tracking-tight text-ink">PBCUM</div>
-              <div className="text-xs uppercase tracking-widest2 text-black/45">马来亚大学华文学会</div>
+              <div className="font-latin text-base sm:text-lg font-bold tracking-tight text-ink">PBCUM</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-widest2 text-black/45">马来亚大学华文学会</div>
             </div>
           </Link>
 
@@ -97,38 +100,48 @@ export function Navbar() {
           <button
             type="button"
             aria-label={mobileOpen ? '关闭菜单' : '打开菜单'}
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-black/8 bg-white text-ink transition hover:border-umred/20 hover:text-umred lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white text-ink transition hover:border-umred/20 hover:text-umred lg:hidden"
             onClick={() => setMobileOpen((v) => !v)}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
-        {/* Mobile menu */}
-        {mobileOpen ? (
-          <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto border-t border-black/6 px-6 pb-6 lg:hidden">
-            <div className="flex flex-col gap-1.5 pt-4">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={`/#${item.id}`}
-                  onClick={(e) => handleNavClick(e, item)}
-                  className="cursor-pointer rounded-2xl px-5 py-3.5 text-base font-medium text-black/65 transition hover:bg-black/4 hover:text-ink sm:text-lg"
-                >
-                  {item.label}
-                </a>
-              ))}
-              <Link
-                to="/join"
-                className="mt-3 inline-flex items-center justify-center gap-2 rounded-2xl bg-umred px-6 py-3.5 text-base font-semibold text-white shadow-glow sm:text-lg"
-                onClick={() => setMobileOpen(false)}
-              >
-                <Sparkles className="h-5 w-5" />
-                加入 PBCUM
-              </Link>
-            </div>
-          </div>
-        ) : null}
+        {/* Mobile menu dropdown */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="overflow-hidden border-t border-black/6"
+            >
+              <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto px-5 pb-5 pt-3">
+                <div className="flex flex-col gap-1">
+                  {navItems.map((item) => (
+                    <a
+                      key={item.label}
+                      href={`/#${item.id}`}
+                      onClick={(e) => handleNavClick(e, item)}
+                      className="cursor-pointer rounded-2xl px-4 py-3 text-base font-medium text-black/70 transition hover:bg-black/4 hover:text-ink active:bg-black/6"
+                    >
+                      {item.label}
+                    </a>
+                  ))}
+                  <Link
+                    to="/join"
+                    className="mt-2.5 inline-flex items-center justify-center gap-2 rounded-2xl bg-umred px-5 py-3.5 text-base font-semibold text-white shadow-glow active:scale-[0.99]"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    加入 PBCUM
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </header>
   );
