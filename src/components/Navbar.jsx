@@ -54,12 +54,12 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: -16, opacity: 0 }}
         transition={{ duration: MOTION.duration * 0.8, ease: MOTION.ease }}
-        className={`mx-auto max-w-7xl border transition-all duration-300 ${
+        className={`mx-auto max-w-7xl rounded-[24px] sm:rounded-[28px] border transition-[background-color,border-color,box-shadow] duration-300 ${
           mobileOpen
-            ? 'rounded-[28px] sm:rounded-[32px] border-black/8 bg-white/95 shadow-xl backdrop-blur-2xl'
+            ? 'border-black/8 bg-white/95 shadow-xl backdrop-blur-2xl'
             : scrolled
-            ? 'rounded-full border-black/8 bg-white/90 shadow-nav backdrop-blur-2xl'
-            : 'rounded-full border-white/35 bg-white/60 shadow-[0_8px_32px_rgba(17,24,39,0.05)] backdrop-blur-xl'
+            ? 'border-black/8 bg-white/90 shadow-nav backdrop-blur-2xl'
+            : 'border-white/35 bg-white/60 shadow-[0_8px_32px_rgba(17,24,39,0.05)] backdrop-blur-xl'
         }`}
       >
         {/* Desktop & Main Header bar */}

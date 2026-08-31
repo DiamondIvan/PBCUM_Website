@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Expand, X } from 'lucide-react';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 /**
  * ImageDetailModal — Full-screen lightbox modal for a single photo item
@@ -15,7 +16,10 @@ export function ImageDetailModal({ item, onClose }) {
   const description = item.description || item.caption || '每一帧记忆，都是学会风采最真实的呈现。这里珍藏着我们共同走过的精彩瞬间。';
   const detail = item.detail;
 
-  return (
+  // Rendered into <body> so the overlay is never trapped inside a transformed
+  // ancestor (e.g. <Reveal>), which would make `fixed` resolve against that
+  // element instead of the viewport and push the modal below the fold.
+  return createPortal(
     <motion.div
       role="dialog"
       aria-modal="true"
@@ -84,7 +88,8 @@ export function ImageDetailModal({ item, onClose }) {
           )}
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
 
