@@ -14,6 +14,17 @@ export default {
         'card-hover': '0 32px 80px rgba(17, 24, 39, 0.12)',
         'nav': '0 10px 40px rgba(17, 24, 39, 0.09)',
       },
+      // pt-18 / sm:py-18 / sm:py-4.5 / group-hover:scale-106 are used across the
+      // pages but are not part of Tailwind's default scales, so they silently
+      // generated nothing. Values interpolated to match the built-in ramps
+      // (16=4rem, 20=5rem -> 18=4.5rem; 4=1rem, 5=1.25rem -> 4.5=1.125rem).
+      spacing: {
+        '4.5': '1.125rem',
+        '18': '4.5rem',
+      },
+      scale: {
+        '106': '1.06',
+      },
       colors: {
         umred: '#A11217',
         ink: '#222222',
