@@ -30,7 +30,20 @@ function Avatar({ image, initials, color }) {
       className={`flex h-[5.5rem] w-[5.5rem] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br ${color} text-2xl font-semibold text-white shadow-[0_20px_50px_rgba(17,24,39,0.18)]`}
     >
       {imageSrc ? (
-        <img src={imageSrc} alt="" className="h-full w-full object-cover" />
+        /* Source files are 264x330 — 3x the 88px circle, so they stay sharp on
+           3x-DPR phones without the browser holding a full-resolution portrait
+           in memory for a thumbnail. The track renders 30 of these (the set is
+           duplicated for the marquee wrap), so lazy loading keeps the ones
+           scrolled off-screen out of the initial load. */
+        <img
+          src={imageSrc}
+          alt=""
+          width="264"
+          height="330"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
       ) : (
         initials
       )}
