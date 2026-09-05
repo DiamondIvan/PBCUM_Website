@@ -241,26 +241,43 @@ export function CommitteeGrid({ members }) {
   const isPaused = useRef(false);
   const resumeTimer = useRef(null);
 
-  // Drag state
-  const drag = useRef({ active: false, startX: 0, scrollLeft: 0, moved: false, isTouch: false });
+  // scrollLeft the rAF loop itself last wrote. Every tick writes scrollLeft and
+  // so fires a scroll event; without this the listener below would read the
+  // marquee's own movement as a user swipe and cancel the loop one frame in.
+  const selfScrollLeft = useRef(-1);
+
+  // Drag state — mouse only. Touch is handled by native scrolling, not by us.
+  const drag = useRef({ active: false, startX: 0, scrollLeft: 0, moved: false });
   const lastMove = useRef({ x: 0, t: 0 });
   const dragVelocity = useRef(0);
 
-  /* Measure first-set width after mount */
+  /* Measure the first card set — the distance the loop wraps by.
+     Card widths are viewport-relative (82vw / 46vw) and the gap is gap-4 on
+     mobile but gap-5 from sm up, so this has to be re-measured whenever the
+     track resizes; otherwise rotating a phone leaves the wrap misaligned and
+     the marquee visibly jumps. */
   useEffect(() => {
     const el = trackRef.current;
     if (!el || prefersReducedMotion()) return;
 
-    const raf = requestAnimationFrame(() => {
-      const cards = el.querySelectorAll('article');
-      const gap = 20; // gap-5 = 1.25rem ≈ 20px
-      let total = 0;
-      for (let i = 0; i < members.length; i++) {
-        if (cards[i]) total += cards[i].getBoundingClientRect().width + gap;
-      }
-      firstSetWidth.current = total;
-    });
-    return () => cancelAnimationFrame(raf);
+    let raf = 0;
+    const measure = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const cards = el.querySelectorAll('article');
+        const gap = parseFloat(getComputedStyle(el).columnGap) || 20;
+        let total = 0;
+        for (let i = 0; i < members.length; i++) {
+          if (cards[i]) total += cards[i].getBoundingClientRect().width + gap;
+        }
+        firstSetWidth.current = total;
+      });
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); };
   }, [members.length]);
 
   /* Unified rAF loop */
@@ -287,6 +304,10 @@ export function CommitteeGrid({ members }) {
         else if (el.scrollLeft < 0) el.scrollLeft += setWidth;
       }
 
+      // Read back what the browser committed so the scroll listener can
+      // recognise this movement as ours and leave the loop alone.
+      selfScrollLeft.current = el.scrollLeft;
+
       rafId.current = requestAnimationFrame(tick);
     };
 
@@ -300,6 +321,17 @@ export function CommitteeGrid({ members }) {
     }
   }, []);
 
+  /* Snapping is switched on only while a finger is driving the track.
+     Left on permanently it fights the marquee: the browser re-snaps whenever a
+     scroll settles, so a continuously-moving loop keeps getting tugged back to
+     the nearest card. Per-gesture, the swipe still settles on a card and the
+     loop never competes with it. 'proximity' rather than 'mandatory' so a
+     deliberate long flick is not yanked to the closest boundary. */
+  const setSnap = useCallback((on) => {
+    const el = trackRef.current;
+    if (el) el.style.scrollSnapType = on ? 'x proximity' : 'none';
+  }, []);
+
   const interruptForWheel = useCallback(() => {
     isPaused.current = true;
     throwVelocity.current = 0;
@@ -310,12 +342,14 @@ export function CommitteeGrid({ members }) {
   const scheduleResume = useCallback(() => {
     if (resumeTimer.current) clearTimeout(resumeTimer.current);
     resumeTimer.current = setTimeout(() => {
+      // Under reduced motion there is no marquee to resume, so leave snapping on.
       if (prefersReducedMotion()) return;
+      setSnap(false);
       isPaused.current = false;
       throwVelocity.current = 0;
       startLoop();
     }, RESUME_DELAY);
-  }, [startLoop]);
+  }, [setSnap, startLoop]);
 
   /* Start loop on mount */
   useEffect(() => {
@@ -395,25 +429,51 @@ export function CommitteeGrid({ members }) {
     return () => el.removeEventListener('wheel', onWheel);
   }, [interruptForWheel, scheduleResume]);
 
-  /* Pointer / Drag handlers */
+  /* Real user scrolling — a touch swipe and the momentum that follows it, or a
+     scrollbar drag — holds the marquee and keeps pushing the resume out until
+     the track settles. The loop's own per-frame writes fire scroll events too,
+     so a scroll landing on the position the loop just wrote is ignored;
+     without that the loop would cancel itself one frame after starting. */
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      if (Math.abs(el.scrollLeft - selfScrollLeft.current) < 1) return;
+      interruptForWheel();
+      scheduleResume();
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, [interruptForWheel, scheduleResume]);
+
+  /* Pointer / drag handlers — mouse only.
+     Touch is deliberately not intercepted. With touch-action allowing pan-x the
+     browser scrolls the track itself, which gives real momentum and rubber-
+     banding that a scrollLeft-per-pointermove drag cannot reproduce. All we do
+     on touch is switch snapping on and hold the marquee for the gesture. */
   const onPointerDown = useCallback((e) => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    if (e.pointerType === 'touch') {
+      setSnap(true);
+      interruptForWheel();
+      return;
+    }
+
+    if (e.button !== 0) return;
     const el = trackRef.current;
     if (!el) return;
 
     stopLoop();
 
-    const isTouch = e.pointerType === 'touch';
-    drag.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft, moved: false, isTouch };
+    drag.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft, moved: false };
     dragVelocity.current = 0;
     lastMove.current = { x: e.clientX, t: performance.now() };
 
-    if (!isTouch) {
-      el.setPointerCapture(e.pointerId);
-      el.style.cursor = 'grabbing';
-      el.style.userSelect = 'none';
-    }
-  }, [stopLoop]);
+    // Throws if the pointer is already gone by the time this runs; without the
+    // guard the drag would stay half-initialised and the grabbing cursor stuck.
+    try { el.setPointerCapture(e.pointerId); } catch { /* pointer already released */ }
+    el.style.cursor = 'grabbing';
+    el.style.userSelect = 'none';
+  }, [interruptForWheel, setSnap, stopLoop]);
 
   const onPointerMove = useCallback((e) => {
     if (!drag.current.active) return;
@@ -434,12 +494,22 @@ export function CommitteeGrid({ members }) {
   }, []);
 
   const onPointerUp = useCallback((e) => {
+    if (e.pointerType === 'touch') {
+      // Momentum carries on after the finger lifts; the scroll listener keeps
+      // pushing the resume out until the track actually comes to rest.
+      scheduleResume();
+      return;
+    }
+
     if (!drag.current.active) return;
     const el = trackRef.current;
     drag.current.active = false;
 
-    if (el && !drag.current.isTouch && el.hasPointerCapture?.(e.pointerId)) {
-      el.releasePointerCapture(e.pointerId);
+    if (el) {
+      // Release only what we actually hold, but always restore the cursor:
+      // if the capture failed on pointerdown, gating the reset on it leaves the
+      // grabbing cursor and the userSelect lock stuck on the track.
+      if (el.hasPointerCapture?.(e.pointerId)) el.releasePointerCapture(e.pointerId);
       el.style.cursor = '';
       el.style.userSelect = '';
     }
@@ -449,7 +519,7 @@ export function CommitteeGrid({ members }) {
 
     isPaused.current = false;
     startLoop();
-  }, [startLoop]);
+  }, [scheduleResume, startLoop]);
 
   const onClickCapture = useCallback((e) => {
     if (drag.current.moved) {
@@ -511,11 +581,15 @@ export function CommitteeGrid({ members }) {
           onClickCapture={onClickCapture}
           className="committee-carousel flex gap-4 sm:gap-5 overflow-x-auto pb-4 md:cursor-grab active:cursor-grabbing"
           style={{
+            // Flipped to 'x proximity' for the duration of a touch gesture — see setSnap.
             scrollSnapType: 'none',
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
-            touchAction: 'pan-y',
+            // pan-x is what hands horizontal swipes to the browser's own
+            // scroller, and with it the momentum and rubber-banding users
+            // expect. Without it the gesture never reaches the track.
+            touchAction: 'pan-x pan-y',
           }}
         >
           {/* Original set */}
