@@ -9,6 +9,32 @@ import { Link } from 'react-router-dom';
 
 const easing = [0.22, 1, 0.36, 1];
 
+/* ────────────────────────────────────────────────────────────────────────
+ * Card colour
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * The one colour an item is themed by, sampled from its own logo.
+ * Events store it as `themeColor`, departments as `accentHex` — two names for
+ * the same job, kept because renaming touches both data arrays.
+ * Regenerate with `python scripts/logo-colors.py` after swapping a logo.
+ */
+function itemColor(item, type) {
+  return type === 'event' ? item.themeColor : item.accentHex;
+}
+
+/** Darkens #RRGGBB by `amount` (0-1) so a flat card colour can form a gradient. */
+function darken(hex, amount = 0.34) {
+  const n = parseInt(hex.slice(1), 16);
+  const f = 1 - amount;
+  return `rgb(${Math.round(((n >> 16) & 255) * f)}, ${Math.round(((n >> 8) & 255) * f)}, ${Math.round((n & 255) * f)})`;
+}
+
+/** Gradient for the modal header bar and icon tile, built from the card colour. */
+function colorGradient(color, dir = 'to right') {
+  return `linear-gradient(${dir}, ${color}, ${darken(color)})`;
+}
+
 /** Returns stagger variants that honour prefers-reduced-motion. */
 function useCardVariants() {
   const reduced = useReducedMotion();
@@ -57,6 +83,8 @@ function ProgramModal({ item, type, onClose }) {
   const isEvent = type === 'event';
   const isImgIcon = typeof item.icon === 'string';
   const Icon = isImgIcon ? null : item.icon;
+  // Same colour the card is tinted with, so opening a card does not change hue.
+  const color = itemColor(item, type);
 
   useEffect(() => { closeRef.current?.focus(); }, []);
 
@@ -90,15 +118,18 @@ function ProgramModal({ item, type, onClose }) {
         variants={modalVariants}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top accent bar */}
-        <div className={`h-2 w-full bg-gradient-to-r ${item.accent}`} />
+        {/* Top accent bar — matches the card's own logo colour */}
+        {color && <div className="h-2 w-full" style={{ background: colorGradient(color) }} />}
 
         <div className="max-h-[85dvh] overflow-y-auto">
           {/* Header row */}
           <div className="flex items-start justify-between gap-4 px-6 sm:px-8 pt-6 sm:pt-7 pb-0">
             <div className="flex items-center gap-3.5 sm:gap-4">
               {!isImgIcon && (
-                <div className={`flex h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm`}>
+                <div
+                  className="flex h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-2xl shadow-sm"
+                  style={color ? { background: colorGradient(color, 'to bottom right') } : undefined}
+                >
                   <Icon className="h-5 w-5 text-white" />
                 </div>
               )}
@@ -162,7 +193,6 @@ function ProgramModal({ item, type, onClose }) {
  *  七小组 (departments):
  *    item.accentHex → 5px top accent bar + top-right corner 回纹 L-bar
  *    fragment. White card body, dark text, unchanged from previous.
- *    (Will switch to item.themeColor once dept logos are processed.)
  *
  *  Both corner motifs share the same nested-L-bar SVG shape; only their
  *  corner anchor (bottom-right vs top-right) differs. All decorative layers
@@ -174,10 +204,9 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
   const isImgIcon = typeof item.icon === 'string';
   const Icon = isImgIcon ? null : item.icon;
 
-  // Color source per section:
-  //   Events      → item.themeColor (extracted from each event's own logo)
-  //   Departments → item.accentHex  (temp palette; replaced after logo extraction)
-  const color = isEvent ? item.themeColor : item.accentHex;
+  // A stale hex here is invisible until someone notices the card no longer
+  // matches its logo — which is exactly how 新家 and 全中华 drifted.
+  const color = itemColor(item, type);
 
   return (
     <motion.article
@@ -288,7 +317,10 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
         </div>
       ) : (
         <div className="relative flex items-center justify-between">
-          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm transition-transform duration-300 group-hover:scale-110"
+            style={color ? { background: colorGradient(color, 'to bottom right') } : undefined}
+          >
             <Icon className="h-5 w-5 text-white" />
           </div>
           {isEvent && (

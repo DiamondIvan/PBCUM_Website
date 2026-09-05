@@ -14,6 +14,11 @@ import {
 } from 'lucide-react';
 
 /* ─── 五特活 — Five Signature Activities ────────────────────────────
+ * Shape: { id, slug, title, teaser, icon, themeColor, detail, cta }
+ * themeColor is sampled from the activity's own logo and drives the whole
+ * card: top bar, gradient wash, corner motif, and the modal + detail-page
+ * hero. Regenerate with `python scripts/logo-colors.py` after changing a logo.
+ *
  * Extract these arrays here so the stats counter can reference their
  * lengths at build time. Add/remove items freely — the '精彩活动'
  * value on the homepage will update automatically.
@@ -25,8 +30,7 @@ export const wuteActivities = [
     title: '活动一 [PLACEHOLDER]',
     teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
     icon: '/tehuo_logos/xxylogo.png',
-    accent: 'from-[#A11217] to-[#6D0E12]',
-    themeColor: '#A8189E', // Deep Fuchsia — dominant hue of xxylogo (pink-purple bubble letters)
+    themeColor: '#4F7D57', // Sage Green — the 新家 characters and illustration linework
     detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
     cta: '了解更多',
   },
@@ -36,8 +40,7 @@ export const wuteActivities = [
     title: '全国中学华文学会生活营【全中华】',
     teaser: '贰续华章，以梦为帆',
     icon: '/tehuo_logos/qzhlogo.png',
-    accent: 'from-[#1f2937] to-[#111827]',
-    themeColor: '#1050A0', // Cobalt Blue — dominant hue of qzhlogo (calligraphy characters)
+    themeColor: '#A84830', // Terracotta — the brick-red top of the banner (fades to gold below)
     detail: '第21届全国中学华文学会生活营 \n 续章•扬帆',
     cta: '了解更多',
   },
@@ -47,8 +50,7 @@ export const wuteActivities = [
     title: '活动三 [PLACEHOLDER]',
     teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
     icon: '/tehuo_logos/DXlogo.png',
-    accent: 'from-[#b91c1c] to-[#f97316]',
-    themeColor: '#C05A20', // Terracotta Orange — dominant hue of DXlogo (coin/elephant)
+    themeColor: '#3F3A36', // Warm Ink — DXlogo is a pure black-and-white seal; no hue to follow
     detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
     cta: '了解更多',
   },
@@ -58,8 +60,7 @@ export const wuteActivities = [
     title: '活动四 [PLACEHOLDER]',
     teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
     icon: '/tehuo_logos/QBlogo.png',
-    accent: 'from-[#7c3aed] to-[#4f46e5]',
-    themeColor: '#1C2B4A', // PBCUM Navy — brand fallback; QBlogo is fully greyscale
+    themeColor: '#1C2B4A', // PBCUM Navy — QBlogo (全辩) is fully greyscale; brand fallback
     detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
     cta: '了解更多',
   },
@@ -69,15 +70,17 @@ export const wuteActivities = [
     title: '活动五 [PLACEHOLDER]',
     teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
     icon: '/tehuo_logos/boshulogo.png',
-    accent: 'from-[#0369a1] to-[#0c4a6e]',
-    themeColor: '#8B5E10', // Deep Amber — dominant hue of boshulogo (博 character gold-brown)
+    themeColor: '#8B5E10', // Deep Bronze — the 博书有约 wordmark (#B46C18 across 72% of the mark)
     detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
     cta: '了解更多',
   },
 ];
 
 /* ─── 七小组 — Seven Sub-Groups / Departments ───────────────────────
- * Shape: { id, title, teaser, icon, accent, detail, cta }
+ * Shape: { id, title, teaser, icon, accentHex, detail, cta }
+ * accentHex is sampled from the group's own logo and drives the whole card:
+ * top bar, gradient wash, corner motif, and the modal + detail-page hero.
+ * Regenerate with `python scripts/logo-colors.py` after changing a logo.
  * ─────────────────────────────────────────────────────────────────── */
 export const qixiaozuGroups = [
   {
@@ -86,7 +89,6 @@ export const qixiaozuGroups = [
     title: '相声组',
     teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
     icon: '/xiaozu_logos/xiangsheng.png',
-    accent: 'from-[#A11217] to-[#6D0E12]',
     accentHex: '#1D6348', // Deep Forest Green — dominant fan background in logo
     detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
     cta: '了解小组',
@@ -97,7 +99,6 @@ export const qixiaozuGroups = [
     title: '文化组',
     teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
     icon: '/xiaozu_logos/wenhua.png',
-    accent: 'from-[#0d9488] to-[#0f766e]',
     accentHex: '#B8301A', // Vermillion Red — the large 文 calligraphy character
     detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
     cta: '了解小组',
@@ -108,7 +109,6 @@ export const qixiaozuGroups = [
     title: '辩论组',
     teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
     icon: '/xiaozu_logos/bianlun.png',
-    accent: 'from-[#7c3aed] to-[#4f46e5]',
     accentHex: '#1A3A9E', // Royal Blue — the shield body fill
     detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
     cta: '了解小组',
@@ -119,7 +119,6 @@ export const qixiaozuGroups = [
     title: '华文班',
     teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
     icon: '/xiaozu_logos/huawenban.png',
-    accent: 'from-[#b45309] to-[#92400e]',
     accentHex: '#9B2335', // Cranberry Red — the red seal stamp (distinct from 文化组 red)
     detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
     cta: '了解小组',
@@ -130,7 +129,6 @@ export const qixiaozuGroups = [
     title: '摇篮手',
     teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
     icon: '/xiaozu_logos/pbcumyls.png',
-    accent: 'from-[#0369a1] to-[#0c4a6e]',
     accentHex: '#6B3FA0', // Deep Amethyst — the signature purple throughout the logo
     detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
     cta: '了解小组',
@@ -141,7 +139,6 @@ export const qixiaozuGroups = [
     title: '升讯团',
     teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
     icon: '/xiaozu_logos/shengxun.png',
-    accent: 'from-[#374151] to-[#111827]',
     accentHex: '#1C2B4A', // PBCUM Navy — brand fallback (logo is monochrome black/white)
     detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
     cta: '了解小组',
@@ -152,7 +149,6 @@ export const qixiaozuGroups = [
     title: '社服组',
     teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
     icon: '/xiaozu_logos/shefu.png',
-    accent: 'from-[#be185d] to-[#9d174d]',
     accentHex: '#C2477A', // Deep Rose — the heart shape's bubblegum pink, saturated
     detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
     cta: '了解小组',
@@ -203,55 +199,6 @@ export const sectionData = {
       title: '创意美学',
       description: '一套让学会形象鲜明、令人过目难忘的视觉设计语言。',
       icon: Camera,
-    },
-  ],
-  activities: [
-    {
-      title: '月夜文化论坛',
-      date: '2026年3月',
-      category: '夜话交流会',
-      summary: '一个融合语言、故事与学生声音的精心策划夜间活动，在电影感氛围中共话文化。',
-      accent: 'from-[#A11217] to-[#6D0E12]',
-    },
-    {
-      title: '校园文化寻根行',
-      date: '2026年4月',
-      category: '文化体验',
-      summary: '一场亲密的边走边谈体验，带领学生重新连结场所记忆、文化身份与历史情感。',
-      accent: 'from-[#1f2937] to-[#111827]',
-    },
-    {
-      title: '华彩风华展演',
-      date: '2026年5月',
-      category: '艺术展演',
-      summary: '一场融合音乐、表演与视觉设计的精致舞台盛事，呈现学会高水准的品牌形象。',
-      accent: 'from-[#b91c1c] to-[#f97316]',
-    },
-  ],
-  // Default grouping for 活动 — split into two sections: 五特活 and 七小组
-  activities_wute: [
-    {
-      title: '月夜文化论坛',
-      date: '2026年3月',
-      category: '夜话交流会',
-      summary: '一个融合语言、故事与学生声音的精心策划夜间活动，在电影感氛围中共话文化。',
-      accent: 'from-[#A11217] to-[#6D0E12]',
-    },
-    {
-      title: '校园文化寻根行',
-      date: '2026年4月',
-      category: '文化体验',
-      summary: '一场亲密的边走边谈体验，带领学生重新连结场所记忆、文化身份与历史情感。',
-      accent: 'from-[#1f2937] to-[#111827]',
-    },
-  ],
-  activities_qixiaozu: [
-    {
-      title: '华彩风华展演',
-      date: '2026年5月',
-      category: '艺术展演',
-      summary: '一场融合音乐、表演与视觉设计的精致舞台盛事，呈现学会高水准的品牌形象。',
-      accent: 'from-[#b91c1c] to-[#f97316]',
     },
   ],
   committee: [

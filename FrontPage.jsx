@@ -18,7 +18,6 @@ import { CommitteeGrid } from './src/components/CommitteeGrid';
 import { SponsorMarquee } from './src/components/SponsorMarquee';
 import { Footer } from './src/components/Footer';
 import { Navbar } from './src/components/Navbar';
-import { ActivityShowcase } from './src/components/ActivityShowcase';
 import { WuteSection, QixiaozuSection } from './src/components/ProgramsGrid';
 import { EventCalendar } from './src/components/EventCalendar';
 

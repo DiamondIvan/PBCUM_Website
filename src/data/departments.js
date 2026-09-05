@@ -53,7 +53,7 @@ export const departments = [
     slug: 'dept-01',
     title: '小组一 [PLACEHOLDER]',
     eyebrow: '七小组 · 01',
-    accent: 'from-[#A11217] to-[#6D0E12]',
+    accent: 'from-[#1D6348] to-[#123D2D]',
     icon: Megaphone,
 
     mission: '[PLACEHOLDER] 一句话使命陈述。',
@@ -116,7 +116,7 @@ export const departments = [
     slug: 'dept-02',
     title: '小组二 [PLACEHOLDER]',
     eyebrow: '七小组 · 02',
-    accent: 'from-[#0d9488] to-[#0f766e]',
+    accent: 'from-[#B8301A] to-[#721E10]',
     icon: Palette,
 
     mission: '[PLACEHOLDER]',
@@ -164,7 +164,7 @@ export const departments = [
     slug: 'dept-03',
     title: '小组三 [PLACEHOLDER]',
     eyebrow: '七小组 · 03',
-    accent: 'from-[#7c3aed] to-[#4f46e5]',
+    accent: 'from-[#1A3A9E] to-[#102462]',
     icon: Camera,
 
     mission: '[PLACEHOLDER]',
@@ -212,7 +212,7 @@ export const departments = [
     slug: 'dept-04',
     title: '小组四 [PLACEHOLDER]',
     eyebrow: '七小组 · 04',
-    accent: 'from-[#b45309] to-[#92400e]',
+    accent: 'from-[#9B2335] to-[#601621]',
     icon: PenLine,
 
     mission: '[PLACEHOLDER]',
@@ -260,7 +260,7 @@ export const departments = [
     slug: 'dept-05',
     title: '小组五 [PLACEHOLDER]',
     eyebrow: '七小组 · 05',
-    accent: 'from-[#0369a1] to-[#0c4a6e]',
+    accent: 'from-[#6B3FA0] to-[#422763]',
     icon: HeartHandshake,
 
     mission: '[PLACEHOLDER]',
@@ -308,7 +308,7 @@ export const departments = [
     slug: 'dept-06',
     title: '小组六 [PLACEHOLDER]',
     eyebrow: '七小组 · 06',
-    accent: 'from-[#374151] to-[#111827]',
+    accent: 'from-[#1C2B4A] to-[#111B2E]',
     icon: Globe2,
 
     mission: '[PLACEHOLDER]',
@@ -356,7 +356,7 @@ export const departments = [
     slug: 'dept-07',
     title: '小组七 [PLACEHOLDER]',
     eyebrow: '七小组 · 07',
-    accent: 'from-[#be185d] to-[#9d174d]',
+    accent: 'from-[#C2477A] to-[#782C4C]',
     icon: BookOpen,
 
     mission: '[PLACEHOLDER]',
