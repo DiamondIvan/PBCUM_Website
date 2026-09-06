@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /* ─── Colour tokens per event type ─────────────────────────────────────── */
@@ -47,11 +47,30 @@ const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 export function EventCalendar({ events = [] }) {
   const navigate = useNavigate();
 
-  // Default to the month of the first upcoming/past event that has a real date,
-  // falling back to today's month.
-  const today = new Date();
-  const [viewYear, setViewYear] = useState(today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(today.getMonth());
+  /* Open on a month that actually has something in it: the next upcoming event,
+     or if the schedule has run out, the most recent past one. This is what the
+     comment here always claimed, but the code opened on today's month — so once
+     the calendar was a year out of date the homepage showed an empty grid with
+     no hint that anything had ever been scheduled.
+
+     Dates are parsed as local midnight; 'YYYY-MM-DD' alone is read as UTC and
+     lands on the previous day for anyone west of Greenwich. */
+  const initialView = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dated = events
+      .map((e) => ({ d: new Date(`${e.date}T00:00:00`) }))
+      .filter((x) => !Number.isNaN(x.d.getTime()))
+      .sort((a, b) => a.d - b.d);
+
+    if (!dated.length) return { year: today.getFullYear(), month: today.getMonth() };
+    const pick = dated.find((x) => x.d >= today) ?? dated[dated.length - 1];
+    return { year: pick.d.getFullYear(), month: pick.d.getMonth() };
+  }, [events]);
+
+  const [viewYear, setViewYear] = useState(initialView.year);
+  const [viewMonth, setViewMonth] = useState(initialView.month);
   const [selectedDay, setSelectedDay] = useState(null); // { year, month, day }
   const popupRef = useRef(null);
 
@@ -118,10 +137,14 @@ export function EventCalendar({ events = [] }) {
     selectedDay ? toKey(selectedDay.year, selectedDay.month, selectedDay.day) : null;
   const selectedEvents = selectedKey ? (eventMap[selectedKey] ?? []) : [];
 
-  const isToday = (day) =>
-    day === today.getDate() &&
-    viewMonth === today.getMonth() &&
-    viewYear === today.getFullYear();
+  const isToday = (day) => {
+    const now = new Date();
+    return (
+      day === now.getDate() &&
+      viewMonth === now.getMonth() &&
+      viewYear === now.getFullYear()
+    );
+  };
 
   return (
     <div className="group relative flex h-full flex-col overflow-hidden rounded-[32px] border border-black/6 bg-white shadow-soft">
