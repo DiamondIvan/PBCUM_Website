@@ -316,13 +316,7 @@ export function DeptPageLayout({ content: dept }) {
                         />
                       )}
                       <div className="flex flex-1 flex-col p-5">
-                        <span
-                          className="font-latin text-[11px] font-bold tracking-widest2"
-                          style={{ color: dept.accentHex, opacity: 0.5 }}
-                        >
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                        <h3 className="mt-1.5 font-semibold leading-snug text-ink">{item.name}</h3>
+                        <h3 className="font-semibold leading-snug text-ink">{item.name}</h3>
                         {item.description && (
                           <p className="mt-2 text-sm leading-[1.8] text-black/55">{item.description}</p>
                         )}

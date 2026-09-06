@@ -313,11 +313,6 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
             alt=""
             className="h-28 w-28 object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
           />
-          {isEvent && (
-            <span className="absolute right-0 top-0 font-latin text-[11px] font-bold tracking-widest2 text-black/22">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-          )}
         </div>
       ) : (
         <div className="relative flex items-center justify-between">
@@ -327,11 +322,6 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
           >
             <Icon className="h-5 w-5 text-white" />
           </div>
-          {isEvent && (
-            <span className="font-latin text-[11px] font-bold tracking-widest2 text-black/22">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-          )}
         </div>
       )}
 

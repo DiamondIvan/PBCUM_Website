@@ -204,13 +204,7 @@ export function EventPageLayout({ content: event }) {
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
-                  ) : (
-                    <div className="p-8 pb-0">
-                      <span className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br ${event.accent} font-latin text-sm font-bold text-white`}>
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                    </div>
-                  )}
+                  ) : null}
 
                   {/* Text content */}
                   <div className="relative flex flex-1 flex-col p-6 sm:p-7">
