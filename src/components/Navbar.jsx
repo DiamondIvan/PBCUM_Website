@@ -9,6 +9,7 @@ const navItems = [
   { label: '精彩活动', id: 'activities' },
   { label: '执委会', id: 'committee' },
   { label: '相册', id: 'gallery' },
+  { label: '活动日历', id: 'calendar' },
   { label: '联系我们', id: 'footer' },
 ];
 

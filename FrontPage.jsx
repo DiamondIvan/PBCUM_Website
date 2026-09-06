@@ -394,6 +394,29 @@ function CommitteeSection() {
   );
 }
 
+/* ─── CalendarSection ───────────────────────────────────────────────────
+ * Its own section rather than a tile inside the gallery grid: the calendar is
+ * navigable content, not a photograph, and one grid cell capped it at a single
+ * column's width.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+function CalendarSection() {
+  return (
+    <AnimatedSection id="calendar" className="bg-[#fafafa] py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="活动日历"
+          title="学会全年的行事历，一目了然。"
+          description="点击有标记的日期，查看当天的活动详情并前往该活动的页面。"
+        />
+        <div className="mx-auto mt-14 max-w-3xl">
+          <EventCalendar events={sectionData.calendarEvents} />
+        </div>
+      </div>
+    </AnimatedSection>
+  );
+}
+
 /* ─── GallerySection ────────────────────────────────────────────────── */
 
 function GallerySection() {
@@ -406,10 +429,7 @@ function GallerySection() {
           description="用影像讲述每一个珍贵时刻，以精致的空间节奏展现视觉故事。"
         />
         <div className="mt-14">
-          <GalleryLightbox
-            items={sectionData.gallery}
-            calendarSlot={<EventCalendar events={sectionData.calendarEvents} />}
-          />
+          <GalleryLightbox items={sectionData.gallery} />
         </div>
       </div>
     </AnimatedSection>
@@ -514,6 +534,7 @@ function HomePage() {
       <ActivitiesSection />
       <CommitteeSection />
       <GallerySection />
+      <CalendarSection />
       <TestimonialsSection />
       <SponsorsSection />
       <JoinCtaSection />

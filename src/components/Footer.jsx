@@ -6,6 +6,7 @@ const footerLinks = [
   { label: '精彩活动', id: 'activities' },
   { label: '执委会', id: 'committee' },
   { label: '相册', id: 'gallery' },
+  { label: '活动日历', id: 'calendar' },
 ];
 
 export function Footer() {
@@ -107,7 +108,7 @@ export function Footer() {
             </div>
             <div className="flex items-start gap-3">
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-umred" />
-              <span className="font-latin">pbcum@um.edu.my</span>
+              <span className="font-latin">pbcum41@gmail.com</span>
             </div>
           </div>
         </div>

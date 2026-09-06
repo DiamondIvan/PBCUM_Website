@@ -96,11 +96,10 @@ export function ImageDetailModal({ item, onClose }) {
 /**
  * GalleryLightbox
  * @param {{
- *   items: Array<{ src?: string|null, alt: string, category: string, span?: string, tone: string, description?: string, detail?: string }>,
- *   calendarSlot?: React.ReactNode — optional node rendered as the last grid tile
+ *   items: Array<{ src?: string|null, alt: string, category: string, span?: string, tone: string, description?: string, detail?: string }>
  * }} props
  */
-export function GalleryLightbox({ items, calendarSlot }) {
+export function GalleryLightbox({ items }) {
   const [activeIndex, setActiveIndex] = useState(null);
   const activeItem = activeIndex === null ? null : items[activeIndex];
 
@@ -141,13 +140,6 @@ export function GalleryLightbox({ items, calendarSlot }) {
             </div>
           </motion.button>
         ))}
-
-        {/* ── Calendar tile — row-span-2 on mobile so it doesn't get clipped in 190px ── */}
-        {calendarSlot && (
-          <div className="relative row-span-2 min-h-[380px] overflow-visible md:min-h-0 md:col-start-3 md:row-start-3 md:row-end-5">
-            {calendarSlot}
-          </div>
-        )}
       </div>
 
       <AnimatePresence>
