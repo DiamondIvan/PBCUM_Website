@@ -142,7 +142,7 @@ export const CONTENT = {
     {
       label: '筹委风采',
       caption: '新一届筹委正式集结，满怀热忱，携手迈向全中华21。',
-      image: '/qzh/highlights/全中华20筹委合照.jpeg',
+      image: '/qzh/highlights/全中华20筹委合照.jpg',
       description: '新一届筹委正式集结，满怀热忱与使命感，携手迈向全中华21崭新征程。',
       detail: '筹备团队由热心华教与文化传承的马大学生组成，分工合作、各司其职。',
     },

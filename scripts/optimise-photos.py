@@ -108,6 +108,7 @@ def main() -> None:
         sys.exit("missing dependencies — run: pip install pillow pillow-heif")
 
     flagged = before = after = 0
+    renamed: list[tuple[str, str]] = []
     for path in walk(args.root):
         real = sniff(path)
         try:
@@ -144,8 +145,17 @@ def main() -> None:
             im.save(out, "PNG", optimize=True)
         else:
             im.convert("RGB").save(out, "JPEG", quality=QUALITY, optimize=True, progressive=True)
-        if out != path:
+        # Compare with normcase: on Windows and macOS '.JPG' and '.jpg' are the
+        # same file, so a plain string comparison would delete the file that was
+        # just written. normcase is a no-op on Linux, where they really differ.
+        if os.path.normcase(out) != os.path.normcase(path):
             os.remove(path)
+
+        # Only a real rename counts. On Windows, saving '.jpg' over an existing
+        # '.JPG' writes into that file and keeps its original name, so comparing
+        # the intended output name would report renames that never happened.
+        if os.path.normcase(out) != os.path.normcase(path):
+            renamed.append((path, out))
 
         a = os.path.getsize(out)
         before += b
@@ -162,6 +172,13 @@ def main() -> None:
     print(f"\n{flagged} file(s): {before/1048576:.1f} MB -> {after/1048576:.1f} MB")
     print(f"Originals kept in {ORIGINALS}/ — back them up; they are the only copies.")
     print("If any file changed extension, update the paths that reference it.")
+    if renamed:
+        print()
+        print(f"{len(renamed)} file(s) changed name. Case matters: Netlify serves")
+        print("from Linux even though Windows does not care, so a .JPG reference")
+        print("pointing at a .jpg file is a 404 in production and fine locally.")
+        for a, b in renamed:
+            print(f"  {os.path.basename(a)}  ->  {os.path.basename(b)}")
 
 
 if __name__ == "__main__":
