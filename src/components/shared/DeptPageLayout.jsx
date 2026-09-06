@@ -14,6 +14,8 @@
  *   4  宗旨与目标      the mission statement, then its objectives
  *   5  适合谁          an invitation quote, then trait tags
  *   6  常年活动        the recurring programme the group runs
+ *   6b 精彩相册        photographs of those activities
+ *   6c 历年精彩时刻    a chronological strip of the group's archive
  *   7  组长            who leads it
  *   8  加入我们        recruitment CTA and social links
  *
@@ -24,12 +26,12 @@
 
 import { AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, CalendarDays, CheckCircle2, ChevronLeft, Facebook,
-  Instagram, Quote, Users,
+  ArrowRight, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight,
+  Facebook, Instagram, Quote, Users,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ImageDetailModal } from '../GalleryLightbox';
+import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
 import { InitialsAvatar, NotFoundDept } from './DeptPageShared';
 import { Reveal } from '../../hooks/useInView.jsx';
@@ -67,8 +69,18 @@ function Section({ children, delay = 0.05 }) {
 export function DeptPageLayout({ content: dept }) {
   const navigate = useNavigate();
   const [activeActivity, setActiveActivity] = useState(null);
+  const [activeMoment, setActiveMoment] = useState(null);
+  const momentsRef = useRef(null);
 
   if (!dept) return <NotFoundDept />;
+
+  /* Nudge the 历年精彩时刻 strip by roughly one card. */
+  const scrollMoments = (direction) => {
+    const el = momentsRef.current;
+    if (!el) return;
+    const amount = el.clientWidth * 0.75;
+    el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+  };
 
   function goBack() {
     if (window.history.length > 1) navigate(-1);
@@ -337,6 +349,115 @@ export function DeptPageLayout({ content: dept }) {
                 detail: activeActivity.detail,
               }}
               onClose={() => setActiveActivity(null)}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* ═══ 6b · 相册 ════════════════════════════════════════════════
+            Photographs of the group's own activities. Reuses GalleryLightbox,
+            the same component the homepage and the event pages use, so the grid
+            and the lightbox behave identically everywhere. */}
+        {dept.gallery?.length > 0 && (
+          <Section>
+            <Eyebrow>精彩相册</Eyebrow>
+            <SectionTitle>{dept.galleryTitle ?? '每一帧，都是故事。'}</SectionTitle>
+            <div className="mt-8">
+              <GalleryLightbox items={dept.gallery} />
+            </div>
+          </Section>
+        )}
+
+        {/* ═══ 6c · 历年精彩时刻 ═════════════════════════════════════════
+            A horizontally scrolling strip, oldest first. For a group with
+            decades behind it this is the archive — so it is ordered by year
+            rather than by importance, and each card leads with its year. */}
+        {dept.moments?.length > 0 && (
+          <Section>
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <Eyebrow>历年精彩时刻</Eyebrow>
+                <SectionTitle>{dept.momentsTitle ?? '一路走来的足迹。'}</SectionTitle>
+              </div>
+              {dept.moments.length > 1 && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => scrollMoments('left')}
+                    aria-label="向前滑动"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => scrollMoments('right')}
+                    aria-label="向后滑动"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div
+              ref={momentsRef}
+              className="mt-8 flex gap-5 overflow-x-auto pb-5 pt-1 snap-x snap-proximity [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {dept.moments.map((m, i) => (
+                <div
+                  key={i}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setActiveMoment(m)}
+                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setActiveMoment(m)}
+                  className="group relative flex w-[280px] flex-shrink-0 cursor-pointer snap-start flex-col overflow-hidden rounded-[28px] border border-black/6 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-umred sm:w-[320px]"
+                >
+                  <div className="relative h-48 w-full overflow-hidden bg-black/5">
+                    <img
+                      src={m.image}
+                      alt={m.label}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {m.year && (
+                      <span
+                        className="absolute left-4 top-4 rounded-full px-3 py-1 font-latin text-[11px] font-bold tracking-widest2 text-white shadow-sm"
+                        style={{ backgroundColor: dept.accentHex }}
+                      >
+                        {m.year}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="whitespace-pre-line text-base font-semibold leading-snug text-ink">
+                      {m.label}
+                    </h3>
+                    {m.caption && (
+                      <p className="mt-2 text-sm leading-[1.8] text-black/55">{m.caption}</p>
+                    )}
+                    {m.credit && (
+                      <p className="mt-3 text-[11px] leading-snug text-black/38">{m.credit}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        <AnimatePresence>
+          {activeMoment && (
+            <ImageDetailModal
+              item={{
+                title: activeMoment.label,
+                alt: activeMoment.label,
+                category: activeMoment.year ? `历年精彩时刻 · ${activeMoment.year}` : '历年精彩时刻',
+                src: activeMoment.image,
+                tone: dept.accent,
+                description: activeMoment.caption,
+                detail: activeMoment.credit,
+              }}
+              onClose={() => setActiveMoment(null)}
             />
           )}
         </AnimatePresence>
