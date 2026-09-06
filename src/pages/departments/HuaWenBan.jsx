@@ -76,12 +76,23 @@ export const CONTENT = {
     { name: '结业礼' },
   ],
 
-  /* ── § 6b 精彩相册 ──────────────────────────────────────────────────────
-     The document links a Google Drive folder rather than supplying files.
-     Download them into public/huawenban/gallery/, run
-     `python scripts/optimise-photos.py`, then list them here. */
-  gallery: [],
-  moments: [],
+  /* ── § 6b 精彩相册 ──────────────────────────────────────────────────── */
+  gallery: [
+    { src: '/huawenban/gallery/上课.jpg',  alt: '日常上课', category: '上课', span: 'md:col-span-2 md:row-span-2' },
+    { src: '/huawenban/gallery/上课.jpeg', alt: '课堂一景', category: '上课', span: '' },
+    { src: '/huawenban/gallery/大课.jpg',  alt: '大课',    category: '大课', span: '' },
+  ],
+
+  /* ── § 6c 精彩时刻 ──────────────────────────────────────────────────────
+     No dates on these, so the heading is overridden — the default 历年精彩时刻
+     is for a chronological archive like 相声组's. */
+  momentsEyebrow: '精彩时刻',
+  momentsTitle: '课堂之外的样子。',
+  moments: [
+    { image: '/huawenban/highlights/场景模拟.jpg', label: '场景模拟' },
+    { image: '/huawenban/highlights/结业礼.jpg',   label: '结业礼' },
+    { image: '/huawenban/highlights/班委照.jpg',   label: '班委合照' },
+  ],
 
   /* ── § 7 小组负责人 ────────────────────────────────────────────────────
      Phone numbers from the document are deliberately not published — contact

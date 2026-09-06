@@ -375,7 +375,11 @@ export function DeptPageLayout({ content: dept }) {
           <Section>
             <div className="flex items-end justify-between gap-4">
               <div>
-                <Eyebrow>历年精彩时刻</Eyebrow>
+                {/* 历年 by default because the strip is built for an archive with
+                    dates on it. A group whose highlights are not chronological
+                    overrides this rather than implying a history it is not
+                    showing. */}
+                <Eyebrow>{dept.momentsEyebrow ?? '历年精彩时刻'}</Eyebrow>
                 <SectionTitle>{dept.momentsTitle ?? '一路走来的足迹。'}</SectionTitle>
               </div>
               {dept.moments.length > 1 && (

@@ -135,7 +135,12 @@ def main() -> None:
         b = os.path.getsize(path)
         im = ImageOps.exif_transpose(Image.open(path))
         # Keep transparency as PNG; flattening it onto white would ruin cut-outs.
-        alpha = im.mode in ("RGBA", "LA") or "transparency" in im.info
+        # But test the channel rather than the mode: photographs exported as
+        # RGBA carry a fully-opaque alpha that is never used, and keeping those
+        # as PNG costs several times the size of the same image as JPEG.
+        alpha = False
+        if im.mode in ("RGBA", "LA") or "transparency" in im.info:
+            alpha = im.convert("RGBA").getchannel("A").getextrema()[0] < 255
         w, h = im.size
         if w > MAX_WIDTH:
             im = im.resize((MAX_WIDTH, round(h * MAX_WIDTH / w)), Image.LANCZOS)
