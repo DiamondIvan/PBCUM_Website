@@ -26,7 +26,7 @@ export const CONTENT = {
   cta: '了解小组',
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '社服组',
-  eyebrow: '七小组 · 07',
+  eyebrow: '七小组',
   logo: '/xiaozu_logos/shefu.png',
   accentHex: '#C2477A', // sampled from the logo — see scripts/logo-colors.py
   accent: 'from-[#C2477A] to-[#782C4C]',

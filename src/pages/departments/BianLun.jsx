@@ -26,7 +26,7 @@ export const CONTENT = {
   cta: '了解小组',
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '辩论组',
-  eyebrow: '七小组 · 03',
+  eyebrow: '七小组',
   logo: '/xiaozu_logos/bianlun.png',
   accentHex: '#1A3A9E', // sampled from the logo — see scripts/logo-colors.py
   accent: 'from-[#1A3A9E] to-[#102462]',

@@ -26,7 +26,7 @@ export const CONTENT = {
   cta: '了解小组',
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '摇篮手',
-  eyebrow: '七小组 · 05',
+  eyebrow: '七小组',
   logo: '/xiaozu_logos/pbcumyls.png',
   accentHex: '#6B3FA0', // sampled from the logo — see scripts/logo-colors.py
   accent: 'from-[#6B3FA0] to-[#422763]',

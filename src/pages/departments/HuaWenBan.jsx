@@ -28,7 +28,7 @@ export const CONTENT = {
 
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '华文班',
-  eyebrow: '七小组 · 04',
+  eyebrow: '七小组',
   logo: '/xiaozu_logos/huawenban.png',
   accentHex: '#9B2335', // Cranberry Red — the red seal stamp in the logo
   accent: 'from-[#9B2335] to-[#601621]',
