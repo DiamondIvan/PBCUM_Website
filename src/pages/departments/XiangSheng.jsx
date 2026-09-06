@@ -35,15 +35,16 @@ export const CONTENT = {
   accentHex: '#1D6348', // Deep Forest Green — sampled from the logo
   accent: 'from-[#1D6348] to-[#123D2D]',
 
-  mission: '推广相声艺术，使相声更为普及化。',
+  // The hero line says what the group is. The 宗旨 is not repeated here —
+  // it carries the pull quote in 宗旨与目标 instead, so each sentence in
+  // the document is read exactly once.
+  mission: '马大华文学会旗下七小组之一，至今已受邀参与无数场演出。',
   founded: '1992/1993 学年',
   // memberCount: '约 30 位组员',   // optional second hero chip
   // vibe: '爱说爱笑',              // optional word beside the eyebrow
 
   /* ── § 2 简介 ──────────────────────────────────────────────────────── */
-  description:
-    '相声是艺术性的聊天谈心说笑话，以组织包袱为显著特色的说话艺术。\n' +
-    '马大华文学会相声组是学会旗下七小组之一，至今已受邀参与无数场演出。',
+  description: '相声是艺术性的聊天谈心说笑话，以组织包袱为显著特色的说话艺术。',
 
   /* ── § 3 组史 ──────────────────────────────────────────────────────── */
   history:
