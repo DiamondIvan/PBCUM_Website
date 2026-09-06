@@ -165,13 +165,6 @@ export const sectionData = {
       href: '/events/event-01',
     },
     {
-      date: '2025-11-15',
-      title: '摄影组外拍活动',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-03',
-    },
-    {
       date: '2025-11-29',
       title: '社服组义工日',
       type: 'qixiaozu',
