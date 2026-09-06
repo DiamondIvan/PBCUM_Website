@@ -1,5 +1,5 @@
 ﻿/**
- * Dept03Page.jsx — dept-03 detail page
+ * ShengXun.jsx — 升讯团 (dept-06) detail page
  *
  * This file is the dedicated page for this specific department.
  * Customise layout, sections, and design freely without affecting other depts.
@@ -16,9 +16,9 @@ import { InitialsAvatar, NotFoundDept } from '../../components/shared/DeptPageSh
 import { Reveal } from '../../hooks/useInView.jsx';
 import { getDepartmentBySlug } from '../../data/departments';
 
-const SLUG = 'dept-03';
+const SLUG = 'dept-06';
 
-export function Dept03Page() {
+export function ShengXun() {
   const navigate = useNavigate();
   const dept = getDepartmentBySlug(SLUG);
   const [activeWork, setActiveWork] = useState(null);

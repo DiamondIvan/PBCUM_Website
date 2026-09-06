@@ -1,5 +1,5 @@
 ﻿/**
- * Dept05Page.jsx — dept-05 detail page
+ * SheFu.jsx — 社服组 (dept-07) detail page
  *
  * This file is the dedicated page for this specific department.
  * Customise layout, sections, and design freely without affecting other depts.
@@ -16,9 +16,9 @@ import { InitialsAvatar, NotFoundDept } from '../../components/shared/DeptPageSh
 import { Reveal } from '../../hooks/useInView.jsx';
 import { getDepartmentBySlug } from '../../data/departments';
 
-const SLUG = 'dept-05';
+const SLUG = 'dept-07';
 
-export function Dept05Page() {
+export function SheFu() {
   const navigate = useNavigate();
   const dept = getDepartmentBySlug(SLUG);
   const [activeWork, setActiveWork] = useState(null);

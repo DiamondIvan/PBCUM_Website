@@ -5,39 +5,43 @@ import { JoinPage } from './pages/JoinPage';
 import { IntroSplash } from './components/IntroSplash';
 
 /* ── Per-event page imports ──────────────────────────────────────────── */
-import { Event01Page } from './pages/events/Event01Page';
-import { Event02Page } from './pages/events/Event02Page';
-import { Event03Page } from './pages/events/Event03Page';
-import { Event04Page } from './pages/events/Event04Page';
-import { Event05Page } from './pages/events/Event05Page';
+import { XXY } from './pages/events/XXY';
+import { QZH } from './pages/events/QZH';
+import { DaXiang } from './pages/events/DaXiang';
+import { QuanBian } from './pages/events/QuanBian';
+import { BoShu } from './pages/events/BoShu';
 
 /* ── Per-department page imports ─────────────────────────────────────── */
-import { Dept01Page } from './pages/departments/Dept01Page';
-import { Dept02Page } from './pages/departments/Dept02Page';
-import { Dept03Page } from './pages/departments/Dept03Page';
-import { Dept04Page } from './pages/departments/Dept04Page';
-import { Dept05Page } from './pages/departments/Dept05Page';
-import { Dept06Page } from './pages/departments/Dept06Page';
-import { Dept07Page } from './pages/departments/Dept07Page';
+import { XiangSheng } from './pages/departments/XiangSheng';
+import { WenHua } from './pages/departments/WenHua';
+import { BianLun } from './pages/departments/BianLun';
+import { HuaWenBan } from './pages/departments/HuaWenBan';
+import { YaoLanShou } from './pages/departments/YaoLanShou';
+import { ShengXun } from './pages/departments/ShengXun';
+import { SheFu } from './pages/departments/SheFu';
 
 /* ── Slug → component maps ───────────────────────────────────────────── */
 
+/* The keys are the public URL slugs and must keep matching the `slug` fields in
+   src/data/siteData.js — renaming a component here is safe, renaming a key is
+   not, because it changes /events/:slug and /departments/:slug. */
+
 const EVENT_PAGES = {
-  'event-01': Event01Page,
-  'event-02': Event02Page,
-  'event-03': Event03Page,
-  'event-04': Event04Page,
-  'event-05': Event05Page,
+  'event-01': XXY,        // 新家
+  'event-02': QZH,        // 全中华
+  'event-03': DaXiang,    // 大相声
+  'event-04': QuanBian,   // 全辩
+  'event-05': BoShu,      // 博书有约
 };
 
 const DEPT_PAGES = {
-  'dept-01': Dept01Page,
-  'dept-02': Dept02Page,
-  'dept-03': Dept03Page,
-  'dept-04': Dept04Page,
-  'dept-05': Dept05Page,
-  'dept-06': Dept06Page,
-  'dept-07': Dept07Page,
+  'dept-01': XiangSheng,  // 相声组
+  'dept-02': WenHua,      // 文化组
+  'dept-03': BianLun,     // 辩论组
+  'dept-04': HuaWenBan,   // 华文班
+  'dept-05': YaoLanShou,  // 摇篮手
+  'dept-06': ShengXun,    // 升讯团
+  'dept-07': SheFu,       // 社服组
 };
 
 /* ── Dispatchers ─────────────────────────────────────────────────────── */

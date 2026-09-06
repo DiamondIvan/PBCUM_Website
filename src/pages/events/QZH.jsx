@@ -1,5 +1,5 @@
 ﻿/**
- * Event02Page.jsx — event-02 detail page
+ * QZH.jsx — 全中华 (event-02) detail page
  *
  * This file is the dedicated page for this specific event.
  * Customise layout, sections, and design freely without affecting other events.
@@ -18,7 +18,7 @@ import { getEventBySlug } from '../../data/events';
 
 const SLUG = 'event-02';
 
-export function Event02Page() {
+export function QZH() {
   const navigate = useNavigate();
   const event = getEventBySlug(SLUG);
   const scrollRef = useRef(null);

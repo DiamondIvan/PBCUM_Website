@@ -1,5 +1,5 @@
 ﻿/**
- * Dept07Page.jsx — dept-07 detail page
+ * BianLun.jsx — 辩论组 (dept-03) detail page
  *
  * This file is the dedicated page for this specific department.
  * Customise layout, sections, and design freely without affecting other depts.
@@ -16,9 +16,9 @@ import { InitialsAvatar, NotFoundDept } from '../../components/shared/DeptPageSh
 import { Reveal } from '../../hooks/useInView.jsx';
 import { getDepartmentBySlug } from '../../data/departments';
 
-const SLUG = 'dept-07';
+const SLUG = 'dept-03';
 
-export function Dept07Page() {
+export function BianLun() {
   const navigate = useNavigate();
   const dept = getDepartmentBySlug(SLUG);
   const [activeWork, setActiveWork] = useState(null);

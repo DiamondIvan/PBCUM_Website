@@ -1,5 +1,5 @@
 ﻿/**
- * Event05Page.jsx — event-05 detail page
+ * BoShu.jsx — 博书有约 (event-05) detail page
  *
  * This file is the dedicated page for this specific event.
  * Customise layout, sections, and design freely without affecting other events.
@@ -18,7 +18,7 @@ import { getEventBySlug } from '../../data/events';
 
 const SLUG = 'event-05';
 
-export function Event05Page() {
+export function BoShu() {
   const navigate = useNavigate();
   const event = getEventBySlug(SLUG);
   const scrollRef = useRef(null);

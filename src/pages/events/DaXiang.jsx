@@ -1,5 +1,5 @@
 ﻿/**
- * Event03Page.jsx — event-03 detail page
+ * DaXiang.jsx — 大相声 (event-03) detail page
  *
  * This file is the dedicated page for this specific event.
  * Customise layout, sections, and design freely without affecting other events.
@@ -18,7 +18,7 @@ import { getEventBySlug } from '../../data/events';
 
 const SLUG = 'event-03';
 
-export function Event03Page() {
+export function DaXiang() {
   const navigate = useNavigate();
   const event = getEventBySlug(SLUG);
   const scrollRef = useRef(null);

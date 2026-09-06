@@ -1,5 +1,5 @@
 ﻿/**
- * Dept02Page.jsx — dept-02 detail page
+ * WenHua.jsx — 文化组 (dept-02) detail page
  *
  * This file is the dedicated page for this specific department.
  * Customise layout, sections, and design freely without affecting other depts.
@@ -18,7 +18,7 @@ import { getDepartmentBySlug } from '../../data/departments';
 
 const SLUG = 'dept-02';
 
-export function Dept02Page() {
+export function WenHua() {
   const navigate = useNavigate();
   const dept = getDepartmentBySlug(SLUG);
   const [activeWork, setActiveWork] = useState(null);

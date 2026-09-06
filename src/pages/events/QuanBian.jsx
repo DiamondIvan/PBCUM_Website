@@ -1,5 +1,5 @@
 ﻿/**
- * Event01Page.jsx — event-01 detail page
+ * QuanBian.jsx — 全辩 (event-04) detail page
  *
  * This file is the dedicated page for this specific event.
  * Customise layout, sections, and design freely without affecting other events.
@@ -16,9 +16,9 @@ import { NotFoundEvent, TourSchedule } from '../../components/shared/EventPageSh
 import { Reveal } from '../../hooks/useInView.jsx';
 import { getEventBySlug } from '../../data/events';
 
-const SLUG = 'event-01';
+const SLUG = 'event-04';
 
-export function Event01Page() {
+export function QuanBian() {
   const navigate = useNavigate();
   const event = getEventBySlug(SLUG);
   const scrollRef = useRef(null);

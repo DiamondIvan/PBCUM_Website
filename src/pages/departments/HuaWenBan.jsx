@@ -1,5 +1,5 @@
 ﻿/**
- * Dept01Page.jsx — dept-01 detail page
+ * HuaWenBan.jsx — 华文班 (dept-04) detail page
  *
  * This file is the dedicated page for this specific department.
  * Customise layout, sections, and design freely without affecting other depts.
@@ -16,9 +16,9 @@ import { InitialsAvatar, NotFoundDept } from '../../components/shared/DeptPageSh
 import { Reveal } from '../../hooks/useInView.jsx';
 import { getDepartmentBySlug } from '../../data/departments';
 
-const SLUG = 'dept-01';
+const SLUG = 'dept-04';
 
-export function Dept01Page() {
+export function HuaWenBan() {
   const navigate = useNavigate();
   const dept = getDepartmentBySlug(SLUG);
   const [activeWork, setActiveWork] = useState(null);
