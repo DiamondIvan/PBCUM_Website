@@ -423,6 +423,101 @@ function HuiwenWatermark({ className = '' }) {
   );
 }
 
+/* ─── HistorySection — 学会简史 ──────────────────────────────────────────
+ * Sits at the foot of the page: a reader who has come this far has seen what
+ * the society does, and this is what it came from. The three dated milestones
+ * are pulled out of the prose because a closure and a twelve-year fight to
+ * reopen carry more weight as a timeline than as a clause.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+const HISTORY_MILESTONES = [
+  {
+    year: '1960年代',
+    title: '第一阶段成立',
+    body: '于马来亚大学吉隆坡院校创立初期成立，是马来西亚历史最悠久的大专华人学生组织之一。',
+  },
+  {
+    year: '1974',
+    title: '遭令关闭',
+    body: '在 1970 年代大专运中极具影响力，后因国会下议院白皮书指控涉及颠覆活动被关闭。',
+  },
+  {
+    year: '1986',
+    title: '获准复办',
+    body: '经过 12 年争取，第二阶段华文学会于 12 月 11 日获准重新成立。',
+  },
+];
+
+function HistorySection() {
+  return (
+    <AnimatedSection id="history" className="relative isolate overflow-hidden bg-white py-24 sm:py-32">
+      <HuiwenWatermark className="-right-12 top-12 h-44 w-44 opacity-[0.05] sm:h-64 sm:w-64" />
+
+      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="学会简史"
+          title="六十年，两个阶段，一个学会。"
+          description="马来亚大学华文学会（Persatuan Bahasa Cina Universiti Malaya，缩写 PBCUM）是马大规模最大的华人学生组织。学会不仅致力于推广华文与中华文化，在促进各民族学生交流方面亦扮演着重要角色。"
+        />
+
+        {/* Timeline */}
+        <ol className="mt-14 space-y-0">
+          {HISTORY_MILESTONES.map((m, i) => (
+            <li key={m.year} className="relative flex gap-6 pb-10 last:pb-0 sm:gap-8">
+              {/* Rail — drawn per item so the last one does not trail off. */}
+              {i < HISTORY_MILESTONES.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-[7px] top-4 h-full w-px bg-gradient-to-b from-umred/30 to-umred/5"
+                />
+              )}
+              <span
+                aria-hidden="true"
+                className="relative mt-1.5 h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-umred bg-white"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
+                  {m.year}
+                </p>
+                <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-ink sm:text-2xl">
+                  {m.title}
+                </h3>
+                <p className="mt-2.5 max-w-2xl text-base leading-[1.9] text-black/62">{m.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        {/* What the society runs today — the sections above, named in one place. */}
+        <div className="mt-12 grid gap-4 rounded-[28px] border border-black/6 bg-[#fafafa] p-7 sm:mt-14 sm:grid-cols-2 sm:p-9">
+          {[
+            // Titles are the page headings, and 全中华's runs onto a second
+            // line. A chip wants the name, not the whole banner.
+            { label: '七小组', items: departments.map((d) => d.title.split('\n')[0]) },
+            { label: '五特活', items: events.map((e) => e.title.split('\n')[0]) },
+          ].map((group) => (
+            <div key={group.label}>
+              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/38">
+                {group.label}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {group.items.map((name) => (
+                  <span
+                    key={name}
+                    className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-sm text-black/65 shadow-sm"
+                  >
+                    {name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </AnimatedSection>
+  );
+}
+
 function CalendarSection() {
   return (
     <AnimatedSection id="calendar" className="relative isolate overflow-hidden bg-soft-radial py-24 sm:py-32">
@@ -567,6 +662,7 @@ function HomePage() {
       <TestimonialsSection />
       <SponsorsSection />
       <JoinCtaSection />
+      <HistorySection />
       <Footer />
     </div>
   );
