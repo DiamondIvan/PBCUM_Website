@@ -27,9 +27,9 @@ import { SheFu } from './pages/departments/SheFu';
    not, because it changes /events/:slug and /departments/:slug. */
 
 const EVENT_PAGES = {
-  'event-01': XXY,        // 新家
+  'event-01': XXY,        // 新血营
   'event-02': QZH,        // 全中华
-  'event-03': DaXiang,    // 大相声
+  'event-03': DaXiang,    // 大型相声观摩会
   'event-04': QuanBian,   // 全辩
   'event-05': BoShu,      // 博书有约
 };

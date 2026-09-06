@@ -209,7 +209,7 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
   const Icon = isImgIcon ? null : item.icon;
 
   // A stale hex here is invisible until someone notices the card no longer
-  // matches its logo — which is exactly how 新家 and 全中华 drifted.
+  // matches its logo — which is exactly how 新血营 and 全中华 drifted.
   const color = itemColor(item);
 
   return (

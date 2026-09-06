@@ -1,5 +1,5 @@
 /**
- * DaXiang.jsx — 大相声 (event-03)
+ * DaXiang.jsx — 大型相声观摩会 (event-03)
  *
  * Everything this page says lives in CONTENT below. Edit it freely — it affects
  * no other activity. The layout is shared (EventPageLayout) so all five pages
@@ -19,11 +19,13 @@ export const CONTENT = {
      the page cannot disagree, because they are the same object. */
   id: 'wute-03',
   slug: 'event-03',
-  teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-  detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+  // Not yet written. Left empty deliberately: the card omits the line
+  // entirely rather than showing scaffolding to visitors.
+  teaser: '',
+  detail: '',
   cta: '了解更多',
   accentHex: '#3F3A36', // Warm Ink — DXlogo is a pure black-and-white seal; no hue to follow
-  title: '活动三 [PLACEHOLDER]',
+  title: '大型相声观摩会',
   eyebrow: '五特活 · 03',
   logo: '/tehuo_logos/DXlogo.png',
   accent: 'from-[#3F3A36] to-[#272421]',

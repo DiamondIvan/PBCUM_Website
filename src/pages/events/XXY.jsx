@@ -1,5 +1,5 @@
 /**
- * XXY.jsx — 新家 (event-01)
+ * XXY.jsx — 新血营 (event-01)
  *
  * Everything this page says lives in CONTENT below. Edit it freely — it affects
  * no other activity. The layout is shared (EventPageLayout) so all five pages
@@ -19,11 +19,13 @@ export const CONTENT = {
      the page cannot disagree, because they are the same object. */
   id: 'wute-01',
   slug: 'event-01',
-  teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-  detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+  // Not yet written. Left empty deliberately: the card omits the line
+  // entirely rather than showing scaffolding to visitors.
+  teaser: '',
+  detail: '',
   cta: '了解更多',
-  accentHex: '#4F7D57', // Sage Green — the 新家 characters and illustration linework
-  title: '活动一 [PLACEHOLDER]',
+  accentHex: '#4F7D57', // Sage Green — the characters and illustration linework
+  title: '新血营',
   eyebrow: '五特活 · 01', // TODO: replace with real category, e.g. "年度旗舰活动"
   logo: '/tehuo_logos/xxylogo.png',
   accent: 'from-[#4F7D57] to-[#314E36]',
