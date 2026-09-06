@@ -19,63 +19,90 @@ export const CONTENT = {
      the page cannot disagree, because they are the same object. */
   id: 'qxz-04',
   slug: 'dept-04',
-  // Not yet written. Left empty deliberately: the card omits the line
-  // entirely rather than showing scaffolding to visitors.
-  teaser: '',
-  detail: '',
+  teaser: '为马大非华裔生提供轻松友好的学习华语平台。',
+  detail:
+    '华文班为零华语基础的马大非华裔生提供系统的华语课程，' +
+    '从日常上课、大课到场景模拟，把语言学习带进真实情境。\n' +
+    '对热心教育的马大生来说，这里也是一个把标准华文教出去的实践机会。',
   cta: '了解小组',
+
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '华文班',
   eyebrow: '七小组 · 04',
   logo: '/xiaozu_logos/huawenban.png',
-  accentHex: '#9B2335', // sampled from the logo — see scripts/logo-colors.py
+  accentHex: '#9B2335', // Cranberry Red — the red seal stamp in the logo
   accent: 'from-[#9B2335] to-[#601621]',
 
-  // One line describing the group, shown under the title.
-  mission: '',
-  // founded: '',                  // e.g. '1998/1999 学年' — shows as a hero chip
-  // memberCount: '',              // e.g. '约 25 位组员'
-  // vibe: '',                     // optional short word beside the eyebrow
+  // Condensed from the 简介 below; the document gives no separate tagline.
+  mission: '推广华文教育，为马大非华裔生提供轻松友好的学习华语平台。',
+  // founded: '',   // the source document gives no founding year — see the notes
 
-  /* ── § 2 简介 ───────────────────────────────────────────────────────────
-     What this group is and what it does. Use \n between paragraphs. */
-  description: '',
+  /* ── § 2 简介 ──────────────────────────────────────────────────────── */
+  description:
+    '马大华文学会华文班是马大华文学会旗下的七小组之一。' +
+    '此活动旨在推广华文教育，为马大非华裔生提供轻松友好的学习华语平台，' +
+    '也给热心教育的马大生一个实践机会。',
 
-  /* ── § 3 组史 ───────────────────────────────────────────────────────────
-     When and how the group started. Leave blank until you have the facts —
-     the section disappears rather than showing a placeholder. */
+  /* ── § 3 组史 ──────────────────────────────────────────────────────────
+     Not in the source document. The section does not render while empty. */
   history: '',
   founders: [],
 
-  /* ── § 4 宗旨与目标 ─────────────────────────────────────────────────────
-     `purpose` is the one-sentence 宗旨, rendered as a large pull quote.
-     `objectives` are the 目标 beneath it. */
+  /* ── § 4 宗旨与目标 ────────────────────────────────────────────────────
+     The document lists three 宗旨 rather than one sentence, so they are all
+     objectives and there is no pull quote. */
   purpose: '',
-  objectives: [],
+  objectives: [
+    '推广华语，提倡使用正确华语',
+    '促进与友族之间的交流',
+    '培养教员的教育心态',
+  ],
 
-  /* ── § 5 适合谁参与 ─────────────────────────────────────────────────────
-     `fitQuote` is an invitation in the group's own voice — this is the line
-     that persuades a fresher, so it is worth writing carefully. */
+  /* ── § 5 适合谁参与 ────────────────────────────────────────────────────
+     华文班 recruits two different kinds of people, which no other group here
+     does. Both are named explicitly rather than blurred into one description. */
   fitQuote: '',
-  fitTags: [],
+  fitTags: [
+    '学员：零华语基础的马大非华裔生',
+    '教员／筹委：热心教育、欲推广标准华文的马大生',
+  ],
 
-  /* ── § 6 常年活动 ───────────────────────────────────────────────────────
-     { name, description?, image?, detail? } — description optional but
-     recommended; image makes the card open in a lightbox. */
-  activities: [],
+  /* ── § 6 常年活动 ──────────────────────────────────────────────────── */
+  activities: [
+    { name: '日常上课', description: '系统的华语教学。' },
+    { name: '大课', description: '学习特定华语知识或文化。' },
+    { name: '场景模拟', description: '将语言学习融入实际场景。' },
+    { name: '社交媒体知识分享', description: '通过平台分享趣味华语。' },
+    { name: '结业礼' },
+  ],
 
-  /* ── § 7 小组负责人 ─────────────────────────────────────────────────────
-     { name, role, photo? } — photo optional, falls back to an initials avatar. */
-  leadership: [],
+  /* ── § 6b 精彩相册 ──────────────────────────────────────────────────────
+     The document links a Google Drive folder rather than supplying files.
+     Download them into public/huawenban/gallery/, run
+     `python scripts/optimise-photos.py`, then list them here. */
+  gallery: [],
+  moments: [],
 
-  /* ── § 8 加入我们 ───────────────────────────────────────────────────── */
-  joinText: '',
-  ctaLabel: '报名加入华文班',
-  ctaHref: '',                     // recruitment form URL, or 'mailto:...'
+  /* ── § 7 小组负责人 ────────────────────────────────────────────────────
+     Phone numbers from the document are deliberately not published — contact
+     routes through the form and the group's social accounts instead. */
+  leadership: [
+    { name: '刘奕君', role: '华文班班长', photo: '/committee_photo/yijun.jpeg' },
+    { name: '黄依玲', role: '华文班副班长' },
+  ],
+
+  /* ── § 8 加入我们 ──────────────────────────────────────────────────────
+     The linked form is the 班委报名表 — it recruits committee members, not
+     students. The wording says so rather than implying it enrols learners. */
+  joinText:
+    '下方表格为班委报名表，欢迎热心教育、想推广标准华文的马大生申请。' +
+    '想以学员身份上课的同学，请透过我们的社交媒体私讯查询。',
+  ctaLabel: '报名成为班委',
+  ctaHref: 'https://docs.google.com/forms/d/1yY46B4uw_ryyRo3pBR75XMgHmMS14ZP4cvTVRwSN1mE/viewform',
   social: {
-    // facebook: '',
-    // instagram: '',
-    // instagramHandle: '',
+    facebook: 'https://www.facebook.com/share/1B2XtwZUTm/',
+    instagram: 'https://www.instagram.com/pbcum_chinese_class',
+    instagramHandle: '@pbcum_chinese_class',
   },
 };
 
