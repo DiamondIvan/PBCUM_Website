@@ -121,6 +121,12 @@ export const CONTENT = {
     { year: '2026', image: '/xiangsheng/highlights/2026大型相声观摩会（大相）.jpg', label: '大型相声观摩会（大相）' },
   ],
 
+  /* A date here puts the group itself on the calendar; a `date` on any
+     entry in activities[] above puts that one activity there instead.
+     ISO 'YYYY-MM-DD', optional endDate, both omitted while unknown. */
+  // date: '',
+  // endDate: '',
+
   /* ── § 7 小组负责人 ────────────────────────────────────────────────── */
   leadership: [
     { name: '林家修', role: '相声组组长', photo: '/committee_photo/jiashiu.jpeg' },

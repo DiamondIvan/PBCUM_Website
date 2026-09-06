@@ -410,7 +410,8 @@ function CalendarSection() {
           description="点击有标记的日期，查看当天的活动详情并前往该活动的页面。"
         />
         <div className="mx-auto mt-14 max-w-3xl">
-          <EventCalendar events={sectionData.calendarEvents} />
+          {/* Takes no props — it collects everything dated itself. */}
+          <EventCalendar />
         </div>
       </div>
     </AnimatedSection>

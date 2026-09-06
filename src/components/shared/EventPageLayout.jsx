@@ -26,6 +26,16 @@ import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
 import { NotFoundEvent, TourSchedule } from './EventPageShared';
 import { Reveal } from '../../hooks/useInView.jsx';
+import { parseDate } from '../../data/calendar';
+
+/** The `date` field feeds both this chip and the homepage calendar, so it is
+ *  stored as ISO. Shown here in the form a reader expects; anything that is
+ *  not a date (a placeholder, 待定) passes through untouched. */
+function formatDate(value) {
+  const d = parseDate(value);
+  if (!d) return value;
+  return d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+}
 
 export function EventPageLayout({ content: event }) {
   const navigate = useNavigate();
@@ -99,7 +109,7 @@ export function EventPageLayout({ content: event }) {
             <div className="mt-10 flex flex-wrap gap-3">
               <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
                 <CalendarDays className="h-4 w-4 opacity-75" />
-                {event.date}
+                {formatDate(event.date)}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
                 <MapPin className="h-4 w-4 opacity-75" />

@@ -182,162 +182,32 @@ export const sectionData = {
   ],
   partners: ['马来亚大学', 'UM 学生事务处', 'PBCUM 校友会', '校园文化实验室', 'Redline Print', 'Moonstage Media'],
 
-  /* ─── 活动日历 — Calendar Events ────────────────────────────────────
-   * Each entry maps to a clickable day on the EventCalendar component.
-   * type: 'wute' | 'qixiaozu' | 'other'
-   * href: route to navigate to (e.g. '/events/event-01', '/departments/dept-03')
-   *       or a page anchor (e.g. '/#activities') for generic events
+  /* ─── 学会活动 — society-wide dates ──────────────────────────────────
+   * The calendar builds itself from the 五特活 and 七小组 content: put a
+   * `date` on any of them and it appears, with no edit here or to the
+   * calendar component. See src/data/calendar.js.
+   *
+   * This list is the exception — dates that belong to the society as a whole
+   * and have no subpage to hang off. A dinner, a handover, an internal
+   * meeting. Add your own freely.
+   *
+   *   date     'YYYY-MM-DD'   required; anything unparseable is skipped
+   *   endDate  'YYYY-MM-DD'   optional, inclusive — for a multi-day thing
+   *   title    what shows on the calendar
+   *   label    the small badge, e.g. '特别活动'
+   *   href     optional; where clicking goes. A '/#anchor' is fine.
+   *   color    optional; defaults to the PBCUM red
    * ──────────────────────────────────────────────────────────────────── */
-  calendarEvents: [
-    // ── 2025 ──────────────────────────────────────────────────────────
-    {
-      date: '2025-09-06',
-      title: '新学年迎新礼',
-      type: 'other',
-      label: '迎新',
-      href: '/#activities',
-    },
-    {
-      date: '2025-09-20',
-      title: '相声组招新说明会',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-01',
-    },
-    {
-      date: '2025-10-04',
-      title: '文化组首次工作坊',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-02',
-    },
-    {
-      date: '2025-10-18',
-      title: '辩论组内部训练营',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-03',
-    },
-    {
-      date: '2025-11-08',
-      title: '活动一（五特活·01）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-01',
-    },
-    {
-      date: '2025-11-29',
-      title: '社服组义工日',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-07',
-    },
-    {
-      date: '2025-12-06',
-      title: '年末联欢晚会',
-      type: 'other',
-      label: '特别活动',
-      href: '/#activities',
-    },
-    // ── 2026 ──────────────────────────────────────────────────────────
-    {
-      date: '2026-01-10',
-      title: '华文班新学期开班',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-04',
-    },
-    {
-      date: '2026-01-24',
-      title: '活动二（五特活·02）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-02',
-    },
-    {
-      date: '2026-02-07',
-      title: '升讯团社交媒体营',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-06',
-    },
-    {
-      date: '2026-02-14',
-      title: '情人节文化夜话',
-      type: 'other',
-      label: '特别活动',
-      href: '/#activities',
-    },
-    {
-      date: '2026-03-07',
-      title: '活动三（五特活·03）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-03',
-    },
-    {
-      date: '2026-03-21',
-      title: '摇篮手坊公开营',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-05',
-    },
-    {
-      date: '2026-04-04',
-      title: '校园文化寻根行',
-      type: 'other',
-      label: '文化探索',
-      href: '/#activities',
-    },
-    {
-      date: '2026-04-18',
-      title: '活动四（五特活·04）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-04',
-    },
-    {
-      date: '2026-05-02',
-      title: '华彩风华展演彩排',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-05',
-    },
-    {
-      date: '2026-05-16',
-      title: '活动五（五特活·05）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-05',
-    },
-    {
-      date: '2026-06-06',
-      title: '年度总检讨大会',
-      type: 'other',
-      label: '内部活动',
-      href: '/#activities',
-    },
-    {
-      date: '2026-07-11',
-      title: '新届委员交接典礼',
-      type: 'other',
-      label: '特别活动',
-      href: '/#committee',
-    },
-    {
-      date: '2026-08-01',
-      title: '2026/27 学年备战会',
-      type: 'other',
-      label: '内部活动',
-      href: '/#activities',
-    },
-    {
-      date: '2026-08-15',
-      title: '独立日文化分享会',
-      type: 'other',
-      label: '文化活动',
-      href: '/#activities',
-    },
+  otherEvents: [
+    { date: '2025-09-06', title: '新学年迎新礼', label: '迎新', href: '/#activities' },
+    { date: '2025-12-06', title: '年末联欢晚会', label: '特别活动', href: '/#activities' },
+    { date: '2026-02-14', title: '情人节文化夜话', label: '特别活动', href: '/#activities' },
+    { date: '2026-03-06', title: '四十周年纪念晚宴', label: '特别活动', href: '/#gallery' },
+    { date: '2026-04-04', title: '校园文化寻根行', label: '文化探索', href: '/#activities' },
+    { date: '2026-06-06', title: '年度总检讨大会', label: '内部活动', href: '/#activities' },
+    { date: '2026-07-11', title: '新届委员交接典礼', label: '特别活动', href: '/#committee' },
+    { date: '2026-08-01', title: '2026/27 学年备战会', label: '内部活动', href: '/#activities' },
+    { date: '2026-08-15', title: '独立日文化分享会', label: '文化活动', href: '/#activities' },
   ],
 };
 

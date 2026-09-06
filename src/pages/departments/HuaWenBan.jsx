@@ -100,6 +100,12 @@ export const CONTENT = {
     { image: '/huawenban/highlights/班委照.jpg',   label: '班委合照' },
   ],
 
+  /* A date here puts the group itself on the calendar; a `date` on any
+     entry in activities[] above puts that one activity there instead.
+     ISO 'YYYY-MM-DD', optional endDate, both omitted while unknown. */
+  // date: '',
+  // endDate: '',
+
   /* ── § 7 小组负责人 ────────────────────────────────────────────────────
      Phone numbers from the document are deliberately not published — contact
      routes through the form and the group's social accounts instead. */

@@ -64,6 +64,12 @@ export const CONTENT = {
      recommended; image makes the card open in a lightbox. */
   activities: [],
 
+  /* A date here puts the group itself on the calendar; a `date` on any
+     entry in activities[] above puts that one activity there instead.
+     ISO 'YYYY-MM-DD', optional endDate, both omitted while unknown. */
+  // date: '',
+  // endDate: '',
+
   /* ── § 7 小组负责人 ─────────────────────────────────────────────────────
      { name, role, photo? } — photo optional, falls back to an initials avatar. */
   leadership: [],

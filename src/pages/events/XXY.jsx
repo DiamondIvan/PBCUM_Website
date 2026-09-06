@@ -30,6 +30,11 @@ export const CONTENT = {
   logo: '/tehuo_logos/xxylogo.png',
   accent: 'from-[#4F7D57] to-[#314E36]',
   icon: Star,
+  /* Put a date here and it appears on the homepage calendar by itself.
+     ISO 'YYYY-MM-DD'; add endDate for something spanning several days.
+     Leave them out entirely while the date is unknown. */
+  // date: '2026-03-06',
+  // endDate: '2026-03-08',
   date: '// TODO: 活动日期，如「2026年3月15日」',
   location: '// TODO: 活动地点，如「马大大讲堂」',
   hook: '// TODO: 一句情感钩子，如「这一夜，语言变成了桥，故事变成了光。」',

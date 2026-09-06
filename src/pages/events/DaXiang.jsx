@@ -30,6 +30,11 @@ export const CONTENT = {
   logo: '/tehuo_logos/DXlogo.png',
   accent: 'from-[#3F3A36] to-[#272421]',
   icon: Theater,
+  /* Put a date here and it appears on the homepage calendar by itself.
+     ISO 'YYYY-MM-DD'; add endDate for something spanning several days.
+     Leave them out entirely while the date is unknown. */
+  // date: '2026-03-06',
+  // endDate: '2026-03-08',
   date: '// TODO',
   location: '// TODO',
   hook: '// TODO',
