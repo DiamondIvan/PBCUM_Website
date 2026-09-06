@@ -19,8 +19,10 @@ export const CONTENT = {
      the page cannot disagree, because they are the same object. */
   id: 'qxz-03',
   slug: 'dept-03',
-  teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-  detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+  // Not yet written. Left empty deliberately: the card omits the line
+  // entirely rather than showing scaffolding to visitors.
+  teaser: '',
+  detail: '',
   cta: '了解小组',
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '辩论组',

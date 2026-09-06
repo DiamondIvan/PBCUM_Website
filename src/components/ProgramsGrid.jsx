@@ -159,10 +159,16 @@ function ProgramModal({ item, type, onClose }) {
 
           {/* Body */}
           <div className="px-6 sm:px-8 pt-4 sm:pt-5 pb-7 sm:pb-8">
-            <p className="text-sm sm:text-base leading-[1.8] text-black/58">{item.teaser}</p>
-            <div className="mt-4 sm:mt-5 rounded-[18px] border border-black/6 bg-[#fafafa] px-5 sm:px-6 py-4 sm:py-5">
-              <p className="whitespace-pre-line text-xs sm:text-sm leading-[1.85] text-black/55">{item.detail}</p>
-            </div>
+            {item.teaser && (
+              <p className="text-sm sm:text-base leading-[1.8] text-black/58">{item.teaser}</p>
+            )}
+            {/* No grey box at all for a group still gathering its words — an
+                empty one reads as a rendering fault. */}
+            {item.detail && (
+              <div className="mt-4 sm:mt-5 rounded-[18px] border border-black/6 bg-[#fafafa] px-5 sm:px-6 py-4 sm:py-5">
+                <p className="whitespace-pre-line text-xs sm:text-sm leading-[1.85] text-black/55">{item.detail}</p>
+              </div>
+            )}
             <Link
               to={isEvent ? `/events/${item.slug}` : `/departments/${item.slug}`}
               onClick={onClose}
@@ -334,9 +340,11 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
         <h3 className="whitespace-pre-line text-lg font-semibold leading-snug text-ink">
           {item.title}
         </h3>
-        <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">
-          {item.teaser}
-        </p>
+        {item.teaser && (
+          <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">
+            {item.teaser}
+          </p>
+        )}
       </div>
 
       {/* ── Divider ── */}
