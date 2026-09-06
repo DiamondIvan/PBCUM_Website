@@ -57,11 +57,11 @@ export const wuteActivities = [
   {
     id: 'wute-04',
     slug: 'event-04',
-    title: '活动四 [PLACEHOLDER]',
-    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+    title: '全国大专辩论会【全辩】',
+    teaser: '立于前思，辩向新知',
     icon: '/tehuo_logos/QBlogo.png',
     themeColor: '#1C2B4A', // PBCUM Navy — QBlogo (全辩) is fully greyscale; brand fallback
-    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+    detail: '第20届全国大专辩论会',
     cta: '了解更多',
   },
   {
@@ -202,7 +202,7 @@ export const sectionData = {
     },
   ],
   committee: [
-    { name: '刘善勤', role: '主席', image: 'sken.jpeg', instagram: 'https://www.instagram.com/', email: 'shankenlaw82@gmail.com', color: 'from-[#A11217] to-[#6D0E12]' },
+    { name: '刘善勤', role: '主席', image: 'sken.jpeg', email: 'shankenlaw82@gmail.com', color: 'from-[#A11217] to-[#6D0E12]' },
     { name: '方骏涛', role: '外务副主席', image: 'ivan.jpeg', instagram: 'https://www.instagram.com/fong_ivan.jt?igsh=b2xncDRjOHd5ZHh4&utm_source=qr', email: 'fongjuntoh@gmail.com', color: 'from-[#111827] to-[#374151]' },
     { name: '彭凯铃', role: '内务副主席', image: 'kailing.jpeg', instagram: 'https://www.instagram.com/kayleen.kling_?igsh=eTcyYzJ5YzNoY3B5&utm_source=qr', email: 'kailinggg0524@gmail.com', color: 'from-[#7c2d12] to-[#ef4444]' },
     { name: '苏冠霖', role: '总秘书', image: 'guanlin.jpeg', instagram: 'https://www.instagram.com/sohgl_31?igsh=enhlaWlnMjI3bmxx', email: 'sohgl11984@gmail.com', color: 'from-[#7f1d1d] to-[#dc2626]' },
@@ -290,7 +290,7 @@ export const sectionData = {
       title: '辩论组内部训练营',
       type: 'qixiaozu',
       label: '七小组',
-      href: '/departments/dept-04',
+      href: '/departments/dept-03',
     },
     {
       date: '2025-11-08',
@@ -311,7 +311,7 @@ export const sectionData = {
       title: '社服组义工日',
       type: 'qixiaozu',
       label: '七小组',
-      href: '/departments/dept-05',
+      href: '/departments/dept-07',
     },
     {
       date: '2025-12-06',
@@ -326,7 +326,7 @@ export const sectionData = {
       title: '华文班新学期开班',
       type: 'qixiaozu',
       label: '七小组',
-      href: '/departments/dept-07',
+      href: '/departments/dept-04',
     },
     {
       date: '2026-01-24',
@@ -361,7 +361,7 @@ export const sectionData = {
       title: '摇篮手坊公开营',
       type: 'qixiaozu',
       label: '七小组',
-      href: '/departments/dept-01',
+      href: '/departments/dept-05',
     },
     {
       date: '2026-04-04',

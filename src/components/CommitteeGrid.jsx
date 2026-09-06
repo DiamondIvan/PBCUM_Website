@@ -103,16 +103,21 @@ function MemberCard({
         PBCUM 执委会成员
       </p>
       <div className="mt-6 sm:mt-7 flex items-center gap-3 text-black/35">
-        <a
-          href={member.instagram || '#'}
-          target={member.instagram ? '_blank' : undefined}
-          rel={member.instagram ? 'noreferrer' : undefined}
-          aria-label={`${member.name} 的 Instagram`}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 transition duration-300 hover:border-umred hover:text-umred"
-          tabIndex={isClone ? -1 : undefined}
-        >
-          <Instagram className="h-4 w-4" />
-        </a>
+        {/* Rendered only when there is a handle to link to. A member without
+            one previously still got a button wired to '#', which looks live and
+            goes nowhere. */}
+        {member.instagram && (
+          <a
+            href={member.instagram}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${member.name} 的 Instagram`}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 transition duration-300 hover:border-umred hover:text-umred"
+            tabIndex={isClone ? -1 : undefined}
+          >
+            <Instagram className="h-4 w-4" />
+          </a>
+        )}
         <div className="relative flex items-center justify-center">
           <button
             type="button"
