@@ -400,10 +400,38 @@ function CommitteeSection() {
  * column's width.
  * ──────────────────────────────────────────────────────────────────────── */
 
+/**
+ * The 回纹 the programme cards carry, blown up as a watermark. It lives on the
+ * section rather than on the calendar card: the card's header and legend are
+ * both occupied, and a motif there landed on top of the view toggle.
+ */
+function HuiwenWatermark({ className = '' }) {
+  return (
+    <svg
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 44 44"
+      className={`pointer-events-none absolute text-umred ${className}`}
+    >
+      <rect x="0" y="0" width="44" height="3" fill="currentColor" />
+      <rect x="41" y="0" width="3" height="44" fill="currentColor" />
+      <rect x="9" y="9" width="29" height="3" fill="currentColor" fillOpacity="0.55" />
+      <rect x="35" y="9" width="3" height="29" fill="currentColor" fillOpacity="0.55" />
+      <rect x="18" y="18" width="16" height="2" fill="currentColor" fillOpacity="0.30" />
+      <rect x="30" y="18" width="2" height="16" fill="currentColor" fillOpacity="0.30" />
+    </svg>
+  );
+}
+
 function CalendarSection() {
   return (
-    <AnimatedSection id="calendar" className="bg-soft-radial py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <AnimatedSection id="calendar" className="relative isolate overflow-hidden bg-soft-radial py-24 sm:py-32">
+      {/* Behind everything, and out of the way of the card itself. overflow-hidden
+          on the section keeps them from widening the page. */}
+      <HuiwenWatermark className="-left-10 top-8 h-40 w-40 -scale-x-100 opacity-[0.07] sm:h-56 sm:w-56" />
+      <HuiwenWatermark className="-right-10 bottom-8 h-40 w-40 -scale-y-100 opacity-[0.07] sm:h-56 sm:w-56" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="活动日历"
           title="学会全年的行事历，一目了然。"
