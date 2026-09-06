@@ -1,253 +1,177 @@
-﻿/**
- * QZH.jsx — 全中华 (event-02) detail page
+/**
+ * QZH.jsx — 全中华 (event-02)
  *
- * This file is the dedicated page for this specific event.
- * Customise layout, sections, and design freely without affecting other events.
- * Shared utilities live in: src/components/shared/EventPageShared.jsx
+ * Everything this page says lives in CONTENT below. Edit it freely — it affects
+ * no other activity. The layout is shared (EventPageLayout) so all five pages
+ * keep an identical structure; edit that file only when you want every activity
+ * to change together.
+ *
+ * Any field you leave out simply is not rendered.
  */
 
-import { useState, useRef } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { GalleryLightbox, ImageDetailModal } from '../../components/GalleryLightbox';
-import { Navbar } from '../../components/Navbar';
-import { NotFoundEvent, TourSchedule } from '../../components/shared/EventPageShared';
-import { Reveal } from '../../hooks/useInView.jsx';
-import { getEventBySlug } from '../../data/events';
+import { MicVocal } from 'lucide-react';
+import { EventPageLayout } from '../../components/shared/EventPageLayout';
 
-const SLUG = 'event-02';
+const CONTENT = {
+  slug: 'event-02',
+  title: '第21届全国中学华文学会生活营\n续章·扬帆',
+  eyebrow: '五特活 · 02',
+  logo: '/tehuo_logos/qzhlogo.png',
+  accent: 'from-[#A84830] to-[#682D1E]',
+  icon: MicVocal,
+  date: '// TODO',
+  location: '// TODO',
+  hook: '// TODO',
+  intro: '全国中学华文学会生活营简介\n\n全国中学华文学会生活营（全中华）是马大华文学会旗下的特别活动。其宗旨是为了提高中学华文学会的素质。营会以游戏与课程并重的形式进行，以培养中学生的团队精神、领导能力及个人素养。课程涵盖个人提升、组织运作、中华文化与华教，推动营员珍惜母语及多元文化。全中华以全国巡回形式举办，为各地中学生提供交流、学习与成长的平台。《续章·扬帆》承接二十载精神，续写新篇章，扬起青春之帆，勇敢迈向未来。 ',
+  /**
+   * tourStops — full-year timeline for 全中华.
+   * Each entry: { label, date, location }
+   *   label    — phase / milestone name, e.g. '迎新日'
+   *   date     — DD.MM.YYYY for single-day, DD.MM.YYYY-DD.MM.YYYY for ranges.
+   *              Use '待定' if not yet confirmed.
+   *   location — venue name; use '待定' if TBC (hidden in UI when 待定).
+   *
+   * Status badge is auto-derived at render time:
+   *   future start date              → 即将举行 (green)
+   *   start ≤ today ≤ end            → 进行中   (blue, pulsing dot)
+   *   end date past                  → 已结束   (muted)
+   *   unparseable / '待定'           → 待定     (grey)
+   */
+  tourStops: [
+    { label: '迎新日', date: '26.10.2026', location: '待定' },
+    { label: '培训营1.0', date: '30.10.2026-1.11.2026', location: '待定' },
+    { label: '培训营2.0', date: '21.11.2026-22.11.2026', location: '待定' },
+    { label: '北马分站', date: '4.12.2026-6.12.2026', location: '待定' },
+    { label: '南马分站', date: '26.12.2026-28.12.2026', location: '待定' },
+    { label: '筹备营', date: '15.2.2027-24.2.2027', location: '待定' },
+    { label: '总站', date: '11.3.2027-14.3.2027', location: '待定' },
+  ],
+  gallery: [
+    {
+      src: '/qzh/gallery/全中华20北马分站大合照.JPG',
+      alt: '北马分站大合照',
+      category: '北马分站',
+      tone: 'from-[#1f2937] to-[#111827]',
+      span: 'md:col-span-2 md:row-span-2',
+      description: '北马分站汇聚了来自各中学的热血营员与筹委，共同留下了意义非凡的全体合影。',
+      detail: '第20届全中华 · 北马分站圆满落幕，定格属于北马营员的青春印记。',
+    },
+    {
+      src: '/qzh/gallery/全中华20南马分站大合照.JPG',
+      alt: '南马分站大合照',
+      category: '南马分站',
+      tone: 'from-[#A11217] to-[#6D0E12]',
+      span: 'md:row-span-2',
+      description: '南马分站全体营员与工委齐聚一堂，展现青年人的蓬勃朝气与凝聚力。',
+      detail: '跨越地域的相聚，为南马中学生播下中华文化的种子。',
+    },
+    {
+      src: '/qzh/gallery/全中华20北马分站开幕.JPG',
+      alt: '北马分站开幕典礼',
+      category: '开幕典礼',
+      tone: 'from-[#374151] to-[#111827]',
+      span: '',
+      description: '隆重的开幕典礼拉开北马分站序幕，嘉宾与营员共同见证生活营正式启动。',
+      detail: '薪火相传，点亮全中华巡回生活营的精彩篇章。',
+    },
+    {
+      src: '/qzh/gallery/全中华20北马分站水站大合照.JPG',
+      alt: '北马分站水站大合照',
+      category: '活动现场',
+      tone: 'from-[#0369a1] to-[#0c4a6e]',
+      span: '',
+      description: '活力四射的大型水战与户外游戏环节，营员们在欢笑与协作中建立深厚友谊。',
+      detail: '在汗水与欢呼中释放青春活力，打破隔阂、并肩作战。',
+    },
+    {
+      src: '/qzh/gallery/全中华20南马分站开幕.JPG',
+      alt: '南马分站开幕典礼',
+      category: '开幕典礼',
+      tone: 'from-[#7c3aed] to-[#4f46e5]',
+      span: '',
+      description: '南马分站开幕典礼现场，庄严而充满期待的启航时刻。',
+      detail: '鼓声雷动，旗帜飞扬，开启三天两夜充实的营会时光。',
+    },
+    {
+      src: '/qzh/gallery/全中华20南马分站水站大合照.JPG',
+      alt: '南马分站水站大合照',
+      category: '活动现场',
+      tone: 'from-[#374151] to-[#111827]',
+      span: '',
+      description: '南马分站刺激的水上关卡挑战，见证了团队默契与拼搏精神的绽放。',
+      detail: '挥洒青春热情，挑战未知，铸就最难忘的团队回忆。',
+    },
+    {
+      src: '/qzh/gallery/全中华20总站大合照.jpg',
+      alt: '总站大合照',
+      category: '总站',
+      tone: 'from-[#1f2937] to-[#111827]',
+      span: 'md:col-span-2',
+      description: '全中华总站大团圆，全国各地优秀中学生与筹委共聚马大校园，谱写年度辉煌终章。',
+      detail: '汇聚全国力量，为这一年的全中华巡回画上最圆满的句号。',
+    },
+    {
+      src: '/qzh/gallery/全中华20总站开幕.jpg',
+      alt: '总站开幕典礼',
+      category: '开幕典礼',
+      tone: 'from-[#A11217] to-[#6D0E12]',
+      span: '',
+      description: '全中华总站开幕仪式，迎风展旗，汇聚来自全国的华教与文化热情。',
+      detail: '二十载初心不改，以梦为帆，携手共创崭新篇章。',
+    },
+    {
+      src: '/qzh/gallery/全中华20总站水站大合照.jpg',
+      alt: '总站水站大合照',
+      category: '活动现场',
+      tone: 'from-[#374151] to-[#111827]',
+      span: '',
+      description: '总站压轴水站活动，全体大合照记录下最灿烂的笑容与难忘的狂欢瞬间。',
+      detail: '热血不熄，友谊长存，这是属于全中华人的专属印记。',
+    },
+  ],
+  highlights: [
+    {
+      label: '筹委风采',
+      caption: '新一届筹委正式集结，满怀热忱，携手迈向全中华21。',
+      image: '/qzh/highlights/全中华20筹委合照.jpeg',
+      description: '新一届筹委正式集结，满怀热忱与使命感，携手迈向全中华21崭新征程。',
+      detail: '筹备团队由热心华教与文化传承的马大学生组成，分工合作、各司其职。',
+    },
+    {
+      label: '新筹委见面会',
+      caption: '初心相聚，破冰启程，共同开启全中华的新征程。',
+      image: '/qzh/highlights/新筹委见面会.JPG',
+      description: '新筹委会成员首次相聚破冰，在交流与欢声笑语中奠定紧密合作的基石。',
+      detail: '初识的腼腆化为并肩同行的默契，共同为即将到来的全国巡回做准备。',
+    },
+    {
+      label: '培训营互动',
+      caption: '在游戏与破冰中拉近彼此距离，凝聚团队向心力。',
+      image: '/qzh/highlights/培训营.JPG',
+      description: '两阶段培训营中的破冰与团队建设活动，通过情境挑战锤炼临场应变能力。',
+      detail: '寓教于乐，提升营员沟通力与团队协同作战能力。',
+    },
+    {
+      label: '课程与实践',
+      caption: '充实学员组织运作能力与中华文化素养，学以致用。',
+      image: '/qzh/highlights/培训营 (1).JPG',
+      description: '涵盖领导力、组织管理、文案企划与中华文化传承的多元化课程分享。',
+      detail: '导师倾囊相授，理论与实践并重，助力中学生全面成长。',
+    },
+    {
+      label: '筹备营记忆',
+      caption: '筹备营是总站前的最后冲刺，每一个细节都饱含心血。',
+      image: '/qzh/highlights/筹备营.jpg',
+      description: '总站前的深度筹备营，通宵达旦地完善每个环节，只为呈现最完美的营会。',
+      detail: '汗水与坚持的结晶，汇聚成舞台上最耀眼的光芒。',
+    },
+  ],
+  closingLine: '贰续华章，以梦为帆',
+  ctaLabel: '关注下一场活动',
+  ctaHref: '#footer',
+
+};
 
 export function QZH() {
-  const navigate = useNavigate();
-  const event = getEventBySlug(SLUG);
-  const scrollRef = useRef(null);
-  const [activeHighlight, setActiveHighlight] = useState(null);
-
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const scrollAmount = clientWidth * 0.75;
-      scrollRef.current.scrollTo({
-        left: direction === 'left' ? scrollLeft - scrollAmount : scrollLeft + scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  if (!event) return <NotFoundEvent />;
-
-  const Icon = event.icon;
-
-  function goBack() {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/#activities');
-    }
-  }
-
-  return (
-    <div className="relative min-h-screen overflow-x-hidden bg-soft-radial text-ink">
-      <Navbar />
-
-      {/* ── Hero banner ─────────────────────────────────────────────── */}
-      <section className="relative isolate overflow-hidden pt-24 sm:pt-28">
-        <div className={`relative mx-4 overflow-hidden rounded-[36px] bg-gradient-to-br ${event.accent} sm:mx-6 lg:mx-8`}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_44%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(0,0,0,0.22),transparent_50%)]" />
-
-          <div className="relative px-8 py-14 text-white sm:px-14 sm:py-20 lg:py-28">
-            <button
-              onClick={goBack}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-md transition-colors duration-200 hover:bg-white/18 hover:text-white"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              返回活动列表
-            </button>
-
-            <div className="mt-10 max-w-5xl">
-              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-white/58">
-                {event.eyebrow}
-              </p>
-              <h1 className="mt-4 whitespace-pre-line text-4xl font-semibold leading-[1.1] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
-                {event.title}
-              </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-[1.8] text-white/75 sm:text-xl">
-                {event.hook}
-              </p>
-            </div>
-
-            {/* Date + location badges */}
-            <div className="mt-10 flex flex-wrap gap-3">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
-                <CalendarDays className="h-4 w-4 opacity-75" />
-                {event.date}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
-                <MapPin className="h-4 w-4 opacity-75" />
-                {event.location}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
-                <Icon className="h-4 w-4 opacity-75" />
-                五特活
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Content wrapper ─────────────────────────────────────────── */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-
-        {/* ── Intro paragraph ──────────────────────────────────────── */}
-        <Reveal delay={0.05}>
-          <div className="mt-16 sm:mt-20">
-            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">活动简介</p>
-            <p className="mt-5 max-w-3xl whitespace-pre-line text-justify text-xl leading-[1.85] text-black/68 sm:text-2xl">
-              {event.intro}
-            </p>
-          </div>
-        </Reveal>
-
-        {/* ── Tour schedule (only for multi-stop / timeline events) ── */}
-        {event.tourStops?.length > 0 && (
-          <Reveal delay={0.06}>
-            <TourSchedule stops={event.tourStops} accent={event.accent} />
-          </Reveal>
-        )}
-
-        {/* ── Gallery ──────────────────────────────────────────────── */}
-        <Reveal delay={0.08}>
-          <div className="mt-16 sm:mt-20">
-            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">精彩相册</p>
-            <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
-              每一帧，都是故事。
-            </h2>
-            <div className="mt-8">
-              <GalleryLightbox items={event.gallery} />
-            </div>
-          </div>
-        </Reveal>
-
-        {/* ── Highlights (Horizontal Scrollable Carousel) ──────────── */}
-        <Reveal delay={0.05}>
-          <div className="mt-16 sm:mt-20">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">精彩时刻</p>
-                <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
-                  那些让人难忘的瞬间。
-                </h2>
-              </div>
-
-              {/* Scroll buttons */}
-              {event.highlights?.length > 1 && (
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => scroll('left')}
-                    aria-label="向前滑动"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => scroll('right')}
-                    aria-label="向后滑动"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Horizontal scrolling track */}
-            <div
-              ref={scrollRef}
-              className="mt-8 flex gap-5 overflow-x-auto pb-5 pt-1 scroll-smooth snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {event.highlights?.map((h, i) => (
-                <div
-                  key={i}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => setActiveHighlight(h)}
-                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setActiveHighlight(h)}
-                  className="group relative flex w-[300px] flex-shrink-0 cursor-pointer snap-start flex-col overflow-hidden rounded-[28px] border border-black/6 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-umred sm:w-[340px] md:w-[360px]"
-                >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.05),transparent_50%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                  {/* Photo header — only when image is provided */}
-                  {h.image ? (
-                    <div className="relative h-48 w-full overflow-hidden bg-black/5">
-                      <img
-                        src={h.image}
-                        alt={h.label}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                  ) : (
-                    <div className="p-8 pb-0">
-                      <span className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br ${event.accent} font-latin text-sm font-bold text-white`}>
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Text content */}
-                  <div className="relative flex flex-1 flex-col p-6 sm:p-7">
-                    <h3 className="whitespace-pre-line text-lg font-semibold leading-snug text-ink">{h.label}</h3>
-                    <p className="mt-2 text-sm leading-[1.8] text-black/55">{h.caption}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        {/* ── Highlights Lightbox Modal ────────────────────────────── */}
-        <AnimatePresence>
-          {activeHighlight && (
-            <ImageDetailModal
-              item={activeHighlight}
-              onClose={() => setActiveHighlight(null)}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* ── Closing CTA ──────────────────────────────────────────── */}
-        <Reveal delay={0.05}>
-          <div className="mt-16 mb-20 sm:mt-20 sm:mb-28">
-            <div className={`relative overflow-hidden rounded-[36px] bg-gradient-to-br ${event.accent} px-9 py-14 text-white shadow-[0_30px_90px_rgba(17,24,39,0.18)] sm:px-14 sm:py-18`}>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_40%)]" />
-              <div className="relative max-w-2xl">
-                <p className="font-latin text-[11px] uppercase tracking-widest3 text-white/58">参与未来</p>
-                <h2 className="mt-5 text-3xl font-semibold leading-[1.2] tracking-[-0.04em] sm:text-4xl">
-                  {event.closingLine}
-                </h2>
-                <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                  <a
-                    href={event.ctaHref}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-umred shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0"
-                  >
-                    {event.ctaLabel}
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
-                  <button
-                    onClick={goBack}
-                    className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/18"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    查看其他活动
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-
-      </div>
-    </div>
-  );
+  return <EventPageLayout content={CONTENT} />;
 }
