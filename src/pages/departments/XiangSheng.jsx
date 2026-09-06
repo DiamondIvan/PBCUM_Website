@@ -19,12 +19,18 @@ export const CONTENT = {
      the page cannot disagree, because they are the same object. */
   id: 'qxz-01',
   slug: 'dept-01',
-  teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-  detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+  // The card's one line. Deliberately about the group — the 简介 below opens
+  // by defining 相声 itself, and the two used to be the same sentence.
+  teaser: '自 1992/1993 学年起，把相声搬上马大与校外的舞台。',
+  detail:
+    '相声组自 1992/1993 学年成立至今，以例常班培训演员，' +
+    '并透过相声日、小型相声日（小相）与大型相声观摩会（大相）呈现作品，' +
+    '也常受邀到校内外演出。\n' +
+    '我们不需要你一开始就会说相声——只要你愿意开口。',
   cta: '了解小组',
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '相声组',
-  eyebrow: '七小组 · 01',
+  eyebrow: '七小组',
   logo: '/xiaozu_logos/xiangsheng.png',
   accentHex: '#1D6348', // Deep Forest Green — sampled from the logo
   accent: 'from-[#1D6348] to-[#123D2D]',
