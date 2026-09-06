@@ -12,8 +12,17 @@
 import { Trophy } from 'lucide-react';
 import { EventPageLayout } from '../../components/shared/EventPageLayout';
 
-const CONTENT = {
+export const CONTENT = {
+  /* ── Homepage card ─────────────────────────────────────────────────
+     What the card on the homepage grid shows, and what its modal says.
+     Kept here so a group is described in exactly one place — the card and
+     the page cannot disagree, because they are the same object. */
+  id: 'wute-04',
   slug: 'event-04',
+  teaser: '立于前思，辩向新知',
+  detail: '第20届全国大专辩论会',
+  cta: '了解更多',
+  accentHex: '#1C2B4A', // PBCUM Navy — QBlogo (全辩) is fully greyscale; brand fallback
   title: '全国大专辩论会【全辩】',
   eyebrow: '五特活 · 04',
   logo: '/tehuo_logos/QBlogo.png',

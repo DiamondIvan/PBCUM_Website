@@ -12,7 +12,16 @@
 
 import { DeptPageLayout } from '../../components/shared/DeptPageLayout';
 
-const CONTENT = {
+export const CONTENT = {
+  /* ── Homepage card ─────────────────────────────────────────────────
+     What the card on the homepage grid shows, and what its modal says.
+     Kept here so a group is described in exactly one place — the card and
+     the page cannot disagree, because they are the same object. */
+  id: 'qxz-06',
+  slug: 'dept-06',
+  teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
+  detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
+  cta: '了解小组',
   /* ── Hero ──────────────────────────────────────────────────────────── */
   title: '升讯团',
   eyebrow: '七小组 · 06',

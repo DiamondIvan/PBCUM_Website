@@ -12,8 +12,17 @@
 import { Theater } from 'lucide-react';
 import { EventPageLayout } from '../../components/shared/EventPageLayout';
 
-const CONTENT = {
+export const CONTENT = {
+  /* ── Homepage card ─────────────────────────────────────────────────
+     What the card on the homepage grid shows, and what its modal says.
+     Kept here so a group is described in exactly one place — the card and
+     the page cannot disagree, because they are the same object. */
+  id: 'wute-03',
   slug: 'event-03',
+  teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+  detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+  cta: '了解更多',
+  accentHex: '#3F3A36', // Warm Ink — DXlogo is a pure black-and-white seal; no hue to follow
   title: '活动三 [PLACEHOLDER]',
   eyebrow: '五特活 · 03',
   logo: '/tehuo_logos/DXlogo.png',

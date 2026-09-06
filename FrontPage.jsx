@@ -8,6 +8,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { sectionData } from './src/data/siteData';
+import { departments } from './src/pages/departments';
+import { events } from './src/pages/events';
 import { AnimatedSection, SectionHeading } from './src/components/ui/SectionHeading';
 import { GradientOrbs } from './src/components/ui/GradientOrbs';
 import { MotionCard } from './src/components/ui/MotionCard';
@@ -339,7 +341,7 @@ function ActivitiesSection() {
             description="从舞台演出到文化探索，五特活是 PBCUM 最具代表性的年度项目。点击任意卡片，了解更多。"
           />
           <div className="mt-14">
-            <WuteSection items={sectionData.wuteActivities} />
+            <WuteSection items={events} />
           </div>
         </div>
       </AnimatedSection>
@@ -353,7 +355,7 @@ function ActivitiesSection() {
             description="七小组涵盖创意、技术、公关等多元领域，总有一个团队等待你的加入。"
           />
           <div className="mt-14">
-            <QixiaozuSection items={sectionData.qixiaozuGroups} />
+            <QixiaozuSection items={departments} />
           </div>
         </div>
       </AnimatedSection>

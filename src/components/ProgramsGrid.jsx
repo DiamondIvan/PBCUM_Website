@@ -15,12 +15,10 @@ const easing = [0.22, 1, 0.36, 1];
 
 /**
  * The one colour an item is themed by, sampled from its own logo.
- * Events store it as `themeColor`, departments as `accentHex` — two names for
- * the same job, kept because renaming touches both data arrays.
  * Regenerate with `python scripts/logo-colors.py` after swapping a logo.
  */
-function itemColor(item, type) {
-  return type === 'event' ? item.themeColor : item.accentHex;
+function itemColor(item) {
+  return item.accentHex;
 }
 
 /** Darkens #RRGGBB by `amount` (0-1) so a flat card colour can form a gradient. */
@@ -81,10 +79,10 @@ const backdropVariants = {
 function ProgramModal({ item, type, onClose }) {
   const closeRef = useRef(null);
   const isEvent = type === 'event';
-  const isImgIcon = typeof item.icon === 'string';
+  const isImgIcon = typeof item.logo === 'string';
   const Icon = isImgIcon ? null : item.icon;
   // Same colour the card is tinted with, so opening a card does not change hue.
-  const color = itemColor(item, type);
+  const color = itemColor(item);
 
   useEffect(() => { closeRef.current?.focus(); }, []);
 
@@ -155,7 +153,7 @@ function ProgramModal({ item, type, onClose }) {
           {/* Centered logo (image icons only) */}
           {isImgIcon && (
             <div className="flex justify-center px-6 sm:px-8 pt-5 sm:pt-6 pb-2">
-              <img src={item.icon} alt="" className="h-24 w-24 sm:h-28 sm:w-28 object-contain drop-shadow-lg" />
+              <img src={item.logo} alt="" className="h-24 w-24 sm:h-28 sm:w-28 object-contain drop-shadow-lg" />
             </div>
           )}
 
@@ -186,7 +184,7 @@ function ProgramModal({ item, type, onClose }) {
  * Color & motif system (per-logo extraction):
  *
  *  五特活 (events):
- *    item.themeColor → bottom gradient wash (45% card height, fades from
+ *    item.accentHex → bottom gradient wash (45% card height, fades from
  *    ~30% colour at the base to transparent at top) + bottom-right corner
  *    回纹 L-bar fragment. Card background stays white; all text stays dark.
  *
@@ -201,12 +199,12 @@ function ProgramModal({ item, type, onClose }) {
 
 function ProgramCard({ item, index, type, onOpen, variants }) {
   const isEvent = type === 'event';
-  const isImgIcon = typeof item.icon === 'string';
+  const isImgIcon = typeof item.logo === 'string';
   const Icon = isImgIcon ? null : item.icon;
 
   // A stale hex here is invisible until someone notices the card no longer
   // matches its logo — which is exactly how 新家 and 全中华 drifted.
-  const color = itemColor(item, type);
+  const color = itemColor(item);
 
   return (
     <motion.article
@@ -305,7 +303,7 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
       {isImgIcon ? (
         <div className="relative flex w-full justify-center">
           <img
-            src={item.icon}
+            src={item.logo}
             alt=""
             className="h-28 w-28 object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
           />

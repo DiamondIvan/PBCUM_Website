@@ -12,8 +12,17 @@
 import { Star } from 'lucide-react';
 import { EventPageLayout } from '../../components/shared/EventPageLayout';
 
-const CONTENT = {
+export const CONTENT = {
+  /* ── Homepage card ─────────────────────────────────────────────────
+     What the card on the homepage grid shows, and what its modal says.
+     Kept here so a group is described in exactly one place — the card and
+     the page cannot disagree, because they are the same object. */
+  id: 'wute-01',
   slug: 'event-01',
+  teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+  detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+  cta: '了解更多',
+  accentHex: '#4F7D57', // Sage Green — the 新家 characters and illustration linework
   title: '活动一 [PLACEHOLDER]',
   eyebrow: '五特活 · 01', // TODO: replace with real category, e.g. "年度旗舰活动"
   logo: '/tehuo_logos/xxylogo.png',

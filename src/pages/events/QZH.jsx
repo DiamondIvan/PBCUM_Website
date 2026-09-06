@@ -12,8 +12,17 @@
 import { MicVocal } from 'lucide-react';
 import { EventPageLayout } from '../../components/shared/EventPageLayout';
 
-const CONTENT = {
+export const CONTENT = {
+  /* ── Homepage card ─────────────────────────────────────────────────
+     What the card on the homepage grid shows, and what its modal says.
+     Kept here so a group is described in exactly one place — the card and
+     the page cannot disagree, because they are the same object. */
+  id: 'wute-02',
   slug: 'event-02',
+  teaser: '贰续华章，以梦为帆',
+  detail: '第21届全国中学华文学会生活营 \n 续章•扬帆',
+  cta: '了解更多',
+  accentHex: '#A84830', // Terracotta — the brick-red top of the banner (fades to gold below)
   title: '第21届全国中学华文学会生活营\n续章·扬帆',
   eyebrow: '五特活 · 02',
   logo: '/tehuo_logos/qzhlogo.png',

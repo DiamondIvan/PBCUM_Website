@@ -12,8 +12,17 @@
 import { Music } from 'lucide-react';
 import { EventPageLayout } from '../../components/shared/EventPageLayout';
 
-const CONTENT = {
+export const CONTENT = {
+  /* ── Homepage card ─────────────────────────────────────────────────
+     What the card on the homepage grid shows, and what its modal says.
+     Kept here so a group is described in exactly one place — the card and
+     the page cannot disagree, because they are the same object. */
+  id: 'wute-05',
   slug: 'event-05',
+  teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
+  detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
+  cta: '了解更多',
+  accentHex: '#8B5E10', // Deep Bronze — the 博书有约 wordmark (#B46C18 across 72% of the mark)
   title: '活动五 [PLACEHOLDER]',
   eyebrow: '五特活 · 05',
   logo: '/tehuo_logos/boshulogo.png',
