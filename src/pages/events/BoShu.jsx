@@ -26,7 +26,7 @@ export const CONTENT = {
   cta: '了解更多',
   accentHex: '#8B5E10', // Deep Bronze — the 博书有约 wordmark (#B46C18 across 72% of the mark)
   title: '博书有约',
-  eyebrow: '五特活 · 05',
+  eyebrow: '五特活',
   logo: '/tehuo_logos/boshulogo.png',
   accent: 'from-[#8B5E10] to-[#563A0A]',
   icon: Music,

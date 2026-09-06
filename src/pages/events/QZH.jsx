@@ -24,7 +24,7 @@ export const CONTENT = {
   cta: '了解更多',
   accentHex: '#A84830', // Terracotta — the brick-red top of the banner (fades to gold below)
   title: '第21届全国中学华文学会生活营\n续章·扬帆',
-  eyebrow: '五特活 · 02',
+  eyebrow: '五特活',
   logo: '/tehuo_logos/qzhlogo.png',
   accent: 'from-[#A84830] to-[#682D1E]',
   icon: MicVocal,

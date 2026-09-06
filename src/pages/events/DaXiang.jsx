@@ -26,7 +26,7 @@ export const CONTENT = {
   cta: '了解更多',
   accentHex: '#3F3A36', // Warm Ink — DXlogo is a pure black-and-white seal; no hue to follow
   title: '大型相声观摩会',
-  eyebrow: '五特活 · 03',
+  eyebrow: '五特活',
   logo: '/tehuo_logos/DXlogo.png',
   accent: 'from-[#3F3A36] to-[#272421]',
   icon: Theater,

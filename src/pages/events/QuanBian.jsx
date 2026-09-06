@@ -24,7 +24,7 @@ export const CONTENT = {
   cta: '了解更多',
   accentHex: '#1C2B4A', // PBCUM Navy — QBlogo (全辩) is fully greyscale; brand fallback
   title: '全国大专辩论会【全辩】',
-  eyebrow: '五特活 · 04',
+  eyebrow: '五特活',
   logo: '/tehuo_logos/QBlogo.png',
   accent: 'from-[#1C2B4A] to-[#111B2E]',
   icon: Trophy,

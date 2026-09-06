@@ -26,7 +26,7 @@ export const CONTENT = {
   cta: '了解更多',
   accentHex: '#4F7D57', // Sage Green — the characters and illustration linework
   title: '新血营',
-  eyebrow: '五特活 · 01', // TODO: replace with real category, e.g. "年度旗舰活动"
+  eyebrow: '五特活',
   logo: '/tehuo_logos/xxylogo.png',
   accent: 'from-[#4F7D57] to-[#314E36]',
   icon: Star,
