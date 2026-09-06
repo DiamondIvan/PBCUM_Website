@@ -402,7 +402,7 @@ function CommitteeSection() {
 
 function CalendarSection() {
   return (
-    <AnimatedSection id="calendar" className="bg-[#fafafa] py-24 sm:py-32">
+    <AnimatedSection id="calendar" className="bg-soft-radial py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="活动日历"

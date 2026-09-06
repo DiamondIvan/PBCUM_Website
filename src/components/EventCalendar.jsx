@@ -116,7 +116,15 @@ function MonthGrid({ year, month, dayMap, today, onPickDay, selectedKey }) {
                 isPast && entries.length ? 'opacity-55' : ''
               }`}
             >
-              <span className={isToday ? 'text-umred' : undefined}>{day}</span>
+              <span
+                className={
+                  isToday
+                    ? 'flex h-6 w-6 items-center justify-center rounded-full bg-umred font-semibold text-white shadow-[0_2px_8px_rgba(161,18,23,0.35)]'
+                    : undefined
+                }
+              >
+                {day}
+              </span>
 
               {entries.length > 0 && (
                 <span className="mt-0.5 flex items-center gap-0.5">
@@ -261,6 +269,9 @@ export function EventCalendar() {
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-[32px] border border-black/6 bg-white shadow-soft">
+      {/* Brand bar, as on the programme modals and the join card. */}
+      <div className="h-1.5 w-full bg-gradient-to-r from-[#A11217] via-[#C2477A] to-[#8B5E10]" />
+
       {/* Header — month navigation, and the view toggle */}
       <div className="flex items-center justify-between gap-3 border-b border-black/6 px-5 py-4">
         <div className={`items-center gap-1 ${showFor('grid', 'flex')}`}>
@@ -273,7 +284,7 @@ export function EventCalendar() {
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <span className="min-w-[7rem] text-center text-sm font-semibold text-ink">
+          <span className="min-w-[7rem] text-center text-sm font-semibold tracking-[-0.02em] text-ink">
             {monthLabel}
           </span>
           <button
@@ -362,7 +373,7 @@ export function EventCalendar() {
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-black/6 px-5 py-3">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-black/6 bg-[#fcfbfa] px-5 py-3">
         {[
           ['五特活', '#A11217'],
           ['七小组', '#1A3A9E'],
