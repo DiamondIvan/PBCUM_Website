@@ -105,7 +105,9 @@ export function GalleryLightbox({ items }) {
 
   return (
     <>
-      <div className="grid auto-rows-[190px] gap-4 md:grid-cols-3 md:auto-rows-[230px]">
+      {/* grid-flow-dense backfills any hole a span leaves, so adding or removing
+          a photograph cannot open a gap the way it did before. */}
+      <div className="grid auto-rows-[190px] gap-4 md:grid-cols-3 md:auto-rows-[230px] md:grid-flow-row-dense">
         {items.map((item, index) => (
           <motion.button
             key={item.alt ?? index}

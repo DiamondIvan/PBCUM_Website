@@ -112,7 +112,7 @@ export const sectionData = {
       src: '/general_gallery/筹委会合照.jpg',
       alt: '筹委会合照',
       category: '幕后',
-      span: 'md:row-span-2',
+      span: '',
       description: '筹备这一夜的工作团队。',
     },
     {
@@ -133,7 +133,7 @@ export const sectionData = {
       src: '/general_gallery/外务合照.jpg',
       alt: '外务合照',
       category: '友会',
-      span: 'md:col-span-2',
+      span: '',
       description: '与各友会代表的合照。',
     },
     {
