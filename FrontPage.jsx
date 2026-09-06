@@ -61,8 +61,20 @@ function HeroGallerySlider({ items }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.45, ease: 'easeOut' }}
-          className={`absolute inset-0 bg-gradient-to-br ${current.tone} rounded-[22px]`}
+          className="absolute inset-0 overflow-hidden rounded-[22px]"
         >
+          {/* The photograph itself. Entries without one fall back to their
+              gradient, which is all this slider used to show. */}
+          {current.src ? (
+            <img
+              src={current.src}
+              alt=""
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : (
+            <div className={`absolute inset-0 bg-gradient-to-br ${current.tone ?? ''}`} />
+          )}
           {/* Overlay */}
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(0,0,0,0.48))] rounded-[22px]" />
           {/* Text */}
@@ -72,7 +84,9 @@ function HeroGallerySlider({ items }) {
             </span>
             <div>
               <p className="font-latin text-[9px] uppercase tracking-widest3 text-white/55">PBCUM</p>
-              <h3 className="mt-1.5 text-lg font-semibold tracking-[-0.03em]">{current.title}</h3>
+              <h3 className="mt-1.5 text-lg font-semibold tracking-[-0.03em]">
+                {current.alt ?? current.title}
+              </h3>
             </div>
           </div>
         </motion.div>
