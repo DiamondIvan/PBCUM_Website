@@ -90,12 +90,73 @@ export const sectionData = {
     { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg', instagram: 'https://www.instagram.com/karheyyy?igsh=MWE3anZscHdoN3VjbA==', email: 'yeekarhey3s@gmail.com', color: 'from-[#b91c1c] to-[#f97316]' },
   ],
 
+  /* ─── 相册 — homepage gallery ────────────────────────────────────────
+   * 「煜火华章 · 四十流芳」马大华文学会四十周年纪念晚宴
+   * 2026 年 3 月 6 日 · 王岳海大礼堂 HGH Convention Centre, Sentul
+   *
+   * `alt` is what the tile shows and what titles the lightbox — the previous
+   * entries used `title`, which GalleryLightbox never reads, so every tile
+   * rendered with a blank heading.
+   * `span` sets the grid footprint; the calendar is pinned to column 3,
+   * rows 3-4, and these flow around it.
+   * ──────────────────────────────────────────────────────────────────── */
   gallery: [
-    { title: '迎新典礼', category: '定向活动', span: 'md:col-span-2 md:row-span-2', tone: 'from-[#1f2937] via-[#111827] to-[#A11217]' },
-    { title: '文化工作坊', category: '学习成长', span: 'md:row-span-2', tone: 'from-[#A11217] via-[#ef4444] to-[#fb7185]' },
-    { title: '委员会风采', category: '团队人物', span: '', tone: 'from-[#0f172a] via-[#374151] to-[#6b7280]' },
-    { title: '论坛舞台', category: '精彩活动', span: '', tone: 'from-[#7c2d12] via-[#a16207] to-[#f59e0b]' },
-    { title: '周边商品预览', category: '品牌形象', span: 'md:col-span-2', tone: 'from-[#4b5563] via-[#111827] to-[#1d4ed8]' },
+    {
+      src: '/general_gallery/全体大合照.jpg',
+      alt: '四十周年纪念晚宴',
+      category: '晚宴',
+      span: 'md:col-span-2 md:row-span-2',
+      description: '「煜火华章 · 四十流芳」马大华文学会四十周年纪念晚宴，2026 年 3 月 6 日于王岳海大礼堂举行。',
+    },
+    {
+      src: '/general_gallery/筹委会合照.jpg',
+      alt: '筹委会合照',
+      category: '幕后',
+      span: 'md:row-span-2',
+      description: '筹备这一夜的工作团队。',
+    },
+    {
+      src: '/general_gallery/舞蹈演出.jpg',
+      alt: '舞蹈演出',
+      category: '演出',
+      span: '',
+      description: '晚宴上的舞蹈节目。',
+    },
+    {
+      src: '/general_gallery/合唱演出.jpg',
+      alt: '合唱演出',
+      category: '演出',
+      span: '',
+      description: '大合唱环节，屏幕同步播放幕后制作过程。',
+    },
+    {
+      src: '/general_gallery/外务合照.jpg',
+      alt: '外务合照',
+      category: '友会',
+      span: 'md:col-span-2',
+      description: '与各友会代表的合照。',
+    },
+    {
+      src: '/general_gallery/嘉宾校友合照.jpg',
+      alt: '嘉宾与校友合照',
+      category: '校友',
+      span: '',
+      description: '历届校友与嘉宾回到同一个舞台上。',
+    },
+    {
+      src: '/general_gallery/演出谢幕.jpg',
+      alt: '演出谢幕',
+      category: '演出',
+      span: '',
+      description: '演出者谢幕，背景是学会历年活动的照片墙。',
+    },
+    {
+      src: '/general_gallery/谢幕烟火.jpg',
+      alt: '谢幕烟火',
+      category: '晚宴',
+      span: 'md:col-span-2',
+      description: '烟火落下，四十周年晚宴在这一刻画上句点。',
+    },
   ],
   testimonials: [
     {
