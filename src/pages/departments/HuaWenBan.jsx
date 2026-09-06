@@ -44,14 +44,20 @@ export const CONTENT = {
     '也给热心教育的马大生一个实践机会。',
 
   /* ── § 3 组史 ──────────────────────────────────────────────────────────
-     Not in the source document. The section does not render while empty. */
+     TODO — 华文班简史. Fill these three in and the section appears by itself;
+     while they are empty nothing renders, so a visitor never sees the gap.
+
+       founded  '1998/1999 学年'   -> shows as a chip in the hero
+       history  the founding story -> the 组史 card
+       founders ['名字', '名字']    -> name chips under it              */
   history: '',
   founders: [],
 
   /* ── § 4 宗旨与目标 ────────────────────────────────────────────────────
-     The document lists three 宗旨 rather than one sentence, so they are all
-     objectives and there is no pull quote. */
-  purpose: '',
+     The 口号 carries the pull quote; the document's three 宗旨 sit beneath it
+     as the objectives. Deliberately not repeated as the hero line above — that
+     stays descriptive, so the motto is read once and lands. */
+  purpose: '以语为桥，以文载道',
   objectives: [
     '推广华语，提倡使用正确华语',
     '促进与友族之间的交流',
