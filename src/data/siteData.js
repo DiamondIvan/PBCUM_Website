@@ -202,7 +202,7 @@ export const sectionData = {
     },
   ],
   committee: [
-    { name: '刘善勤', role: '主席', image: 'sken.jpeg', email: 'shankenlaw82@gmail.com', color: 'from-[#A11217] to-[#6D0E12]' },
+    { name: '刘善勤', role: '主席', image: 'sken.jpeg', instagram: 'https://www.instagram.com/shanken09/', email: 'shankenlaw82@gmail.com', color: 'from-[#A11217] to-[#6D0E12]' },
     { name: '方骏涛', role: '外务副主席', image: 'ivan.jpeg', instagram: 'https://www.instagram.com/fong_ivan.jt?igsh=b2xncDRjOHd5ZHh4&utm_source=qr', email: 'fongjuntoh@gmail.com', color: 'from-[#111827] to-[#374151]' },
     { name: '彭凯铃', role: '内务副主席', image: 'kailing.jpeg', instagram: 'https://www.instagram.com/kayleen.kling_?igsh=eTcyYzJ5YzNoY3B5&utm_source=qr', email: 'kailinggg0524@gmail.com', color: 'from-[#7c2d12] to-[#ef4444]' },
     { name: '苏冠霖', role: '总秘书', image: 'guanlin.jpeg', instagram: 'https://www.instagram.com/sohgl_31?igsh=enhlaWlnMjI3bmxx', email: 'sohgl11984@gmail.com', color: 'from-[#7f1d1d] to-[#dc2626]' },
