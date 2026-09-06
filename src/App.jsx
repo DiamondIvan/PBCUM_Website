@@ -39,7 +39,7 @@ const DEPT_PAGES = {
   'dept-02': WenHua,      // 文化组
   'dept-03': BianLun,     // 辩论组
   'dept-04': HuaWenBan,   // 华文班
-  'dept-05': YaoLanShou,  // 摇篮手
+  'dept-05': YaoLanShou,  // 摇篮手音乐创造坊
   'dept-06': ShengXun,    // 升讯团
   'dept-07': SheFu,       // 社服组
 };

@@ -1,5 +1,5 @@
 /**
- * YaoLanShou.jsx — 摇篮手 (dept-05)
+ * YaoLanShou.jsx — 摇篮手音乐创造坊 (dept-05)
  *
  * Everything this page says lives in CONTENT below. Edit it freely — it affects
  * no other group. The layout is shared (DeptPageLayout) so all seven pages keep
@@ -25,7 +25,7 @@ export const CONTENT = {
   detail: '',
   cta: '了解小组',
   /* ── Hero ──────────────────────────────────────────────────────────── */
-  title: '摇篮手',
+  title: '摇篮手音乐创造坊',
   eyebrow: '七小组',
   logo: '/xiaozu_logos/pbcumyls.png',
   accentHex: '#6B3FA0', // sampled from the logo — see scripts/logo-colors.py
