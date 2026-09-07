@@ -18,7 +18,7 @@
  *   6c 历年精彩时刻    a chronological strip of the group's archive
  *   6d photoSections   any number of separately-titled photo sections
  *   7  组长            who leads it
- *   8  加入我们        recruitment CTA and social links
+ *   8  加入我们        recruitment CTA, optional poster, and social links
  *
  * Every section is optional. A group that has not supplied its 组史 simply does
  * not render one, so the six departments still awaiting content degrade to a
@@ -577,6 +577,27 @@ export function DeptPageLayout({ content: dept }) {
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-stretch">
+                  {/* An optional recruitment poster. A group that is actively
+                      recruiting usually has one, and it carries the QR codes and
+                      deadline that no amount of body copy replaces. Clicking it
+                      opens the full-size image, so the QR codes stay scannable
+                      on a phone. Omit `joinPoster` and nothing renders. */}
+                  {dept.joinPoster?.src && (
+                    <a
+                      href={dept.joinPoster.src}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group block sm:order-last lg:order-first"
+                    >
+                      <img
+                        src={dept.joinPoster.src}
+                        alt={dept.joinPoster.alt ?? `${dept.title}招募海报`}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full rounded-[20px] border border-black/8 shadow-soft transition duration-300 group-hover:-translate-y-1 group-hover:shadow-card-hover sm:w-56 lg:w-52"
+                      />
+                    </a>
+                  )}
                   {dept.ctaHref && (
                     <a
                       href={dept.ctaHref}

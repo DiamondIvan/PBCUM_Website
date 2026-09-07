@@ -208,6 +208,10 @@ export const sectionData = {
     { date: '2026-07-11', title: '新届委员交接典礼', label: '特别活动', href: '/#committee' },
     { date: '2026-08-01', title: '2026/27 学年备战会', label: '内部活动', href: '/#activities' },
     { date: '2026-08-15', title: '独立日文化分享会', label: '文化活动', href: '/#activities' },
+    // Read off the 升讯团 26/27 届招募海报: 招募截至 2026 年 10 月 18 日晚上 11:59.
+    // It lives here rather than on the group's page because it is a deadline,
+    // not an activity — it would read oddly as a card in 常年活动.
+    { date: '2026-10-18', title: '升讯团 26/27 届团委招募截止', label: '招募', href: '/departments/dept-06', color: '#1C2B4A' },
   ],
 };
 
