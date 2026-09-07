@@ -16,6 +16,7 @@
  *   6  常年活动        the recurring programme the group runs
  *   6b 精彩相册        photographs of those activities
  *   6c 历年精彩时刻    a chronological strip of the group's archive
+ *   6d photoSections   any number of separately-titled photo sections
  *   7  组长            who leads it
  *   8  加入我们        recruitment CTA and social links
  *
@@ -459,6 +460,38 @@ export function DeptPageLayout({ content: dept }) {
             />
           )}
         </AnimatePresence>
+
+        {/* ═══ 6d · 分组相册 ═════════════════════════════════════════════
+            One titled photo section per entry, for a group whose photographs
+            belong to distinct things rather than to one pool. 文化组 runs three
+            programmes and shoots each separately; putting all thirty frames in
+            a single 精彩相册 would say they are interchangeable, which they are
+            not. Each entry gets its own eyebrow, title, optional standfirst and
+            its own lightbox grid.
+
+              photoSections: [
+                { eyebrow: '例常班', title: '……', description: '……',
+                  photos: [{ src, alt, category, span }] },
+              ]
+
+            Omit the field and nothing renders — the other six groups are
+            untouched. */}
+        {dept.photoSections?.map((sec, i) => (
+          sec.photos?.length > 0 && (
+            <Section key={sec.title ?? sec.eyebrow ?? i}>
+              <Eyebrow>{sec.eyebrow ?? '精彩相册'}</Eyebrow>
+              <SectionTitle>{sec.title}</SectionTitle>
+              {sec.description && (
+                <p className="mt-4 max-w-3xl text-[15px] leading-[1.95] text-black/62 whitespace-pre-line">
+                  {sec.description}
+                </p>
+              )}
+              <div className="mt-8">
+                <GalleryLightbox items={sec.photos} />
+              </div>
+            </Section>
+          )
+        ))}
 
         {/* ═══ 7 · 组长 ═════════════════════════════════════════════════ */}
         {dept.leadership?.length > 0 && (
