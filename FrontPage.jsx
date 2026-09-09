@@ -619,7 +619,7 @@ function JoinCtaSection() {
                 我们正在建设一个精致、包容、面向未来的学会。如果你希望在推动文化的同时，成长为一名领导者，这里就是你的归属之地。
               </p>
               <div className="mt-8 sm:mt-9 flex flex-col gap-3.5 sm:flex-row sm:gap-4">
-                <a href="mailto:pbcum@um.edu.my" className="btn-primary bg-white text-umred hover:bg-white/95 shadow-none">
+                <a href="mailto:pbcum41@gmail.com" className="btn-primary bg-white text-umred hover:bg-white/95 shadow-none">
                   联系执委会
                   <MessageCircleMore className="h-4 w-4" />
                 </a>

@@ -56,7 +56,7 @@ export function Footer() {
               <Facebook className="h-4 w-4" />
             </a>
             <a
-              href="mailto:pbcum@um.edu.my"
+              href="mailto:pbcum41@gmail.com"
               aria-label="发送电邮"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >

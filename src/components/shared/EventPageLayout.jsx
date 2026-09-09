@@ -24,6 +24,7 @@ import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight, MapPin } from 'luc
 import { useNavigate } from 'react-router-dom';
 import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
+import { Footer } from '../Footer';
 import { NotFoundEvent, TourSchedule } from './EventPageShared';
 import { Reveal } from '../../hooks/useInView.jsx';
 import { parseDate } from '../../data/calendar';
@@ -269,6 +270,8 @@ export function EventPageLayout({ content: event }) {
         </Reveal>
 
       </div>
+
+      <Footer />
     </div>
   );
 }

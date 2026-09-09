@@ -31,6 +31,72 @@ import { buildDayMap, collectCalendarEntries, toKey } from '../data/calendar';
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 const MAX_DOTS = 3; // beyond this a day shows "+N"
 
+/* ─── Pastel palette (display-only) ────────────────────────────────────────
+ * Every dot on this calendar is still keyed to the item's own `accentHex` —
+ * `toPastel` only softens it for this surface; the source colour in each
+ * event/department file is never touched. Method: hex -> HSL, keep the hue,
+ * saturation x0.62, lightness -> 70%. `TODAY_ACCENT` is umred put through the
+ * same idea at a deeper step (saturation x0.75, lightness -> 44%) so today's
+ * marker still reads as "the brand colour," not a fourth unrelated hue.
+ * Cache is a plain module-level Map — the input set is a fixed, small list of
+ * accent hexes, so this never grows unbounded. */
+const PASTEL_CACHE = new Map();
+// Calendar surface: #F3F4F7, a dusty blue-lavender off the same navy family as
+// the crest. Applied directly as `bg-[#F3F4F7]` below — Tailwind's arbitrary-
+// value classes need a literal string, so it isn't read from this constant.
+const TODAY_ACCENT = '#B32D32';
+
+function hexToHsl(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = ((n >> 16) & 255) / 255;
+  const g = ((n >> 8) & 255) / 255;
+  const b = (n & 255) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return [0, 0, l];
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h;
+  switch (max) {
+    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+    case g: h = (b - r) / d + 2; break;
+    default: h = (r - g) / d + 4;
+  }
+  return [h / 6, s, l];
+}
+
+function hslToHex(h, s, l) {
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+  const toHex = (v) => Math.round(v * 255).toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function toPastel(hex) {
+  if (!hex) return hex;
+  const cached = PASTEL_CACHE.get(hex);
+  if (cached) return cached;
+  const [h, s] = hexToHsl(hex);
+  const pastel = hslToHex(h, s * 0.62, 0.7);
+  PASTEL_CACHE.set(hex, pastel);
+  return pastel;
+}
+
 function startOfToday() {
   const d = new Date();
   d.setHours(0, 0, 0, 0);
@@ -44,13 +110,13 @@ function EntryRow({ e, past, onPick }) {
     <button
       type="button"
       onClick={() => onPick(e)}
-      className={`flex w-full items-start gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors duration-200 hover:bg-black/[0.04] ${
+      className={`flex w-full items-start gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors duration-200 hover:bg-[#EAEDF3] ${
         past ? 'opacity-55' : ''
       }`}
     >
       <span
         className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full"
-        style={{ backgroundColor: e.color }}
+        style={{ backgroundColor: toPastel(e.color) }}
       />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-medium text-ink">{e.title}</span>
@@ -110,18 +176,19 @@ function MonthGrid({ year, month, dayMap, today, onPickDay, selectedKey }) {
               onClick={() => onPickDay(key)}
               className={`relative flex aspect-square flex-col items-center justify-center rounded-xl text-sm transition-colors duration-200 ${
                 entries.length
-                  ? 'cursor-pointer font-semibold text-ink hover:bg-black/[0.05]'
+                  ? 'cursor-pointer font-semibold text-ink hover:bg-[#E9ECF4]'
                   : 'cursor-default text-black/25'
-              } ${isSelected ? 'bg-black/[0.06]' : ''} ${
+              } ${isSelected ? 'bg-[#DEE2ED]' : ''} ${
                 isPast && entries.length ? 'opacity-55' : ''
               }`}
             >
               <span
                 className={
                   isToday
-                    ? 'flex h-6 w-6 items-center justify-center rounded-full bg-umred font-semibold text-white shadow-[0_2px_8px_rgba(161,18,23,0.35)]'
+                    ? 'flex h-6 w-6 items-center justify-center rounded-full font-semibold text-white shadow-[0_2px_8px_rgba(179,45,50,0.35)]'
                     : undefined
                 }
+                style={isToday ? { backgroundColor: TODAY_ACCENT } : undefined}
               >
                 {day}
               </span>
@@ -132,7 +199,7 @@ function MonthGrid({ year, month, dayMap, today, onPickDay, selectedKey }) {
                     <span
                       key={n}
                       className="h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: e.color }}
+                      style={{ backgroundColor: toPastel(e.color) }}
                     />
                   ))}
                   {entries.length > MAX_DOTS && (
@@ -268,7 +335,7 @@ export function EventCalendar() {
   const listClass = showFor('list');
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-[32px] border border-black/6 bg-white shadow-soft">
+    <div className="group relative flex flex-col overflow-hidden rounded-[32px] border border-black/6 bg-[#F3F4F7] shadow-soft">
       {/* Brand bar, as on the programme modals and the join card. */}
       <div className="h-1.5 w-full bg-gradient-to-r from-[#A11217] via-[#C2477A] to-[#8B5E10]" />
 
@@ -373,14 +440,14 @@ export function EventCalendar() {
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-black/6 bg-[#fcfbfa] px-5 py-3">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-black/6 bg-[#EBEDF3] px-5 py-3">
         {[
           ['五特活', '#A11217'],
           ['七小组', '#1A3A9E'],
           ['学会活动', '#6B7280'],
         ].map(([label, color]) => (
           <span key={label} className="flex items-center gap-1.5 text-[10px] text-black/45">
-            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
+            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: toPastel(color) }} />
             {label}
           </span>
         ))}

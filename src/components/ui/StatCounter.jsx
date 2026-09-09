@@ -1,28 +1,32 @@
-import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useInView, animate } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
+/* Drives the digits through plain React state rather than handing a
+   MotionValue to JSX as a child: that pattern relies on framer-motion
+   patching the DOM node outside React's render cycle, which was found to
+   silently never kick in for some of the four hero cards (stuck at "0"
+   indefinitely). An explicit setState on every tick has no such failure mode. */
 function useCount(target) {
   const nodeRef = useRef(null);
   const inView = useInView(nodeRef, { once: true, margin: '-12% 0px' });
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (latest) => Math.round(latest).toLocaleString());
+  const [display, setDisplay] = useState('0');
 
   useEffect(() => {
-    if (inView) {
-      const controls = animate(count, Number(target.toString().replace(/[^\d.]/g, '')), {
-        duration: 1.6,
-        ease: 'easeOut',
-      });
-      return controls.stop;
-    }
-    return undefined;
-  }, [count, inView, target]);
+    if (!inView) return undefined;
+    const numericTarget = Number(target.toString().replace(/[^\d.]/g, '')) || 0;
+    const controls = animate(0, numericTarget, {
+      duration: 1.6,
+      ease: 'easeOut',
+      onUpdate: (latest) => setDisplay(Math.round(latest).toLocaleString()),
+    });
+    return controls.stop;
+  }, [inView, target]);
 
-  return { nodeRef, rounded };
+  return { nodeRef, display };
 }
 
 export function StatCounter({ value, label, icon: Icon }) {
-  const { nodeRef, rounded } = useCount(value);
+  const { nodeRef, display } = useCount(value);
 
   return (
     <div
@@ -34,9 +38,9 @@ export function StatCounter({ value, label, icon: Icon }) {
           <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
         <div className="min-w-0">
-          <motion.div className="font-latin text-xl sm:text-[1.6rem] font-bold leading-none tracking-[-0.04em] text-ink">
-            {rounded}
-          </motion.div>
+          <div className="font-latin text-xl sm:text-[1.6rem] font-bold leading-none tracking-[-0.04em] text-ink">
+            {display}
+          </div>
           <p className="mt-1 truncate text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest2 text-black/40">{label}</p>
         </div>
       </div>

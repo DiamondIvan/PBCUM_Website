@@ -34,6 +34,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
+import { Footer } from '../Footer';
 import { InitialsAvatar, NotFoundDept } from './DeptPageShared';
 import { Reveal } from '../../hooks/useInView.jsx';
 
@@ -620,6 +621,8 @@ export function DeptPageLayout({ content: dept }) {
         </Reveal>
 
       </div>
+
+      <Footer />
     </div>
   );
 }

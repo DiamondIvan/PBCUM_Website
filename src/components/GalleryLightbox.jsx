@@ -1,12 +1,25 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Expand, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 /**
  * ImageDetailModal — Full-screen lightbox modal for a single photo item
  */
 export function ImageDetailModal({ item, onClose }) {
+  const closeRef = useRef(null);
+
+  // Same pattern as ProgramModal: focus the close control on open, close on
+  // Escape. Without this a keyboard user who opens the lightbox — the most
+  // widely reused modal in the app — has no keyboard way to close it.
+  useEffect(() => {
+    if (!item) return undefined;
+    closeRef.current?.focus();
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [item, onClose]);
+
   if (!item) return null;
 
   const title = item.alt || item.label || item.title || '';
@@ -53,6 +66,7 @@ export function ImageDetailModal({ item, onClose }) {
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.28),rgba(0,0,0,0.0)_40%,rgba(0,0,0,0.65))] p-5 sm:p-10">
             <div className="flex justify-end">
               <button
+                ref={closeRef}
                 type="button"
                 aria-label="关闭图片"
                 onClick={onClose}
@@ -110,7 +124,7 @@ export function GalleryLightbox({ items }) {
       <div className="grid auto-rows-[190px] gap-4 md:grid-cols-3 md:auto-rows-[230px] md:grid-flow-row-dense">
         {items.map((item, index) => (
           <motion.button
-            key={item.alt ?? index}
+            key={index}
             type="button"
             whileHover={{ y: -6, scale: 1.015 }}
             transition={{ duration: 0.28, ease: 'easeOut' }}

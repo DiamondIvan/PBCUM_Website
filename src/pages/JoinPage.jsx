@@ -47,7 +47,8 @@ export function JoinPage() {
           <div className="mt-11 flex flex-col gap-4 sm:flex-row">
             <a
               target="_blank"
-              href="https://docs.google.com/forms/d/e/1FAIpQLScwxdpARvJlyls5h1IqQwcXGZcf5MSGtQ6EmQoQ4C9nngRkwQ/closedform"
+              rel="noreferrer"
+              href="https://forms.gle/ZdSwMf5yzTZcR3Ma7"
               className="btn-primary"
             >
               立即报名加入
