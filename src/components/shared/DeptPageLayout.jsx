@@ -30,13 +30,14 @@ import {
   ArrowRight, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight,
   Facebook, Instagram, Quote, Users,
 } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
 import { Footer } from '../Footer';
 import { InitialsAvatar, NotFoundDept } from './DeptPageShared';
 import { Reveal } from '../../hooks/useInView.jsx';
+import { withoutScaffold } from '../../data/publishing';
 
 /* ─── Small building blocks ─────────────────────────────────────────────── */
 
@@ -68,7 +69,11 @@ function Section({ children, delay = 0.05 }) {
 
 /* ─── Layout ────────────────────────────────────────────────────────────── */
 
-export function DeptPageLayout({ content: dept }) {
+export function DeptPageLayout({ content }) {
+  /* Same rule as the activity pages: strip any field still holding its
+     `// TODO` example before rendering, so a group added as a scaffold shows
+     a short "being written" page rather than the example text. */
+  const dept = useMemo(() => withoutScaffold(content), [content]);
   const navigate = useNavigate();
   const [activeActivity, setActiveActivity] = useState(null);
   const [activeMoment, setActiveMoment] = useState(null);
@@ -96,12 +101,16 @@ export function DeptPageLayout({ content: dept }) {
     <div className="relative min-h-screen overflow-x-hidden bg-soft-radial text-ink">
       <Navbar />
 
+      <main id="main">
       {/* ═══ 1 · HERO ═══════════════════════════════════════════════════ */}
       <section className="relative isolate overflow-hidden bg-white pt-24 pb-0 sm:pt-28">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          {/* -ml-3 keeps the text optically aligned with the content below while
+              the padding gives the control a 44px-tall tap area. At 20px it was
+              the smallest target on the page and also the main way back. */}
           <button
             onClick={goBack}
-            className="inline-flex items-center gap-2 text-sm font-medium text-black/45 transition-colors duration-200 hover:text-umred"
+            className="-ml-3 inline-flex min-h-[44px] items-center gap-2 rounded-full px-3 text-sm font-medium text-black/60 transition-colors duration-200 hover:bg-black/[0.04] hover:text-umred"
           >
             <ChevronLeft className="h-4 w-4" />
             返回小组列表
@@ -127,7 +136,7 @@ export function DeptPageLayout({ content: dept }) {
               <div className="flex flex-wrap items-center gap-3">
                 <Eyebrow>{dept.eyebrow}</Eyebrow>
                 {dept.vibe && (
-                  <span className="rounded-full border border-black/8 bg-black/4 px-2.5 py-0.5 text-[11px] font-medium text-black/50">
+                  <span className="rounded-full border border-black/8 bg-black/4 px-2.5 py-0.5 text-[11px] font-medium text-black/58">
                     {dept.vibe}
                   </span>
                 )}
@@ -203,7 +212,7 @@ export function DeptPageLayout({ content: dept }) {
                 </p>
                 {dept.founders?.length > 0 && (
                   <div className="mt-6 border-t border-black/6 pt-5">
-                    <p className="text-[11px] font-semibold uppercase tracking-widest2 text-black/38">
+                    <p className="text-[11px] font-semibold uppercase tracking-widest2 text-black/58">
                       创办人
                     </p>
                     <div className="mt-2.5 flex flex-wrap gap-2">
@@ -383,14 +392,14 @@ export function DeptPageLayout({ content: dept }) {
                   <button
                     onClick={() => scrollMoments('left')}
                     aria-label="向前滑动"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => scrollMoments('right')}
                     aria-label="向后滑动"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -436,7 +445,7 @@ export function DeptPageLayout({ content: dept }) {
                       <p className="mt-2 text-sm leading-[1.8] text-black/55">{m.caption}</p>
                     )}
                     {m.credit && (
-                      <p className="mt-3 text-[11px] leading-snug text-black/38">{m.credit}</p>
+                      <p className="mt-3 text-[11px] leading-snug text-black/58">{m.credit}</p>
                     )}
                   </div>
                 </div>
@@ -519,7 +528,7 @@ export function DeptPageLayout({ content: dept }) {
                   )}
                   <div>
                     <p className="font-semibold leading-snug text-ink">{person.name}</p>
-                    <p className="mt-0.5 text-xs font-medium text-black/45">{person.role}</p>
+                    <p className="mt-0.5 text-xs font-medium text-black/58">{person.role}</p>
                   </div>
                 </div>
               ))}
@@ -544,7 +553,7 @@ export function DeptPageLayout({ content: dept }) {
 
                   {hasSocial && (
                     <div className="mt-7">
-                      <p className="text-[11px] font-semibold uppercase tracking-widest2 text-black/38">
+                      <p className="text-[11px] font-semibold uppercase tracking-widest2 text-black/58">
                         关注我们
                       </p>
                       <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -554,7 +563,7 @@ export function DeptPageLayout({ content: dept }) {
                             target="_blank"
                             rel="noreferrer"
                             aria-label={`${dept.title} Facebook`}
-                            className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white px-4 py-2 text-sm font-medium text-black/60 shadow-sm transition duration-200 hover:border-umred/25 hover:text-umred"
+                            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-black/8 bg-white px-4 py-2 text-sm font-medium text-black/60 shadow-sm transition duration-200 hover:border-umred/25 hover:text-umred"
                           >
                             <Facebook className="h-4 w-4" />
                             Facebook
@@ -566,7 +575,7 @@ export function DeptPageLayout({ content: dept }) {
                             target="_blank"
                             rel="noreferrer"
                             aria-label={`${dept.title} Instagram`}
-                            className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white px-4 py-2 text-sm font-medium text-black/60 shadow-sm transition duration-200 hover:border-umred/25 hover:text-umred"
+                            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-black/8 bg-white px-4 py-2 text-sm font-medium text-black/60 shadow-sm transition duration-200 hover:border-umred/25 hover:text-umred"
                           >
                             <Instagram className="h-4 w-4" />
                             {social.instagramHandle ?? 'Instagram'}
@@ -590,13 +599,23 @@ export function DeptPageLayout({ content: dept }) {
                       rel="noreferrer"
                       className="group block sm:order-last lg:order-first"
                     >
-                      <img
-                        src={dept.joinPoster.src}
-                        alt={dept.joinPoster.alt ?? `${dept.title}招募海报`}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full rounded-[20px] border border-black/8 shadow-soft transition duration-300 group-hover:-translate-y-1 group-hover:shadow-card-hover sm:w-56 lg:w-52"
-                      />
+                      {/* The poster is the one lazy image on the page whose
+                          height is not already fixed by its container, so it
+                          was collapsing to ~2px and shoving the section down
+                          when it finally loaded. The 4:5 box reserves the space
+                          up front — that is the shape Canva and Instagram
+                          posters come in — and object-contain means a poster
+                          cut to some other ratio letterboxes rather than
+                          stretches. Nothing to remember when adding one. */}
+                      <div className="aspect-[4/5] w-full overflow-hidden rounded-[20px] border border-black/8 bg-[#fafafa] shadow-soft transition duration-300 group-hover:-translate-y-1 group-hover:shadow-card-hover sm:w-56 lg:w-52">
+                        <img
+                          src={dept.joinPoster.src}
+                          alt={dept.joinPoster.alt ?? `${dept.title}招募海报`}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
                     </a>
                   )}
                   {dept.ctaHref && (
@@ -621,6 +640,7 @@ export function DeptPageLayout({ content: dept }) {
         </Reveal>
 
       </div>
+      </main>
 
       <Footer />
     </div>

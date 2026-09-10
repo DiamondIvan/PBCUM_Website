@@ -39,6 +39,13 @@ import shutil
 import sys
 
 MAX_WIDTH = 1600      # generous for full-bleed use and 2x lightboxes
+# Capping width alone lets a portrait photo through at twice the pixels of a
+# landscape one: 1600x1067 is 1.7 MP, but 1600x2133 is 3.4 MP, and the file is
+# several times larger for a picture shown no bigger on the page. 社服组 was
+# 58 portrait shots out of 101 and the folder reached 51 MB. This is the same
+# pixel budget as a 1600px-wide landscape frame, applied whichever way up the
+# photograph happens to be.
+MAX_PIXELS = 1600 * 1200   # 1.92 MP
 QUALITY = 82
 ORIGINALS = "photo-originals"
 
@@ -66,20 +73,51 @@ def sniff(path: str) -> str:
     return "?"
 
 
-def problems(path: str, im_size, real: str) -> list[str]:
+def target_size(w: int, h: int) -> tuple[int, int] | None:
+    """Dimensions to resize to, or None when the photo is already small enough.
+
+    Two limits, both applied: no wider than MAX_WIDTH, and no more than
+    MAX_PIXELS in total. The second is what catches portrait photographs, which
+    the width limit alone lets through at double the pixel count.
+    """
+    scale = 1.0
+    if w > MAX_WIDTH:
+        scale = MAX_WIDTH / w
+    if w * h * scale * scale > MAX_PIXELS:
+        scale = (MAX_PIXELS / (w * h)) ** 0.5
+    # Ignore a shave of a few percent. Without this a 1600x1201 photo is "over
+    # budget" by one row of pixels and gets rewritten for nothing — and because
+    # rewriting means re-encoding, near-miss files would churn on every run.
+    if scale > 0.97:
+        return None
+    return max(1, round(w * scale)), max(1, round(h * scale))
+
+
+def problems(path: str, im_size, real: str) -> tuple[list[str], list[str]]:
+    """(actionable, advisory).
+
+    Actionable means re-processing will fix it. Advisory means the file is
+    already as small as this script can make it and is merely still large —
+    dense outdoor photographs compress poorly however they are encoded. The two
+    are kept apart so --check can gate a commit on real faults without failing
+    forever on a handful of leafy hillsides that are already correct.
+    """
     ext = os.path.splitext(path)[1].lower()
-    found = []
+    actionable, advisory = [], []
     if real == "HEIC":
-        found.append("HEIC — will not display in any browser")
+        actionable.append("HEIC — will not display in any browser")
     elif real == "JPEG" and ext not in (".jpg", ".jpeg"):
-        found.append(f"JPEG bytes named {ext}")
+        actionable.append(f"JPEG bytes named {ext}")
     elif real == "PNG" and ext != ".png":
-        found.append(f"PNG bytes named {ext}")
-    if im_size and im_size[0] > MAX_WIDTH:
-        found.append(f"{im_size[0]}px wide (max {MAX_WIDTH})")
+        actionable.append(f"PNG bytes named {ext}")
+    if im_size:
+        w, h = im_size
+        want = target_size(w, h)
+        if want:
+            actionable.append(f"{w}x{h} ({w*h/1_000_000:.1f} MP) -> {want[0]}x{want[1]}")
     if os.path.getsize(path) > 600_000:
-        found.append(f"{os.path.getsize(path)/1024:.0f} KB")
-    return found
+        advisory.append(f"{os.path.getsize(path)/1024:.0f} KB")
+    return actionable, advisory
 
 
 def walk(root: str):
@@ -109,6 +147,7 @@ def main() -> None:
 
     flagged = before = after = 0
     renamed: list[tuple[str, str]] = []
+    still_large: list[tuple[str, str]] = []
     for path in walk(args.root):
         real = sniff(path)
         try:
@@ -116,12 +155,14 @@ def main() -> None:
         except Exception:
             size = None
 
-        issues = problems(path, size, real)
-        if not issues:
+        actionable, advisory = problems(path, size, real)
+        if not actionable:
+            if advisory:
+                still_large.append((path, advisory[0]))
             continue
         flagged += 1
         print(f"  {path}")
-        print(f"      {'; '.join(issues)}")
+        print(f"      {'; '.join(actionable + advisory)}")
         if args.check:
             continue
 
@@ -133,7 +174,15 @@ def main() -> None:
             shutil.copy2(path, keep)
 
         b = os.path.getsize(path)
-        im = ImageOps.exif_transpose(Image.open(path))
+        # Always read from the preserved original when there is one. Re-running
+        # this script is expected — limits change, new photos arrive — and
+        # re-encoding an already-encoded JPEG stacks a second round of loss on
+        # a file for no gain. The original is the only lossless starting point,
+        # so every run produces the same result rather than a slightly worse one.
+        source = keep if os.path.exists(keep) else path
+        # An original saved under a stale extension (a .heic that became .jpg on
+        # an earlier run) still opens fine — the decoder reads the bytes.
+        im = ImageOps.exif_transpose(Image.open(source))
         # Keep transparency as PNG; flattening it onto white would ruin cut-outs.
         # But test the channel rather than the mode: photographs exported as
         # RGBA carry a fully-opaque alpha that is never used, and keeping those
@@ -141,9 +190,9 @@ def main() -> None:
         alpha = False
         if im.mode in ("RGBA", "LA") or "transparency" in im.info:
             alpha = im.convert("RGBA").getchannel("A").getextrema()[0] < 255
-        w, h = im.size
-        if w > MAX_WIDTH:
-            im = im.resize((MAX_WIDTH, round(h * MAX_WIDTH / w)), Image.LANCZOS)
+        want = target_size(*im.size)
+        if want:
+            im = im.resize(want, Image.LANCZOS)
 
         out = os.path.splitext(path)[0] + (".png" if alpha else ".jpg")
         if alpha:
@@ -167,12 +216,24 @@ def main() -> None:
         after += a
         print(f"      -> {os.path.basename(out)}  {b/1024:.0f} KB -> {a/1024:.0f} KB")
 
+    def report_still_large() -> None:
+        if not still_large:
+            return
+        print(f"\n{len(still_large)} file(s) are correctly sized but still over 600 KB.")
+        print("Nothing more this script can do — dense outdoor scenes carry real")
+        print("detail and do not compress further without visible loss. Shrink the")
+        print("photo's display size or drop it if the weight matters.")
+        for p, why in still_large:
+            print(f"  {why:>9}  {p}")
+
     if not flagged:
         print(f"{args.root}: nothing to do — every photo is web-ready.")
+        report_still_large()
         return
     if args.check:
         print(f"\n{flagged} file(s) need processing. Run without --check to fix.")
         print("Any renamed file will need its path updated where it is referenced.")
+        report_still_large()
         sys.exit(1)
     print(f"\n{flagged} file(s): {before/1048576:.1f} MB -> {after/1048576:.1f} MB")
     print(f"Originals kept in {ORIGINALS}/ — back them up; they are the only copies.")

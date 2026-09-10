@@ -92,7 +92,7 @@ function MemberCard({
     >
       <div className="flex items-start justify-between gap-4">
         <Avatar image={avatar.image} initials={avatar.initials} color={member.color} />
-        <div className="mt-1 rounded-full border border-black/6 bg-[#fafafa] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-widest2 text-black/40">
+        <div className="mt-1 rounded-full border border-black/6 bg-[#fafafa] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-widest2 text-black/58">
           {member.role}
         </div>
       </div>
@@ -102,7 +102,7 @@ function MemberCard({
       <p className="mt-2 text-sm leading-[1.8] text-black/55">
         PBCUM 执委会成员
       </p>
-      <div className="mt-6 sm:mt-7 flex items-center gap-3 text-black/35">
+      <div className="mt-6 sm:mt-7 flex items-center gap-3 text-black/58">
         {/* Rendered only when there is a handle to link to. A member without
             one previously still got a button wired to '#', which looks live and
             goes nowhere. */}
@@ -145,7 +145,7 @@ function MemberCard({
               transition={{ duration: 0.2, ease: 'easeOut' }}
               className="absolute left-1/2 top-full z-20 mt-3 w-[min(240px,calc(100vw-3rem))] -translate-x-1/2 rounded-2xl border border-black/8 bg-white p-3.5 text-left shadow-[0_16px_40px_rgba(17,24,39,0.14)]"
             >
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/40">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/58">
                 联系方式
               </p>
               <div className="mt-2 rounded-xl border border-black/6 bg-[#fafafa] px-3 py-2">

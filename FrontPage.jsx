@@ -91,17 +91,29 @@ function HeroGallerySlider({ items }) {
           </div>
         </motion.div>
       </AnimatePresence>
-      {/* Dot indicators */}
-      <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
-        {items.map((_, i) => (
+      {/* Dot indicators.
+          The visible mark stays 6px; the button around it is 28x44, which is
+          the tap area. Not the full 44 wide — eight of these sit side by side
+          and 8x44 does not fit a 375px phone — but comfortably over the 24x24
+          WCAG 2.5.8 floor, where a 6px dot was not. Names come from the photo
+          each dot leads to, so a screen reader announces something better
+          than "button". */}
+      <div className="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2">
+        {items.map((item, i) => (
           <button
             key={i}
             type="button"
             onClick={() => setIndex(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/45'
-            }`}
-          />
+            aria-label={`查看第 ${i + 1} 张照片：${item.alt ?? item.category ?? ''}`}
+            aria-current={i === index ? 'true' : undefined}
+            className="group/dot flex h-11 w-7 items-center justify-center"
+          >
+            <span
+              className={`block h-1.5 rounded-full transition-all duration-300 ${
+                i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/45 group-hover/dot:bg-white/70'
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>
@@ -225,7 +237,7 @@ function HeroSection() {
                 transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
                 className="rounded-[24px] sm:rounded-[30px] border border-black/6 bg-[#fbfbfb] p-6 sm:p-7 shadow-[0_20px_60px_rgba(17,24,39,0.06)]"
               >
-                <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-black/42">即将举办</p>
+                <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-black/58">即将举办</p>
                 <h3 className="mt-2.5 sm:mt-3 text-xl sm:text-2xl font-semibold leading-snug text-ink">月夜文化论坛</h3>
                 <p className="mt-2.5 sm:mt-3 text-sm leading-[1.8] text-black/58">
                   一场融合交流、表演与视觉叙事的精彩夜间体验。
@@ -237,14 +249,16 @@ function HeroSection() {
               </motion.div>
               <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
                 <div className="rounded-[24px] sm:rounded-[28px] border border-black/6 bg-white p-5 shadow-[0_20px_60px_rgba(17,24,39,0.06)]">
-                  <p className="text-sm font-medium text-black/45">会员增长</p>
+                  <p className="text-sm font-medium text-black/58">会员增长</p>
                   <div className="mt-3 sm:mt-4 flex items-end gap-2">
                     <span className="font-latin text-3xl sm:text-4xl font-bold tracking-[-0.04em] text-ink">1.2K</span>
-                    <span className="mb-1 text-xs sm:text-sm text-emerald-600">+18% 今年</span>
+                    {/* emerald-700, not 600: at 12px the lighter green came in
+                        at 3.8:1 on white, under the 4.5:1 AA floor. */}
+                    <span className="mb-1 text-xs sm:text-sm text-emerald-700">+18% 今年</span>
                   </div>
                 </div>
                 <div className="rounded-[24px] sm:rounded-[28px] border border-black/6 bg-white p-5 shadow-[0_20px_60px_rgba(17,24,39,0.06)]">
-                  <p className="text-sm font-medium text-black/45">校园覆盖</p>
+                  <p className="text-sm font-medium text-black/58">校园覆盖</p>
                   <div className="mt-3 sm:mt-4 flex items-center gap-2.5 sm:gap-3 text-sm font-medium text-ink">
                     <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-emerald-500" />
                     活跃于各学院及学生空间
@@ -298,7 +312,7 @@ function AboutSection() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="font-latin text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest2 text-black/38">
+                  <p className="font-latin text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest2 text-black/58">
                     {stat.label}
                   </p>
                   <div className="mt-3 sm:mt-4 flex items-end gap-2">
@@ -346,33 +360,42 @@ function WhyJoinSection() {
 function ActivitiesSection() {
   return (
     <>
-      {/* ── 五特活 ── editorial grid, white background ──────────────── */}
-      <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="五大特色活动"
-            title="每一项活动，都是一段难以忘怀的体验。"
-            description="从舞台演出到文化探索，五特活是 PBCUM 最具代表性的年度项目。点击任意卡片，了解更多。"
-          />
-          <div className="mt-14">
-            <WuteSection items={events} />
+      {/* ── 五特活 ── editorial grid, white background ────────────────
+          The heading only appears if there is something under it. While the
+          remaining activities are still being written they are filtered out
+          (see src/data/publishing.js), and a section title standing over an
+          empty grid reads as a page that failed to load rather than one with
+          nothing to say yet. */}
+      {events.length > 0 && (
+        <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+              eyebrow="五大特色活动"
+              title="每一项活动，都是一段难以忘怀的体验。"
+              description="从舞台演出到文化探索，五特活是 PBCUM 最具代表性的年度项目。点击任意卡片，了解更多。"
+            />
+            <div className="mt-14">
+              <WuteSection items={events} />
+            </div>
           </div>
-        </div>
-      </AnimatedSection>
+        </AnimatedSection>
+      )}
 
       {/* ── 七小组 ── dense directory grid, tinted background ───────── */}
-      <AnimatedSection id="groups" className="bg-[#fafafa] py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="七大工作小组"
-            title="找到属于你的位置，发现你的舞台。"
-            description="七小组涵盖创意、技术、公关等多元领域，总有一个团队等待你的加入。"
-          />
-          <div className="mt-14">
-            <QixiaozuSection items={departments} />
+      {departments.length > 0 && (
+        <AnimatedSection id="groups" className="bg-[#fafafa] py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+              eyebrow="七大工作小组"
+              title="找到属于你的位置，发现你的舞台。"
+              description="七小组涵盖创意、技术、公关等多元领域，总有一个团队等待你的加入。"
+            />
+            <div className="mt-14">
+              <QixiaozuSection items={departments} />
+            </div>
           </div>
-        </div>
-      </AnimatedSection>
+        </AnimatedSection>
+      )}
     </>
   );
 }
@@ -497,7 +520,7 @@ function HistorySection() {
             { label: '五特活', items: events.map((e) => e.title.split('\n')[0]) },
           ].map((group) => (
             <div key={group.label}>
-              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/38">
+              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/58">
                 {group.label}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -587,7 +610,7 @@ function SponsorsSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-9 flex items-end justify-between gap-6">
           <div>
-            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/38">
+            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/58">
               赞助商 / 合作伙伴
             </p>
             <h2 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
@@ -652,17 +675,19 @@ function HomePage() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-soft-radial text-ink">
       <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <WhyJoinSection />
-      <ActivitiesSection />
-      <CommitteeSection />
-      <GallerySection />
-      <CalendarSection />
-      <TestimonialsSection />
-      <SponsorsSection />
-      <JoinCtaSection />
-      <HistorySection />
+      <main id="main">
+        <HeroSection />
+        <AboutSection />
+        <WhyJoinSection />
+        <ActivitiesSection />
+        <CommitteeSection />
+        <GallerySection />
+        <CalendarSection />
+        <TestimonialsSection />
+        <SponsorsSection />
+        <JoinCtaSection />
+        <HistorySection />
+      </main>
       <Footer />
     </div>
   );

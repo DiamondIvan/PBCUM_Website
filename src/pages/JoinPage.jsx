@@ -1,5 +1,6 @@
 import { ArrowRight, CheckCircle2, ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Footer } from '../components/Footer';
 
 const steps = [
   '填写会员申请表，分享你的兴趣与期望。',
@@ -9,11 +10,14 @@ const steps = [
 
 export function JoinPage() {
   return (
-    <main className="min-h-screen bg-soft-radial px-4 py-8 text-ink sm:px-6 lg:px-8">
+    <>
+    {/* id="main" so the skip link in the navbar has a target here too — this
+        is the one page that carries no navbar of its own. */}
+    <main id="main" className="min-h-screen bg-soft-radial px-4 py-8 text-ink sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl pt-18">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-black/50 transition duration-300 hover:text-umred"
+          className="-ml-3 inline-flex min-h-[44px] items-center gap-2 rounded-full px-3 text-sm font-semibold text-black/58 transition duration-300 hover:bg-black/[0.04] hover:text-umred"
         >
           <ChevronLeft className="h-4 w-4" />
           返回首页
@@ -61,5 +65,11 @@ export function JoinPage() {
         </div>
       </div>
     </main>
+    {/* Someone who reaches this page and decides not to fill the form in has
+        nowhere else to go without it — the contact details and social links
+        are the second-best outcome, and every other page already carries
+        them. */}
+    <Footer />
+    </>
   );
 }

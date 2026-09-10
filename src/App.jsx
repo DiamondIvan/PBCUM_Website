@@ -46,6 +46,12 @@ const DEPT_PAGES = {
 
 /* ── Dispatchers ─────────────────────────────────────────────────────── */
 
+/* An unknown slug goes home. A slug that names a page still being written
+   renders it: the scaffold fields are stripped before the page ever sees them
+   (see src/data/publishing.js), so it shows what exists — title, logo, and a
+   note that the rest is coming — rather than either a dead end or `// TODO`
+   text. Nothing here changes when a page is finished. */
+
 function EventDispatcher() {
   const { slug } = useParams();
   const Page = EVENT_PAGES[slug];

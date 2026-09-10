@@ -132,7 +132,7 @@ function ProgramModal({ item, type, onClose }) {
                 </div>
               )}
               <div>
-                <p className="font-latin text-[10px] font-semibold uppercase tracking-widest3 text-black/38">
+                <p className="font-latin text-[10px] font-semibold uppercase tracking-widest3 text-black/58">
                   {isEvent ? '五特活' : '七小组'}
                 </p>
                 <h2 className="mt-0.5 text-lg sm:text-xl font-semibold leading-tight text-ink">
@@ -143,7 +143,7 @@ function ProgramModal({ item, type, onClose }) {
             <button
               ref={closeRef}
               onClick={onClose}
-              className="group flex h-10 w-10 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/50 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80"
+              className="group flex h-10 w-10 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/58 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80"
               aria-label="关闭"
             >
               <X className="h-4 w-4" />
@@ -330,6 +330,13 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
         <h3 className="whitespace-pre-line text-lg font-semibold leading-snug text-ink">
           {item.title}
         </h3>
+        {/* Says up front that this one's write-up is not ready, so the card
+            sets the right expectation before a reader spends a tap on it. */}
+        {item.isDraft && (
+          <span className="mt-2 inline-flex w-fit items-center rounded-full border border-black/8 bg-black/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-black/58">
+            内容筹备中
+          </span>
+        )}
         {item.teaser && (
           <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">
             {item.teaser}

@@ -74,12 +74,12 @@ export const STATUS_CONFIG = {
   past: {
     label: '已结束',
     dot: 'bg-black/20',
-    pill: 'bg-black/5 text-black/38 ring-1 ring-black/10',
+    pill: 'bg-black/5 text-black/58 ring-1 ring-black/10',
   },
   tbd: {
     label: '待定',
     dot: 'bg-black/15',
-    pill: 'bg-black/5 text-black/35 ring-1 ring-black/8',
+    pill: 'bg-black/5 text-black/58 ring-1 ring-black/8',
   },
 };
 
@@ -126,7 +126,7 @@ export function TourSchedule({
               </span>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm sm:text-base font-semibold text-ink">{stop.label}</p>
-                <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs sm:text-sm text-black/45">
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs sm:text-sm text-black/58">
                   {hasLocation && (
                     <span className="flex items-center gap-1 truncate">
                       <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0 opacity-60" />
@@ -134,13 +134,13 @@ export function TourSchedule({
                     </span>
                   )}
                   <span className="flex items-center gap-1 sm:hidden text-black/55">
-                    <CalendarDays className="h-3 w-3 flex-shrink-0 text-black/35" />
+                    <CalendarDays className="h-3 w-3 flex-shrink-0 text-black/58" />
                     {stop.date}
                   </span>
                 </div>
               </div>
               <div className="hidden flex-shrink-0 items-center gap-1.5 sm:flex">
-                <CalendarDays className="h-4 w-4 text-black/28" />
+                <CalendarDays className="h-4 w-4 text-black/58" />
                 <span className="text-sm text-black/55">{stop.date}</span>
               </div>
               <span className={`ml-1 sm:ml-2 flex flex-shrink-0 items-center gap-1 sm:gap-1.5 rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold ${cfg.pill}`}>

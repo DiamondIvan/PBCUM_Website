@@ -1,0 +1,12 @@
+# 马来亚大学华文学会 PBCUM
+# Everything here is public information about the society, so everything is
+# crawlable. photo-originals/ never reaches the server at all — it lives
+# outside public/ and is gitignored — so it needs no rule.
+
+User-agent: *
+Allow: /
+
+# Sitemap: https://<your-domain>/sitemap.xml
+# ^ uncomment once the deployed domain is settled, and add public/sitemap.xml
+#   listing the 10 live routes. Left commented rather than guessed: a Sitemap
+#   line pointing at the wrong host is worse than none at all.

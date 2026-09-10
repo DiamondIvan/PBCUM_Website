@@ -41,7 +41,7 @@ export function StatCounter({ value, label, icon: Icon }) {
           <div className="font-latin text-xl sm:text-[1.6rem] font-bold leading-none tracking-[-0.04em] text-ink">
             {display}
           </div>
-          <p className="mt-1 truncate text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest2 text-black/40">{label}</p>
+          <p className="mt-1 truncate text-[10px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest2 text-black/58">{label}</p>
         </div>
       </div>
     </div>

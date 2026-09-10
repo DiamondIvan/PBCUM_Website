@@ -45,7 +45,7 @@ export function TestimonialsCarousel({ testimonials }) {
               </div>
               <div>
                 <p className="font-semibold text-ink">{current.name}</p>
-                <p className="mt-0.5 text-xs sm:text-sm text-black/48">{current.role}</p>
+                <p className="mt-0.5 text-xs sm:text-sm text-black/58">{current.role}</p>
               </div>
             </div>
           </motion.div>
@@ -54,7 +54,7 @@ export function TestimonialsCarousel({ testimonials }) {
 
       {/* Controls panel */}
       <div className="rounded-[36px] border border-black/6 bg-[linear-gradient(180deg,#fff,#f8f8f8)] p-7 shadow-soft sm:p-8">
-        <p className="text-[11px] uppercase tracking-widest3 text-black/38">切换评价</p>
+        <p className="text-[11px] uppercase tracking-widest3 text-black/58">切换评价</p>
         <div className="mt-5 flex gap-2.5">
           <button
             type="button"
@@ -87,11 +87,11 @@ export function TestimonialsCarousel({ testimonials }) {
             >
               <div className="flex items-center justify-between gap-4">
                 <span className="font-semibold text-ink">{testimonial.name}</span>
-                <span className="font-latin text-[11px] uppercase tracking-widest2 text-black/35">
+                <span className="font-latin text-[11px] uppercase tracking-widest2 text-black/58">
                   0{testimonialIndex + 1}
                 </span>
               </div>
-              <p className="mt-1.5 text-sm text-black/50">{testimonial.role}</p>
+              <p className="mt-1.5 text-sm text-black/58">{testimonial.role}</p>
             </button>
           ))}
         </div>

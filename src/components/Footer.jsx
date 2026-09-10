@@ -40,7 +40,7 @@ export function Footer() {
           <p className="mt-5 max-w-sm text-sm leading-[1.8] text-black/55">
             马来亚大学华文学会致力于传承中华文化、培育领导人才，为每一位会员打造充实而有意义的校园体验。
           </p>
-          <div className="mt-7 flex items-center gap-3 text-black/42">
+          <div className="mt-7 flex items-center gap-3 text-black/58">
             <a
               href="#"
               aria-label="Instagram"
@@ -67,16 +67,19 @@ export function Footer() {
 
         {/* Quick links */}
         <div>
-          <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/38">
+          <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/58">
             快速导览
           </p>
-          <div className="mt-5 flex flex-col gap-3.5">
+          {/* gap tightened because each row now carries its own 44px height —
+              these are the most-tapped links on a phone, one per line, and at
+              20px tall they were easy to miss between neighbours. */}
+          <div className="mt-3 flex flex-col gap-0.5">
             {footerLinks.map((link) => (
               <a
                 key={link.label}
                 href={`/#${link.id}`}
                 onClick={(e) => handleLinkClick(e, link)}
-                className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
+                className="inline-flex min-h-[44px] cursor-pointer items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
               >
                 <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
                 {link.label}
@@ -84,7 +87,7 @@ export function Footer() {
             ))}
             <Link
               to="/join"
-              className="inline-flex items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
+              className="inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
             >
               <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
               加入我们
@@ -94,7 +97,7 @@ export function Footer() {
 
         {/* Contact */}
         <div>
-          <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/38">
+          <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/58">
             联系方式
           </p>
           <div className="mt-5 space-y-4 text-sm text-black/55">
@@ -117,10 +120,10 @@ export function Footer() {
       {/* Copyright strip */}
       <div className="border-t border-black/5 px-4 py-5 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-center sm:text-left">
-          <p className="text-xs text-black/35">
+          <p className="text-xs text-black/58">
             © {new Date().getFullYear()} 马来亚大学华文学会（PBCUM）。版权所有。
           </p>
-          <p className="font-latin text-xs text-black/28">马来亚大学</p>
+          <p className="font-latin text-xs text-black/58">马来亚大学</p>
         </div>
       </div>
     </footer>

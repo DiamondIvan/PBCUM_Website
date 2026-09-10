@@ -16,8 +16,13 @@ import {
 // 五特活 and 七小组 now live with their own pages — each activity or group is
 // described in one file. Imported here only so the '精彩活动' stat below can
 // still count them automatically.
-import { departments } from '../pages/departments';
-import { events } from '../pages/events';
+//
+// `all…`, not the published lists: the society runs twelve programmes whether
+// or not each one's page has been written yet. Counting the published list
+// made the homepage advertise "8+" the moment the four unwritten activities
+// were held back, which understates the society rather than the website.
+import { allDepartments } from '../pages/departments';
+import { allEvents } from '../pages/events';
 
 /* ─── 五特活 — Five Signature Activities ────────────────────────────
  * Shape: { id, slug, title, teaser, icon, themeColor, detail, cta }
@@ -29,7 +34,7 @@ import { events } from '../pages/events';
  * lengths at build time. Add/remove items freely — the '精彩活动'
  * value on the homepage will update automatically.
  * ─────────────────────────────────────────────────────────────────── */
-const totalPrograms = events.length + departments.length;
+const totalPrograms = allEvents.length + allDepartments.length;
 
 export const sectionData = {
   stats: [

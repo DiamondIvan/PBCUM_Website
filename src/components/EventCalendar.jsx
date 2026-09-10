@@ -120,7 +120,7 @@ function EntryRow({ e, past, onPick }) {
       />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-medium text-ink">{e.title}</span>
-        <span className="mt-0.5 block text-[11px] text-black/45">
+        <span className="mt-0.5 block text-[11px] text-black/58">
           {e.parent ? `${e.parent} · ${e.label}` : e.label}
         </span>
       </span>
@@ -145,7 +145,7 @@ function MonthGrid({ year, month, dayMap, today, onPickDay, selectedKey }) {
         {WEEKDAYS.map((w) => (
           <div
             key={w}
-            className="py-1 text-center font-latin text-[10px] font-semibold uppercase tracking-wider text-black/30"
+            className="py-1 text-center font-latin text-[10px] font-semibold uppercase tracking-wider text-black/58"
           >
             {w}
           </div>
@@ -174,6 +174,12 @@ function MonthGrid({ year, month, dayMap, today, onPickDay, selectedKey }) {
                   : undefined
               }
               onClick={() => onPickDay(key)}
+              /* text-black/25 is the one colour on the site below the 55%
+                 opacity floor the rest of the text now keeps to. It is only
+                 ever used on a day with nothing on it — the button is
+                 `disabled`, and WCAG 1.4.3 exempts inactive controls. Making
+                 empty days as dark as real ones would also undo the thing the
+                 grid is for: showing at a glance which days carry something. */
               className={`relative flex aspect-square flex-col items-center justify-center rounded-xl text-sm transition-colors duration-200 ${
                 entries.length
                   ? 'cursor-pointer font-semibold text-ink hover:bg-[#E9ECF4]'
@@ -203,7 +209,7 @@ function MonthGrid({ year, month, dayMap, today, onPickDay, selectedKey }) {
                     />
                   ))}
                   {entries.length > MAX_DOTS && (
-                    <span className="font-latin text-[9px] font-bold leading-none text-black/45">
+                    <span className="font-latin text-[9px] font-bold leading-none text-black/58">
                       +{entries.length - MAX_DOTS}
                     </span>
                   )}
@@ -232,13 +238,13 @@ function AgendaList({ entries, today, onPick }) {
   const Group = ({ title, list, muted }) =>
     list.length === 0 ? null : (
       <div className={muted ? 'mt-6 opacity-60' : ''}>
-        <p className="px-3 font-latin text-[10px] font-semibold uppercase tracking-widest2 text-black/35">
+        <p className="px-3 font-latin text-[10px] font-semibold uppercase tracking-widest2 text-black/58">
           {title}
         </p>
         <div className="mt-1.5 flex flex-col">
           {list.map((e, i) => (
             <div key={i} className="flex items-start gap-2">
-              <span className="w-20 flex-shrink-0 pt-3 pl-3 font-latin text-[11px] text-black/45">
+              <span className="w-20 flex-shrink-0 pt-3 pl-3 font-latin text-[11px] text-black/58">
                 {stamp(e)}
               </span>
               <div className="min-w-0 flex-1">
@@ -252,7 +258,7 @@ function AgendaList({ entries, today, onPick }) {
 
   if (entries.length === 0) {
     return (
-      <p className="px-3 py-8 text-center text-sm text-black/40">
+      <p className="px-3 py-8 text-center text-sm text-black/58">
         目前还没有已排定日期的活动。
       </p>
     );
@@ -347,7 +353,7 @@ export function EventCalendar() {
             type="button"
             onClick={() => step(-1)}
             aria-label="上个月"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-black/45 transition-colors duration-200 hover:bg-black/5 hover:text-ink"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-black/58 transition-colors duration-200 hover:bg-black/5 hover:text-ink"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -359,7 +365,7 @@ export function EventCalendar() {
             type="button"
             onClick={() => step(1)}
             aria-label="下个月"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-black/45 transition-colors duration-200 hover:bg-black/5 hover:text-ink"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-black/58 transition-colors duration-200 hover:bg-black/5 hover:text-ink"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -372,8 +378,8 @@ export function EventCalendar() {
             onClick={() => setView('list')}
             aria-label="列表检视"
             aria-pressed={view === 'list'}
-            className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-200 ${
-              view === 'list' ? 'bg-white text-ink shadow-sm' : 'text-black/40 hover:text-ink'
+            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 ${
+              view === 'list' ? 'bg-white text-ink shadow-sm' : 'text-black/58 hover:text-ink'
             }`}
           >
             <List className="h-3.5 w-3.5" />
@@ -383,8 +389,8 @@ export function EventCalendar() {
             onClick={() => setView('grid')}
             aria-label="月历检视"
             aria-pressed={view === 'grid'}
-            className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-200 ${
-              view === 'grid' ? 'bg-white text-ink shadow-sm' : 'text-black/40 hover:text-ink'
+            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 ${
+              view === 'grid' ? 'bg-white text-ink shadow-sm' : 'text-black/58 hover:text-ink'
             }`}
           >
             <CalendarDays className="h-3.5 w-3.5" />
@@ -415,7 +421,7 @@ export function EventCalendar() {
             className="absolute inset-x-4 bottom-4 z-20 rounded-[22px] border border-black/8 bg-white p-3 shadow-[0_16px_50px_rgba(17,24,39,0.16)]"
           >
             <div className="flex items-center justify-between px-2 pb-1">
-              <p className="text-[11px] font-semibold text-black/45">
+              <p className="text-[11px] font-semibold text-black/58">
                 {new Date(
                   ...selectedKey.split('-').map((v, i) => (i === 1 ? +v - 1 : +v)),
                 ).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -425,7 +431,7 @@ export function EventCalendar() {
                 type="button"
                 onClick={() => setSelectedKey(null)}
                 aria-label="关闭"
-                className="flex h-6 w-6 items-center justify-center rounded-full text-black/35 transition-colors hover:bg-black/5 hover:text-ink"
+                className="flex h-6 w-6 items-center justify-center rounded-full text-black/58 transition-colors hover:bg-black/5 hover:text-ink"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -446,12 +452,12 @@ export function EventCalendar() {
           ['七小组', '#1A3A9E'],
           ['学会活动', '#6B7280'],
         ].map(([label, color]) => (
-          <span key={label} className="flex items-center gap-1.5 text-[10px] text-black/45">
+          <span key={label} className="flex items-center gap-1.5 text-[10px] text-black/58">
             <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: toPastel(color) }} />
             {label}
           </span>
         ))}
-        <span className="ml-auto text-[10px] text-black/30">已结束的日期会淡化显示</span>
+        <span className="ml-auto text-[10px] text-black/58">已结束的日期会淡化显示</span>
       </div>
     </div>
   );

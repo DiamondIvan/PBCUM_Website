@@ -34,50 +34,19 @@
  * Date constructor and lands on the previous day for anyone west of Greenwich.
  */
 
+import { parseDate, parseRange, toKey } from './dates';
 import { departments } from '../pages/departments';
 import { events } from '../pages/events';
 import { sectionData } from './siteData';
 
-/* ─── Parsing ───────────────────────────────────────────────────────────── */
+/* ─── Parsing ───────────────────────────────────────────────────────────────
+   The helpers themselves live in ./dates.js, which imports nothing. Anything
+   that only needs to read a date should import from there rather than from
+   here — this module pulls in the whole content graph, and importing it from
+   inside that graph forms a cycle. Re-exported so existing callers keep
+   working, and so EventCalendar can take everything from one place. */
 
-/** 'YYYY-MM-DD' or 'D.M.YYYY' -> Date at local midnight, or null. */
-export function parseDate(value) {
-  if (typeof value !== 'string') return null;
-  const s = value.trim();
-  if (!s || s === '待定') return null;
-
-  const iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-  if (iso) return new Date(+iso[1], +iso[2] - 1, +iso[3]);
-
-  const dmy = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-  if (dmy) return new Date(+dmy[3], +dmy[2] - 1, +dmy[1]);
-
-  return null;
-}
-
-/**
- * Splits a value that may itself be a range into [start, end].
- * Accepts '30.10.2026-1.11.2026' as well as a separate endDate field.
- */
-function parseRange(dateValue, endValue) {
-  if (typeof dateValue === 'string' && !endValue) {
-    // Split only between a year and a following day, so '2026-03-06' survives.
-    const parts = dateValue.split(/(?<=\d{4})\s*-\s*/);
-    if (parts.length === 2) {
-      const a = parseDate(parts[0]);
-      const b = parseDate(parts[1]);
-      if (a) return [a, b ?? a];
-    }
-  }
-  const start = parseDate(dateValue);
-  if (!start) return null;
-  return [start, parseDate(endValue) ?? start];
-}
-
-/** Local-midnight 'YYYY-MM-DD'. Used as the map key and for sorting. */
-export function toKey(d) {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-}
+export { parseDate, toKey };
 
 /* ─── Collection ────────────────────────────────────────────────────────── */
 

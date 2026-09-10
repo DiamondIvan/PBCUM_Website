@@ -33,9 +33,14 @@ export const CONTENT = {
      Leave them out entirely while the date is unknown. */
   // date: '2026-03-06',
   // endDate: '2026-03-08',
-  date: '// TODO',
-  location: '// TODO',
-  hook: '// TODO',
+  /* Left out rather than filled with scaffold text: the layout omits a chip it
+     has no value for, and the whole activity is hidden while any `// TODO`
+     remains. 全中华 runs as a tour, so the dates that matter are on the
+     tourStops below and already reach the calendar from there. Add a `date`,
+     `location` or `hook` here whenever the headline ones are confirmed. */
+  // date: '',
+  // location: '',
+  // hook: '',
   intro: '全国中学华文学会生活营简介\n\n全国中学华文学会生活营（全中华）是马大华文学会旗下的特别活动。其宗旨是为了提高中学华文学会的素质。营会以游戏与课程并重的形式进行，以培养中学生的团队精神、领导能力及个人素养。课程涵盖个人提升、组织运作、中华文化与华教，推动营员珍惜母语及多元文化。全中华以全国巡回形式举办，为各地中学生提供交流、学习与成长的平台。《续章·扬帆》承接二十载精神，续写新篇章，扬起青春之帆，勇敢迈向未来。 ',
   /**
    * tourStops — full-year timeline for 全中华.

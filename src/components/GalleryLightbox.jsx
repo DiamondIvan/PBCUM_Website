@@ -8,17 +8,36 @@ import { createPortal } from 'react-dom';
  */
 export function ImageDetailModal({ item, onClose }) {
   const closeRef = useRef(null);
+  // The element that was focused before the modal opened, so focus can be put
+  // back where the user left it rather than dropped on <body>.
+  const returnFocusRef = useRef(null);
 
   // Same pattern as ProgramModal: focus the close control on open, close on
   // Escape. Without this a keyboard user who opens the lightbox — the most
   // widely reused modal in the app — has no keyboard way to close it.
   useEffect(() => {
     if (!item) return undefined;
+    returnFocusRef.current = document.activeElement;
     closeRef.current?.focus();
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      // Only restore if focus is still somewhere in the (now unmounting) modal;
+      // if the user has since clicked elsewhere, leave their choice alone.
+      returnFocusRef.current?.focus?.();
+    };
   }, [item, onClose]);
+
+  // Hold the page still behind the overlay. ProgramModal already does this;
+  // without it a swipe on a phone scrolls the page under the photo, and closing
+  // the lightbox leaves the reader somewhere they never navigated to.
+  useEffect(() => {
+    if (!item) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [item]);
 
   if (!item) return null;
 
@@ -96,7 +115,7 @@ export function ImageDetailModal({ item, onClose }) {
           </div>
           {detail && (
             <div className="flex flex-col justify-center rounded-[20px] sm:rounded-[22px] border border-black/5 bg-[#f8f8f8] p-4 sm:p-5 text-xs sm:text-sm leading-[1.75] text-black/55">
-              <p className="font-latin text-[10px] font-semibold uppercase tracking-widest2 text-black/35 mb-1">详细说明</p>
+              <p className="font-latin text-[10px] font-semibold uppercase tracking-widest2 text-black/58 mb-1">详细说明</p>
               <p>{detail}</p>
             </div>
           )}
@@ -131,11 +150,19 @@ export function GalleryLightbox({ items }) {
             onClick={() => setActiveIndex(index)}
             className={`group relative overflow-hidden rounded-[28px] sm:rounded-[32px] ${item.span} border border-black/6 bg-black text-left shadow-soft`}
           >
-            {/* Photo or gradient background */}
+            {/* Photo or gradient background.
+                lazy + async: this grid is the one place the site renders a large
+                number of photographs at once — 社服组 alone puts 91 through it.
+                Loading them all eagerly made that page fetch 51 MB before a phone
+                could show anything. The tiles sit in fixed `auto-rows` with the
+                image absolutely positioned, so the row height never depends on
+                the image and deferring it shifts nothing. */}
             {item.src ? (
               <img
                 src={item.src}
                 alt={item.alt}
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
               />
             ) : (

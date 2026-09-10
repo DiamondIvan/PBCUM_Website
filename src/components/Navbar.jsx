@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { Menu, Sparkles, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MOTION } from './ui/animations';
 
@@ -19,11 +19,41 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const barRef = useRef(null);
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     const nextScrolled = latest > 20;
     setScrolled((current) => (current === nextScrolled ? current : nextScrolled));
   });
+
+  /* Dismissing the open mobile menu.
+     Previously the only way out was the X or picking a link — tapping the page
+     behind it did nothing, which is the first thing most people try on a phone.
+     Escape covers the keyboard, and the page is held still underneath so the
+     menu cannot be scrolled away from. */
+  useEffect(() => {
+    if (!mobileOpen) return undefined;
+
+    const onKey = (e) => { if (e.key === 'Escape') setMobileOpen(false); };
+    const onDown = (e) => {
+      if (barRef.current && !barRef.current.contains(e.target)) setMobileOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKey);
+    // pointerdown rather than click: it fires before the menu's own links, so a
+    // tap that lands outside never also activates something underneath.
+    document.addEventListener('pointerdown', onDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onDown);
+    };
+  }, [mobileOpen]);
+
+  // A route change with the menu still open would leave it covering the new
+  // page. Every in-menu control closes it already; this covers back/forward.
+  useEffect(() => { setMobileOpen(false); }, [location.pathname]);
 
   const handleNavClick = (e, item) => {
     e.preventDefault();
@@ -51,7 +81,17 @@ export function Navbar() {
 
   return (
     <header className="fixed left-0 top-0 z-40 w-full px-4 pt-3 sm:px-6 sm:pt-4">
+      {/* First thing in the tab order on every page. Hidden until focused, so
+          a keyboard user can jump the nav instead of tabbing through it on all
+          fourteen pages. Every layout wraps its content in <main id="main">. */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-5 focus:z-50 focus:rounded-full focus:bg-umred focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white focus:shadow-glow"
+      >
+        跳至主要内容
+      </a>
       <motion.div
+        ref={barRef}
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: -16, opacity: 0 }}
         transition={{ duration: MOTION.duration * 0.8, ease: MOTION.ease }}
@@ -65,13 +105,13 @@ export function Navbar() {
       >
         {/* Desktop & Main Header bar */}
         <div className="flex items-center justify-between gap-5 px-5 py-3.5 sm:px-8 sm:py-4.5">
-          <Link to="/" onClick={handleLogoClick} className="group inline-flex items-center gap-3.5 sm:gap-4">
+          <Link to="/" onClick={handleLogoClick} className="group inline-flex min-h-[44px] items-center gap-3.5 sm:gap-4">
             <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-glow transition duration-300 group-hover:rotate-6 group-hover:scale-105">
               <img src="/pbcum.jpg" alt="PBCUM logo" className="h-full w-full object-cover" />
             </div>
             <div className="leading-snug">
               <div className="font-latin text-base sm:text-lg font-bold tracking-tight text-ink">PBCUM</div>
-              <div className="text-[10px] sm:text-xs uppercase tracking-widest2 text-black/45">马来亚大学华文学会</div>
+              <div className="text-[10px] sm:text-xs uppercase tracking-widest2 text-black/58">马来亚大学华文学会</div>
             </div>
           </Link>
 

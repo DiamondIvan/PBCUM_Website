@@ -18,7 +18,7 @@
  * gathering material shows a shorter page rather than empty headings.
  */
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +27,8 @@ import { Navbar } from '../Navbar';
 import { Footer } from '../Footer';
 import { NotFoundEvent, TourSchedule } from './EventPageShared';
 import { Reveal } from '../../hooks/useInView.jsx';
-import { parseDate } from '../../data/calendar';
+import { parseDate } from '../../data/dates';
+import { withoutScaffold } from '../../data/publishing';
 
 /** The `date` field feeds both this chip and the homepage calendar, so it is
  *  stored as ISO. Shown here in the form a reader expects; anything that is
@@ -38,7 +39,13 @@ function formatDate(value) {
   return d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-export function EventPageLayout({ content: event }) {
+export function EventPageLayout({ content }) {
+  /* Strip the scaffold here rather than trusting the caller. Each activity
+     page passes its own CONTENT object straight in, so sanitising only the
+     list in pages/events/index.js cleaned up the homepage cards and left the
+     detail pages still rendering `// TODO` — which is exactly what happened.
+     Doing it at the layout means every page is covered by one rule. */
+  const event = useMemo(() => withoutScaffold(content), [content]);
   const navigate = useNavigate();
   const scrollRef = useRef(null);
   const [activeHighlight, setActiveHighlight] = useState(null);
@@ -58,6 +65,12 @@ export function EventPageLayout({ content: event }) {
 
   const Icon = event.icon;
 
+  /* A tile with neither a photograph nor a caption shows nothing but its
+     category pill. The scaffold galleries are exactly that once their example
+     captions are stripped — five blank panels that read as a broken album —
+     so they are filtered out and the section disappears with them. */
+  const gallery = (event.gallery ?? []).filter((g) => g.src || g.alt);
+
   function goBack() {
     if (window.history.length > 1) {
       navigate(-1);
@@ -70,6 +83,7 @@ export function EventPageLayout({ content: event }) {
     <div className="relative min-h-screen overflow-x-hidden bg-soft-radial text-ink">
       <Navbar />
 
+      <main id="main">
       {/* ── Hero banner ─────────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden pt-24 sm:pt-28">
         <div className={`relative mx-4 overflow-hidden rounded-[36px] bg-gradient-to-br ${event.accent} sm:mx-6 lg:mx-8`}>
@@ -79,7 +93,7 @@ export function EventPageLayout({ content: event }) {
           <div className="relative px-8 py-14 text-white sm:px-14 sm:py-20 lg:py-28">
             <button
               onClick={goBack}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-md transition-colors duration-200 hover:bg-white/18 hover:text-white"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-md transition-colors duration-200 hover:bg-white/18 hover:text-white"
             >
               <ChevronLeft className="h-4 w-4" />
               返回活动列表
@@ -101,21 +115,32 @@ export function EventPageLayout({ content: event }) {
               <h1 className="mt-4 whitespace-pre-line text-4xl font-semibold leading-[1.1] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
                 {event.title}
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-[1.8] text-white/75 sm:text-xl">
-                {event.hook}
-              </p>
+              {event.hook && (
+                <p className="mt-6 max-w-2xl text-lg leading-[1.8] text-white/75 sm:text-xl">
+                  {event.hook}
+                </p>
+              )}
             </div>
 
-            {/* Date + location badges */}
+            {/* Date + location badges.
+                Each is rendered only when it is known — the same rule the
+                department pages follow. An activity whose date is not fixed
+                yet shows one fewer chip rather than an empty pill, which is
+                what let 全中华 keep a page while those two details are still
+                being confirmed. */}
             <div className="mt-10 flex flex-wrap gap-3">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
-                <CalendarDays className="h-4 w-4 opacity-75" />
-                {formatDate(event.date)}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
-                <MapPin className="h-4 w-4 opacity-75" />
-                {event.location}
-              </span>
+              {event.date && (
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
+                  <CalendarDays className="h-4 w-4 opacity-75" />
+                  {formatDate(event.date)}
+                </span>
+              )}
+              {event.location && (
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
+                  <MapPin className="h-4 w-4 opacity-75" />
+                  {event.location}
+                </span>
+              )}
               <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
                 <Icon className="h-4 w-4 opacity-75" />
                 五特活
@@ -128,15 +153,38 @@ export function EventPageLayout({ content: event }) {
       {/* ── Content wrapper ─────────────────────────────────────────── */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
+        {/* ── Still being written ──────────────────────────────────────
+            Shown in place of the missing sections for an activity whose
+            content has not been supplied yet. Saying so plainly is better
+            than a page that looks like it failed to load — and far better
+            than the scaffold text this replaced. */}
+        {event.isDraft && (
+          <Reveal delay={0.05}>
+            <div className="mt-16 rounded-[28px] border border-black/8 bg-[#fafafa] px-7 py-8 sm:mt-20 sm:px-9">
+              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
+                内容筹备中
+              </p>
+              <h2 className="mt-3 text-xl font-semibold leading-snug text-ink sm:text-2xl">
+                这项活动的介绍正在整理中。
+              </h2>
+              <p className="mt-3 max-w-2xl text-base leading-[1.85] text-black/58">
+                详情、日期与照片会在确认后陆续更新。想先了解，欢迎透过页尾的联络方式找我们。
+              </p>
+            </div>
+          </Reveal>
+        )}
+
         {/* ── Intro paragraph ──────────────────────────────────────── */}
-        <Reveal delay={0.05}>
-          <div className="mt-16 sm:mt-20">
-            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">活动简介</p>
-            <p className="mt-5 max-w-3xl whitespace-pre-line text-justify text-xl leading-[1.85] text-black/68 sm:text-2xl">
-              {event.intro}
-            </p>
-          </div>
-        </Reveal>
+        {event.intro && (
+          <Reveal delay={0.05}>
+            <div className="mt-16 sm:mt-20">
+              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">活动简介</p>
+              <p className="mt-5 max-w-3xl whitespace-pre-line text-justify text-xl leading-[1.85] text-black/68 sm:text-2xl">
+                {event.intro}
+              </p>
+            </div>
+          </Reveal>
+        )}
 
         {/* ── Tour schedule (only for multi-stop / timeline events) ── */}
         {event.tourStops?.length > 0 && (
@@ -145,20 +193,26 @@ export function EventPageLayout({ content: event }) {
           </Reveal>
         )}
 
-        {/* ── Gallery ──────────────────────────────────────────────── */}
-        <Reveal delay={0.08}>
-          <div className="mt-16 sm:mt-20">
-            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">精彩相册</p>
-            <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
-              每一帧，都是故事。
-            </h2>
-            <div className="mt-8">
-              <GalleryLightbox items={event.gallery} />
+        {/* ── Gallery ────────────────────────────────────────────────
+            Guarded like every other section: an activity with no photographs
+            yet shows no album, rather than an empty heading — and
+            GalleryLightbox is never handed an undefined list to map over. */}
+        {gallery.length > 0 && (
+          <Reveal delay={0.08}>
+            <div className="mt-16 sm:mt-20">
+              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">精彩相册</p>
+              <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
+                每一帧，都是故事。
+              </h2>
+              <div className="mt-8">
+                <GalleryLightbox items={gallery} />
+              </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        )}
 
         {/* ── Highlights (Horizontal Scrollable Carousel) ──────────── */}
+        {event.highlights?.length > 0 && (
         <Reveal delay={0.05}>
           <div className="mt-16 sm:mt-20">
             <div className="flex items-end justify-between gap-4">
@@ -175,14 +229,14 @@ export function EventPageLayout({ content: event }) {
                   <button
                     onClick={() => scroll('left')}
                     aria-label="向前滑动"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => scroll('right')}
                     aria-label="向后滑动"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white text-black/60 shadow-sm transition-all duration-200 hover:border-black/20 hover:bg-black/5 hover:text-ink active:scale-95"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -227,6 +281,7 @@ export function EventPageLayout({ content: event }) {
             </div>
           </div>
         </Reveal>
+        )}
 
         {/* ── Highlights Lightbox Modal ────────────────────────────── */}
         <AnimatePresence>
@@ -245,8 +300,12 @@ export function EventPageLayout({ content: event }) {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_40%)]" />
               <div className="relative max-w-2xl">
                 <p className="font-latin text-[11px] uppercase tracking-widest3 text-white/58">参与未来</p>
+                {/* The closing line is one of the fields an unwritten activity
+                    has not got yet. The panel still earns its place without it
+                    — it is how a reader gets onward from the page — so only
+                    the heading is held back, not the whole block. */}
                 <h2 className="mt-5 text-3xl font-semibold leading-[1.2] tracking-[-0.04em] sm:text-4xl">
-                  {event.closingLine}
+                  {event.closingLine ?? '想知道下一场什么时候开始？'}
                 </h2>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <a
@@ -270,6 +329,7 @@ export function EventPageLayout({ content: event }) {
         </Reveal>
 
       </div>
+      </main>
 
       <Footer />
     </div>
