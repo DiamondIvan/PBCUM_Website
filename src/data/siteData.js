@@ -77,22 +77,43 @@ export const sectionData = {
       icon: Camera,
     },
   ],
+  /* ─── 执委会 ─────────────────────────────────────────────────────────
+   * Two tiers, and `dept` is what decides which one a person sits in:
+   *
+   *   no `dept`    执行委员 — runs the society as a whole
+   *   `dept` slug  七小组负责人 — leads that group; their card links to the
+   *                group's page, and takes its name and colour from it
+   *
+   * Group leads are shown in the 七小组 order, not the order written here,
+   * so they always line up with the group grid higher up the page.
+   *
+   *   image      filename in public/committee_photo/
+   *   instagram  the handle alone, no @ and no URL. The link is built from
+   *              it. Links copied out of the Instagram app carry `igsh=`
+   *              and `utm_source=` — a token identifying whoever shared the
+   *              profile — and a bare handle leaves nowhere for one to go.
+   *
+   * No email addresses. These are personal accounts, and a public page is
+   * read by address scrapers as well as students. Instagram reaches every
+   * member; the society's shared address is in the footer.
+   * ──────────────────────────────────────────────────────────────────── */
   committee: [
-    { name: '刘善勤', role: '主席', image: 'sken.jpeg', instagram: 'https://www.instagram.com/shanken09/', email: 'shankenlaw82@gmail.com', color: 'from-[#A11217] to-[#6D0E12]' },
-    { name: '方骏涛', role: '外务副主席', image: 'ivan.jpeg', instagram: 'https://www.instagram.com/fong_ivan.jt?igsh=b2xncDRjOHd5ZHh4&utm_source=qr', email: 'fongjuntoh@gmail.com', color: 'from-[#111827] to-[#374151]' },
-    { name: '彭凯铃', role: '内务副主席', image: 'kailing.jpeg', instagram: 'https://www.instagram.com/kayleen.kling_?igsh=eTcyYzJ5YzNoY3B5&utm_source=qr', email: 'kailinggg0524@gmail.com', color: 'from-[#7c2d12] to-[#ef4444]' },
-    { name: '苏冠霖', role: '总秘书', image: 'guanlin.jpeg', instagram: 'https://www.instagram.com/sohgl_31?igsh=enhlaWlnMjI3bmxx', email: 'sohgl11984@gmail.com', color: 'from-[#7f1d1d] to-[#dc2626]' },
-    { name: '陈彦德', role: '总财政', image: 'andy.jpeg', instagram: 'https://www.instagram.com/andychan.0111?igsh=dnBmYzQ2OThxMzk%3D&utm_source=qr', email: 'acyd1470@gmail.com', color: 'from-[#991b1b] to-[#f59e0b]' },
-    { name: '徐伟伦', role: '副总秘书', image: 'weilun.jpeg', instagram: 'https://www.instagram.com/wl0804?utm_source=qr&igsh=MW84Y3o5emd4bndiag==', email: 'weilun050804@gmail.com', color: 'from-[#312e81] to-[#0f172a]' },
-    { name: '温滢薪', role: '副总财政', image: 'yingxin.jpeg', instagram: 'https://www.instagram.com/yingxin_oon?igsh=MXVrY2N0YWU3cG9hNA%3D%3D&utm_source=qr', email: 'oonyingxin0526@gmail.com', color: 'from-[#0369a1] to-[#0c4a6e]' },
-    { name: '林家修', role: '相声组组长', image: 'jiashiu.jpeg', instagram: 'https://www.instagram.com/limjiashiu?igsh=MWppZWdtdmsyd2Yxbg==', email: 'jiashiu135@gmail.com', color: 'from-[#0d9488] to-[#0f766e]' },
-    { name: '伍詠诗', role: '文化组组长', image: 'yongshi.jpeg', instagram: 'https://www.instagram.com/___its.alice?igsh=d3FpMDl3ZmNhc2p0', email: 'alice.wengsee.ng@gmail.com', color: 'from-[#7c3aed] to-[#4f46e5]' },
-    { name: '陈永进', role: '摇篮手坊长', image: 'yongjin.jpeg', instagram: 'https://www.instagram.com/tyongjing?igsh=a2FjNXFpNmVqN3lx&utm_source=qr', email: 'tanyongjing7@gmail.com', color: 'from-[#1e3a5f] to-[#2563eb]' },
-    { name: '符凌绮', role: '辩论组组长', image: 'lingqi.jpeg', instagram: 'https://www.instagram.com/lingyiiiii.1222?igsh=MW1oNzduemdwbDdyZw==', email: 'holingyi@gmail.com', color: 'from-[#b45309] to-[#92400e]' },
-    { name: '刘奕君', role: '华文班班长', image: 'yijun.jpeg', instagram: 'https://www.instagram.com/yijun0803?utm_source=qr&igsh=MXVoODVwdHg0YXdkdA==', email: 'lyjun5187@gmail.com', color: 'from-[#be185d] to-[#9d174d]' },
-    { name: '陈丽文', role: '社服组组长', image: 'liwen.jpeg', instagram: 'https://www.instagram.com/leiwennnn?igsh=N2J6eDdta3VwMHA0&utm_source=qr', email: 'leiwennnn@gmail.com', color: 'from-[#374151] to-[#111827]' },
-    { name: '林筱萱', role: '升讯团团长', image: 'xiaoxuan.jpeg', instagram: 'https://www.instagram.com/xiaoooxuannn06?igsh=MWc1aXowMnJ4NzRteg==', email: 'xiaoxuanlim1019@gmail.com', color: 'from-[#065f46] to-[#047857]' },
-    { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg', instagram: 'https://www.instagram.com/karheyyy?igsh=MWE3anZscHdoN3VjbA==', email: 'yeekarhey3s@gmail.com', color: 'from-[#b91c1c] to-[#f97316]' },
+    { name: '刘善勤', role: '主席',             image: 'sken.jpeg',     instagram: 'shanken09' },
+    { name: '方骏涛', role: '外务副主席',       image: 'ivan.jpeg',     instagram: 'fong_ivan.jt' },
+    { name: '彭凯铃', role: '内务副主席',       image: 'kailing.jpeg',  instagram: 'kayleen.kling_' },
+    { name: '苏冠霖', role: '总秘书',           image: 'guanlin.jpeg',  instagram: 'sohgl_31' },
+    { name: '陈彦德', role: '总财政',           image: 'andy.jpeg',     instagram: 'andychan.0111' },
+    { name: '徐伟伦', role: '副总秘书',         image: 'weilun.jpeg',   instagram: 'wl0804' },
+    { name: '温滢薪', role: '副总财政',         image: 'yingxin.jpeg',  instagram: 'yingxin_oon' },
+    { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg',    instagram: 'karheyyy' },
+
+    { name: '林家修', role: '相声组组长',       image: 'jiashiu.jpeg',  instagram: 'limjiashiu',      dept: 'dept-01' },
+    { name: '伍詠诗', role: '文化组组长',       image: 'yongshi.jpeg',  instagram: '___its.alice',    dept: 'dept-02' },
+    { name: '符凌绮', role: '辩论组组长',       image: 'lingqi.jpeg',   instagram: 'lingyiiiii.1222', dept: 'dept-03' },
+    { name: '刘奕君', role: '华文班班长',       image: 'yijun.jpeg',    instagram: 'yijun0803',       dept: 'dept-04' },
+    { name: '陈永进', role: '摇篮手坊长',       image: 'yongjin.jpeg',  instagram: 'tyongjing',       dept: 'dept-05' },
+    { name: '林筱萱', role: '升讯团团长',       image: 'xiaoxuan.jpeg', instagram: 'xiaoooxuannn06',  dept: 'dept-06' },
+    { name: '陈丽文', role: '社服组组长',       image: 'liwen.jpeg',    instagram: 'leiwennnn',       dept: 'dept-07' },
   ],
 
   /* ─── 相册 — homepage gallery ────────────────────────────────────────

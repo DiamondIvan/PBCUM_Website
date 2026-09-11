@@ -72,7 +72,9 @@ export const CONTENT = {
 
   /* ── § 7 小组负责人 ─────────────────────────────────────────────────────
      { name, role, photo? } — photo optional, falls back to an initials avatar. */
-  leadership: [],
+  leadership: [
+    { name: '陈永进', role: '摇篮手坊长', photo: '/committee_photo/yongjin.jpeg' },
+  ],
 
   /* ── § 8 加入我们 ───────────────────────────────────────────────────── */
   joinText: '',

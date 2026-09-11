@@ -305,12 +305,6 @@ textarea::placeholder {
   background: rgba(161, 18, 23, 0.45);
 }
 
-/* ─── Committee Carousel — hide native scrollbar (scrolling still works) ── */
-
-.committee-carousel::-webkit-scrollbar {
-  display: none;
-}
-
 /* ─── Anchor targets — clear the fixed navbar ───────────────────────────── */
 /* The navbar is fixed (~92px tall incl. its top padding), and AnimatedSection
    animates y:32→0 as it enters — so a raw scrollIntoView lands ~124px too high

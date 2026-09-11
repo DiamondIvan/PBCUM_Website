@@ -236,10 +236,9 @@ export const CONTENT = {
   /* ── § 7 小组负责人 ────────────────────────────────────────────────────
      Phone numbers and email from the source are deliberately not published as
      text — contact routes through the group's social accounts, as on the other
-     pages. The role reads 负责人 because the source says 负责人联系方式 and does
-     not give a title; change it to 团长 if that is what it is. */
+     pages. Title confirmed as 团长, matching her card in the 执委会 section. */
   leadership: [
-    { name: '林筱萱', role: '升讯团负责人' },
+    { name: '林筱萱', role: '升讯团团长', photo: '/committee_photo/xiaoxuan.jpeg' },
   ],
 
   /* ── § 8 加入我们 ──────────────────────────────────────────────────────

@@ -193,7 +193,7 @@ export const CONTENT = {
      Phone numbers from the source are deliberately not published — contact
      routes through the group's social accounts instead, as on the other pages. */
   leadership: [
-    { name: '伍詠诗', role: '文化组组长' },
+    { name: '伍詠诗', role: '文化组组长', photo: '/committee_photo/yongshi.jpeg' },
     { name: '陈绮媚', role: '文化组副组长' },
   ],
 

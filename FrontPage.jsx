@@ -406,10 +406,14 @@ function CommitteeSection() {
   return (
     <AnimatedSection id="committee" className="bg-[#fafafa] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* The previous heading and standfirst described the cards ("每张个人
+            卡片都经过精心设计，而非仓促拼凑") rather than the people on them. A
+            visitor here wants to know who runs the society and how to reach
+            the group they are curious about — so that is what this says. */}
         <SectionHeading
           eyebrow="执委会"
-          title="认识我们清晰、温暖、精致呈现的领导团队。"
-          description="每个职位都有充裕的展示空间，每张个人卡片都经过精心设计，而非仓促拼凑。"
+          title="带领学会前行的，是这一群人。"
+          description="执行委员统筹学会的日常运作与年度活动，七小组则各由一位负责人带领。想认识某个小组，点进负责人的卡片就能直达小组页面。"
         />
         <CommitteeGrid members={sectionData.committee} />
       </div>
