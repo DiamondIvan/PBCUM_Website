@@ -13,156 +13,28 @@ import {
   Wand2,
 } from 'lucide-react';
 
+// 五特活 and 七小组 now live with their own pages — each activity or group is
+// described in one file. Imported here only so the '精彩活动' stat below can
+// still count them automatically.
+//
+// `all…`, not the published lists: the society runs twelve programmes whether
+// or not each one's page has been written yet. Counting the published list
+// made the homepage advertise "8+" the moment the four unwritten activities
+// were held back, which understates the society rather than the website.
+import { allDepartments } from '../pages/departments';
+import { allEvents } from '../pages/events';
+
 /* ─── 五特活 — Five Signature Activities ────────────────────────────
+ * Shape: { id, slug, title, teaser, icon, themeColor, detail, cta }
+ * themeColor is sampled from the activity's own logo and drives the whole
+ * card: top bar, gradient wash, corner motif, and the modal + detail-page
+ * hero. Regenerate with `python scripts/logo-colors.py` after changing a logo.
+ *
  * Extract these arrays here so the stats counter can reference their
  * lengths at build time. Add/remove items freely — the '精彩活动'
  * value on the homepage will update automatically.
  * ─────────────────────────────────────────────────────────────────── */
-export const wuteActivities = [
-  {
-    id: 'wute-01',
-    slug: 'event-01',
-    title: '活动一 [PLACEHOLDER]',
-    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-    icon: '/tehuo_logos/xxylogo.png',
-    accent: 'from-[#A11217] to-[#6D0E12]',
-    themeColor: '#A8189E', // Deep Fuchsia — dominant hue of xxylogo (pink-purple bubble letters)
-    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-    cta: '了解更多',
-  },
-  {
-    id: 'wute-02',
-    slug: 'event-02',
-    title: '全国中学华文学会生活营【全中华】',
-    teaser: '贰续华章，以梦为帆',
-    icon: '/tehuo_logos/qzhlogo.png',
-    accent: 'from-[#1f2937] to-[#111827]',
-    themeColor: '#1050A0', // Cobalt Blue — dominant hue of qzhlogo (calligraphy characters)
-    detail: '第21届全国中学华文学会生活营 \n 续章•扬帆',
-    cta: '了解更多',
-  },
-  {
-    id: 'wute-03',
-    slug: 'event-03',
-    title: '活动三 [PLACEHOLDER]',
-    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-    icon: '/tehuo_logos/DXlogo.png',
-    accent: 'from-[#b91c1c] to-[#f97316]',
-    themeColor: '#C05A20', // Terracotta Orange — dominant hue of DXlogo (coin/elephant)
-    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-    cta: '了解更多',
-  },
-  {
-    id: 'wute-04',
-    slug: 'event-04',
-    title: '活动四 [PLACEHOLDER]',
-    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-    icon: '/tehuo_logos/QBlogo.png',
-    accent: 'from-[#7c3aed] to-[#4f46e5]',
-    themeColor: '#1C2B4A', // PBCUM Navy — brand fallback; QBlogo is fully greyscale
-    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-    cta: '了解更多',
-  },
-  {
-    id: 'wute-05',
-    slug: 'event-05',
-    title: '活动五 [PLACEHOLDER]',
-    teaser: '一句话勾起好奇心的预告文案。[PLACEHOLDER]',
-    icon: '/tehuo_logos/boshulogo.png',
-    accent: 'from-[#0369a1] to-[#0c4a6e]',
-    themeColor: '#8B5E10', // Deep Amber — dominant hue of boshulogo (博 character gold-brown)
-    detail: '[PLACEHOLDER — 请在此填写活动的详细介绍，约 2–3 句话。]',
-    cta: '了解更多',
-  },
-];
-
-/* ─── 七小组 — Seven Sub-Groups / Departments ───────────────────────
- * Shape: { id, title, teaser, icon, accent, detail, cta }
- * ─────────────────────────────────────────────────────────────────── */
-export const qixiaozuGroups = [
-  {
-    id: 'qxz-01',
-    slug: 'dept-01',
-    title: '相声组',
-    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-    icon: '/xiaozu_logos/xiangsheng.png',
-    accent: 'from-[#A11217] to-[#6D0E12]',
-    accentHex: '#1D6348', // Deep Forest Green — dominant fan background in logo
-    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-    cta: '了解小组',
-  },
-  {
-    id: 'qxz-02',
-    slug: 'dept-02',
-    title: '文化组',
-    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-    icon: '/xiaozu_logos/wenhua.png',
-    accent: 'from-[#0d9488] to-[#0f766e]',
-    accentHex: '#B8301A', // Vermillion Red — the large 文 calligraphy character
-    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-    cta: '了解小组',
-  },
-  {
-    id: 'qxz-03',
-    slug: 'dept-03',
-    title: '辩论组',
-    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-    icon: '/xiaozu_logos/bianlun.png',
-    accent: 'from-[#7c3aed] to-[#4f46e5]',
-    accentHex: '#1A3A9E', // Royal Blue — the shield body fill
-    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-    cta: '了解小组',
-  },
-  {
-    id: 'qxz-04',
-    slug: 'dept-04',
-    title: '华文班',
-    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-    icon: '/xiaozu_logos/huawenban.png',
-    accent: 'from-[#b45309] to-[#92400e]',
-    accentHex: '#9B2335', // Cranberry Red — the red seal stamp (distinct from 文化组 red)
-    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-    cta: '了解小组',
-  },
-  {
-    id: 'qxz-05',
-    slug: 'dept-05',
-    title: '摇篮手',
-    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-    icon: '/xiaozu_logos/pbcumyls.png',
-    accent: 'from-[#0369a1] to-[#0c4a6e]',
-    accentHex: '#6B3FA0', // Deep Amethyst — the signature purple throughout the logo
-    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-    cta: '了解小组',
-  },
-  {
-    id: 'qxz-06',
-    slug: 'dept-06',
-    title: '升讯团',
-    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-    icon: '/xiaozu_logos/shengxun.png',
-    accent: 'from-[#374151] to-[#111827]',
-    accentHex: '#1C2B4A', // PBCUM Navy — brand fallback (logo is monochrome black/white)
-    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-    cta: '了解小组',
-  },
-  {
-    id: 'qxz-07',
-    slug: 'dept-07',
-    title: '社服组',
-    teaser: '一句话说明该小组的核心工作。[PLACEHOLDER]',
-    icon: '/xiaozu_logos/shefu.png',
-    accent: 'from-[#be185d] to-[#9d174d]',
-    accentHex: '#C2477A', // Deep Rose — the heart shape's bubblegum pink, saturated
-    detail: '[PLACEHOLDER — 请在此填写小组介绍：职责范围、适合谁加入，约 2–3 句话。]',
-    cta: '了解小组',
-  },
-];
-
-// ─── Derived counter ───────────────────────────────────────────────────
-// Auto-computed from the actual program arrays above. Adding or removing
-// a card here automatically updates the '精彩活动' stat on the homepage.
-const totalPrograms = wuteActivities.length + qixiaozuGroups.length;
+const totalPrograms = allEvents.length + allDepartments.length;
 
 export const sectionData = {
   stats: [
@@ -205,79 +77,115 @@ export const sectionData = {
       icon: Camera,
     },
   ],
-  activities: [
-    {
-      title: '月夜文化论坛',
-      date: '2026年3月',
-      category: '夜话交流会',
-      summary: '一个融合语言、故事与学生声音的精心策划夜间活动，在电影感氛围中共话文化。',
-      accent: 'from-[#A11217] to-[#6D0E12]',
-    },
-    {
-      title: '校园文化寻根行',
-      date: '2026年4月',
-      category: '文化体验',
-      summary: '一场亲密的边走边谈体验，带领学生重新连结场所记忆、文化身份与历史情感。',
-      accent: 'from-[#1f2937] to-[#111827]',
-    },
-    {
-      title: '华彩风华展演',
-      date: '2026年5月',
-      category: '艺术展演',
-      summary: '一场融合音乐、表演与视觉设计的精致舞台盛事，呈现学会高水准的品牌形象。',
-      accent: 'from-[#b91c1c] to-[#f97316]',
-    },
-  ],
-  // Default grouping for 活动 — split into two sections: 五特活 and 七小组
-  activities_wute: [
-    {
-      title: '月夜文化论坛',
-      date: '2026年3月',
-      category: '夜话交流会',
-      summary: '一个融合语言、故事与学生声音的精心策划夜间活动，在电影感氛围中共话文化。',
-      accent: 'from-[#A11217] to-[#6D0E12]',
-    },
-    {
-      title: '校园文化寻根行',
-      date: '2026年4月',
-      category: '文化体验',
-      summary: '一场亲密的边走边谈体验，带领学生重新连结场所记忆、文化身份与历史情感。',
-      accent: 'from-[#1f2937] to-[#111827]',
-    },
-  ],
-  activities_qixiaozu: [
-    {
-      title: '华彩风华展演',
-      date: '2026年5月',
-      category: '艺术展演',
-      summary: '一场融合音乐、表演与视觉设计的精致舞台盛事，呈现学会高水准的品牌形象。',
-      accent: 'from-[#b91c1c] to-[#f97316]',
-    },
-  ],
+  /* ─── 执委会 ─────────────────────────────────────────────────────────
+   * Two tiers, and `dept` is what decides which one a person sits in:
+   *
+   *   no `dept`    执行委员 — runs the society as a whole
+   *   `dept` slug  七小组负责人 — leads that group; their card links to the
+   *                group's page, and takes its name and colour from it
+   *
+   * Group leads are shown in the 七小组 order, not the order written here,
+   * so they always line up with the group grid higher up the page.
+   *
+   *   image      filename in public/committee_photo/
+   *   instagram  the handle alone, no @ and no URL. The link is built from
+   *              it. Links copied out of the Instagram app carry `igsh=`
+   *              and `utm_source=` — a token identifying whoever shared the
+   *              profile — and a bare handle leaves nowhere for one to go.
+   *
+   * No email addresses. These are personal accounts, and a public page is
+   * read by address scrapers as well as students. Instagram reaches every
+   * member; the society's shared address is in the footer.
+   * ──────────────────────────────────────────────────────────────────── */
   committee: [
-    { name: '刘善勤', role: '主席', image: 'sken.jpeg', instagram: 'https://www.instagram.com/', email: 'shankenlaw82@gmail.com', color: 'from-[#A11217] to-[#6D0E12]' },
-    { name: '方骏涛', role: '外务副主席', image: 'ivan.jpeg', instagram: 'https://www.instagram.com/fong_ivan.jt?igsh=b2xncDRjOHd5ZHh4&utm_source=qr', email: 'fongjuntoh@gmail.com', color: 'from-[#111827] to-[#374151]' },
-    { name: '彭凯铃', role: '内务副主席', image: 'kailing.jpeg', instagram: 'https://www.instagram.com/kayleen.kling_?igsh=eTcyYzJ5YzNoY3B5&utm_source=qr', email: 'kailinggg0524@gmail.com', color: 'from-[#7c2d12] to-[#ef4444]' },
-    { name: '苏冠霖', role: '总秘书', image: 'guanlin.jpeg', instagram: 'https://www.instagram.com/sohgl_31?igsh=enhlaWlnMjI3bmxx', email: 'sohgl11984@gmail.com', color: 'from-[#7f1d1d] to-[#dc2626]' },
-    { name: '陈彦德', role: '总财政', image: 'andy.jpeg', instagram: 'https://www.instagram.com/andychan.0111?igsh=dnBmYzQ2OThxMzk%3D&utm_source=qr', email: 'acyd1470@gmail.com', color: 'from-[#991b1b] to-[#f59e0b]' },
-    { name: '徐伟伦', role: '副总秘书', image: 'weilun.jpeg', instagram: 'https://www.instagram.com/wl0804?utm_source=qr&igsh=MW84Y3o5emd4bndiag==', email: 'weilun050804@gmail.com', color: 'from-[#312e81] to-[#0f172a]' },
-    { name: '温滢薪', role: '副总财政', image: 'yingxin.jpeg', instagram: 'https://www.instagram.com/yingxin_oon?igsh=MXVrY2N0YWU3cG9hNA%3D%3D&utm_source=qr', email: 'oonyingxin0526@gmail.com', color: 'from-[#0369a1] to-[#0c4a6e]' },
-    { name: '林家修', role: '相声组组长', image: 'jiashiu.jpeg', instagram: 'https://www.instagram.com/limjiashiu?igsh=MWppZWdtdmsyd2Yxbg==', email: 'jiashiu135@gmail.com', color: 'from-[#0d9488] to-[#0f766e]' },
-    { name: '伍詠诗', role: '文化组组长', image: 'yongshi.jpeg', instagram: 'https://www.instagram.com/___its.alice?igsh=d3FpMDl3ZmNhc2p0', email: 'alice.wengsee.ng@gmail.com', color: 'from-[#7c3aed] to-[#4f46e5]' },
-    { name: '陈永进', role: '摇篮手坊长', image: 'yongjin.jpeg', instagram: 'https://www.instagram.com/tyongjing?igsh=a2FjNXFpNmVqN3lx&utm_source=qr', email: 'tanyongjing7@gmail.com', color: 'from-[#1e3a5f] to-[#2563eb]' },
-    { name: '符凌绮', role: '辩论组组长', image: 'lingqi.jpeg', instagram: 'https://www.instagram.com/lingyiiiii.1222?igsh=MW1oNzduemdwbDdyZw==', email: 'holingyi@gmail.com', color: 'from-[#b45309] to-[#92400e]' },
-    { name: '刘奕君', role: '华文班班长', image: 'yijun.jpeg', instagram: 'https://www.instagram.com/yijun0803?utm_source=qr&igsh=MXVoODVwdHg0YXdkdA==', email: 'lyjun5187@gmail.com', color: 'from-[#be185d] to-[#9d174d]' },
-    { name: '陈丽文', role: '社服组组长', image: 'liwen.jpeg', instagram: 'https://www.instagram.com/leiwennnn?igsh=N2J6eDdta3VwMHA0&utm_source=qr', email: 'leiwennnn@gmail.com', color: 'from-[#374151] to-[#111827]' },
-    { name: '林筱萱', role: '升讯团团长', image: 'xiaoxuan.jpeg', instagram: 'https://www.instagram.com/xiaoooxuannn06?igsh=MWc1aXowMnJ4NzRteg==', email: 'xiaoxuanlim1019@gmail.com', color: 'from-[#065f46] to-[#047857]' },
-    { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg', instagram: 'https://www.instagram.com/karheyyy?igsh=MWE3anZscHdoN3VjbA==', email: 'yeekarhey3s@gmail.com', color: 'from-[#b91c1c] to-[#f97316]' },
+    { name: '刘善勤', role: '主席',             image: 'sken.jpeg',     instagram: 'shanken09' },
+    { name: '方骏涛', role: '外务副主席',       image: 'ivan.jpeg',     instagram: 'fong_ivan.jt' },
+    { name: '彭凯铃', role: '内务副主席',       image: 'kailing.jpeg',  instagram: 'kayleen.kling_' },
+    { name: '苏冠霖', role: '总秘书',           image: 'guanlin.jpeg',  instagram: 'sohgl_31' },
+    { name: '陈彦德', role: '总财政',           image: 'andy.jpeg',     instagram: 'andychan.0111' },
+    { name: '徐伟伦', role: '副总秘书',         image: 'weilun.jpeg',   instagram: 'wl0804' },
+    { name: '温滢薪', role: '副总财政',         image: 'yingxin.jpeg',  instagram: 'yingxin_oon' },
+    // The one officer whose remit maps to a section of the page: 特别活动
+    // is the 五特活, so the card scrolls to them like the nav's 精彩活动 does.
+    { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg',    instagram: 'karheyyy',
+      link: { section: 'activities', label: '精彩活动' } },
+
+    { name: '林家修', role: '相声组组长',       image: 'jiashiu.jpeg',  instagram: 'limjiashiu',      dept: 'dept-01' },
+    { name: '伍詠诗', role: '文化组组长',       image: 'yongshi.jpeg',  instagram: '___its.alice',    dept: 'dept-02' },
+    { name: '符凌绮', role: '辩论组组长',       image: 'lingqi.jpeg',   instagram: 'lingyiiiii.1222', dept: 'dept-03' },
+    { name: '刘奕君', role: '华文班班长',       image: 'yijun.jpeg',    instagram: 'yijun0803',       dept: 'dept-04' },
+    { name: '陈永进', role: '摇篮手坊长',       image: 'yongjin.jpeg',  instagram: 'tyongjing',       dept: 'dept-05' },
+    { name: '林筱萱', role: '升讯团团长',       image: 'xiaoxuan.jpeg', instagram: 'xiaoooxuannn06',  dept: 'dept-06' },
+    { name: '陈丽文', role: '社服组组长',       image: 'liwen.jpeg',    instagram: 'leiwennnn',       dept: 'dept-07' },
   ],
 
+  /* ─── 相册 — homepage gallery ────────────────────────────────────────
+   * 「煜火华章 · 四十流芳」马大华文学会四十周年纪念晚宴
+   * 2026 年 3 月 6 日 · 王岳海大礼堂 HGH Convention Centre, Sentul
+   *
+   * `alt` is what the tile shows and what titles the lightbox — the previous
+   * entries used `title`, which GalleryLightbox never reads, so every tile
+   * rendered with a blank heading.
+   * `span` sets the grid footprint; the calendar is pinned to column 3,
+   * rows 3-4, and these flow around it.
+   * ──────────────────────────────────────────────────────────────────── */
   gallery: [
-    { title: '迎新典礼', category: '定向活动', span: 'md:col-span-2 md:row-span-2', tone: 'from-[#1f2937] via-[#111827] to-[#A11217]' },
-    { title: '文化工作坊', category: '学习成长', span: 'md:row-span-2', tone: 'from-[#A11217] via-[#ef4444] to-[#fb7185]' },
-    { title: '委员会风采', category: '团队人物', span: '', tone: 'from-[#0f172a] via-[#374151] to-[#6b7280]' },
-    { title: '论坛舞台', category: '精彩活动', span: '', tone: 'from-[#7c2d12] via-[#a16207] to-[#f59e0b]' },
-    { title: '周边商品预览', category: '品牌形象', span: 'md:col-span-2', tone: 'from-[#4b5563] via-[#111827] to-[#1d4ed8]' },
+    {
+      src: '/general_gallery/全体大合照.jpg',
+      alt: '四十周年纪念晚宴',
+      category: '晚宴',
+      span: 'md:col-span-2 md:row-span-2',
+      description: '「煜火华章 · 四十流芳」马大华文学会四十周年纪念晚宴，2026 年 3 月 6 日于王岳海大礼堂举行。',
+    },
+    {
+      src: '/general_gallery/筹委会合照.jpg',
+      alt: '筹委会合照',
+      category: '幕后',
+      span: '',
+      description: '筹备这一夜的工作团队。',
+    },
+    {
+      src: '/general_gallery/舞蹈演出.jpg',
+      alt: '舞蹈演出',
+      category: '演出',
+      span: '',
+      description: '晚宴上的舞蹈节目。',
+    },
+    {
+      src: '/general_gallery/合唱演出.jpg',
+      alt: '合唱演出',
+      category: '演出',
+      span: '',
+      description: '大合唱环节，屏幕同步播放幕后制作过程。',
+    },
+    {
+      src: '/general_gallery/外务合照.jpg',
+      alt: '外务合照',
+      category: '友会',
+      span: '',
+      description: '与各友会代表的合照。',
+    },
+    {
+      src: '/general_gallery/嘉宾校友合照.jpg',
+      alt: '嘉宾与校友合照',
+      category: '校友',
+      span: '',
+      description: '历届校友与嘉宾回到同一个舞台上。',
+    },
+    {
+      src: '/general_gallery/演出谢幕.jpg',
+      alt: '演出谢幕',
+      category: '演出',
+      span: '',
+      description: '演出者谢幕，背景是学会历年活动的照片墙。',
+    },
+    {
+      src: '/general_gallery/谢幕烟火.jpg',
+      alt: '谢幕烟火',
+      category: '晚宴',
+      span: 'md:col-span-2',
+      description: '烟火落下，四十周年晚宴在这一刻画上句点。',
+    },
   ],
   testimonials: [
     {
@@ -303,175 +211,36 @@ export const sectionData = {
   ],
   partners: ['马来亚大学', 'UM 学生事务处', 'PBCUM 校友会', '校园文化实验室', 'Redline Print', 'Moonstage Media'],
 
-  // ─── 五特活 & 七小组 are now top-level named exports above sectionData.
-  // They are referenced here so FrontPage / ProgramsGrid can still consume
-  // them from sectionData as before.
-  wuteActivities,
-  qixiaozuGroups,
-
-  /* ─── 活动日历 — Calendar Events ────────────────────────────────────
-   * Each entry maps to a clickable day on the EventCalendar component.
-   * type: 'wute' | 'qixiaozu' | 'other'
-   * href: route to navigate to (e.g. '/events/event-01', '/departments/dept-03')
-   *       or a page anchor (e.g. '/#activities') for generic events
+  /* ─── 学会活动 — society-wide dates ──────────────────────────────────
+   * The calendar builds itself from the 五特活 and 七小组 content: put a
+   * `date` on any of them and it appears, with no edit here or to the
+   * calendar component. See src/data/calendar.js.
+   *
+   * This list is the exception — dates that belong to the society as a whole
+   * and have no subpage to hang off. A dinner, a handover, an internal
+   * meeting. Add your own freely.
+   *
+   *   date     'YYYY-MM-DD'   required; anything unparseable is skipped
+   *   endDate  'YYYY-MM-DD'   optional, inclusive — for a multi-day thing
+   *   title    what shows on the calendar
+   *   label    the small badge, e.g. '特别活动'
+   *   href     optional; where clicking goes. A '/#anchor' is fine.
+   *   color    optional; defaults to the PBCUM red
    * ──────────────────────────────────────────────────────────────────── */
-  calendarEvents: [
-    // ── 2025 ──────────────────────────────────────────────────────────
-    {
-      date: '2025-09-06',
-      title: '新学年迎新礼',
-      type: 'other',
-      label: '迎新',
-      href: '/#activities',
-    },
-    {
-      date: '2025-09-20',
-      title: '相声组招新说明会',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-01',
-    },
-    {
-      date: '2025-10-04',
-      title: '文化组首次工作坊',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-02',
-    },
-    {
-      date: '2025-10-18',
-      title: '辩论组内部训练营',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-04',
-    },
-    {
-      date: '2025-11-08',
-      title: '活动一（五特活·01）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-01',
-    },
-    {
-      date: '2025-11-15',
-      title: '摄影组外拍活动',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-03',
-    },
-    {
-      date: '2025-11-29',
-      title: '社服组义工日',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-05',
-    },
-    {
-      date: '2025-12-06',
-      title: '年末联欢晚会',
-      type: 'other',
-      label: '特别活动',
-      href: '/#activities',
-    },
-    // ── 2026 ──────────────────────────────────────────────────────────
-    {
-      date: '2026-01-10',
-      title: '华文班新学期开班',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-07',
-    },
-    {
-      date: '2026-01-24',
-      title: '活动二（五特活·02）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-02',
-    },
-    {
-      date: '2026-02-07',
-      title: '升讯团社交媒体营',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-06',
-    },
-    {
-      date: '2026-02-14',
-      title: '情人节文化夜话',
-      type: 'other',
-      label: '特别活动',
-      href: '/#activities',
-    },
-    {
-      date: '2026-03-07',
-      title: '活动三（五特活·03）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-03',
-    },
-    {
-      date: '2026-03-21',
-      title: '摇篮手坊公开营',
-      type: 'qixiaozu',
-      label: '七小组',
-      href: '/departments/dept-01',
-    },
-    {
-      date: '2026-04-04',
-      title: '校园文化寻根行',
-      type: 'other',
-      label: '文化探索',
-      href: '/#activities',
-    },
-    {
-      date: '2026-04-18',
-      title: '活动四（五特活·04）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-04',
-    },
-    {
-      date: '2026-05-02',
-      title: '华彩风华展演彩排',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-05',
-    },
-    {
-      date: '2026-05-16',
-      title: '活动五（五特活·05）',
-      type: 'wute',
-      label: '五特活',
-      href: '/events/event-05',
-    },
-    {
-      date: '2026-06-06',
-      title: '年度总检讨大会',
-      type: 'other',
-      label: '内部活动',
-      href: '/#activities',
-    },
-    {
-      date: '2026-07-11',
-      title: '新届委员交接典礼',
-      type: 'other',
-      label: '特别活动',
-      href: '/#committee',
-    },
-    {
-      date: '2026-08-01',
-      title: '2026/27 学年备战会',
-      type: 'other',
-      label: '内部活动',
-      href: '/#activities',
-    },
-    {
-      date: '2026-08-15',
-      title: '独立日文化分享会',
-      type: 'other',
-      label: '文化活动',
-      href: '/#activities',
-    },
+  otherEvents: [
+    { date: '2025-09-06', title: '新学年迎新礼', label: '迎新', href: '/#activities' },
+    { date: '2025-12-06', title: '年末联欢晚会', label: '特别活动', href: '/#activities' },
+    { date: '2026-02-14', title: '情人节文化夜话', label: '特别活动', href: '/#activities' },
+    { date: '2026-03-06', title: '四十周年纪念晚宴', label: '特别活动', href: '/#gallery' },
+    { date: '2026-04-04', title: '校园文化寻根行', label: '文化探索', href: '/#activities' },
+    { date: '2026-06-06', title: '年度总检讨大会', label: '内部活动', href: '/#activities' },
+    { date: '2026-07-11', title: '新届委员交接典礼', label: '特别活动', href: '/#committee' },
+    { date: '2026-08-01', title: '2026/27 学年备战会', label: '内部活动', href: '/#activities' },
+    { date: '2026-08-15', title: '独立日文化分享会', label: '文化活动', href: '/#activities' },
+    // Read off the 升讯团 26/27 届招募海报: 招募截至 2026 年 10 月 18 日晚上 11:59.
+    // It lives here rather than on the group's page because it is a deadline,
+    // not an activity — it would read oddly as a card in 常年活动.
+    { date: '2026-10-18', title: '升讯团 26/27 届团委招募截止', label: '招募', href: '/departments/dept-06', color: '#1C2B4A' },
   ],
 };
 

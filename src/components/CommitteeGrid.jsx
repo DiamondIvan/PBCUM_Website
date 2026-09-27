@@ -1,555 +1,404 @@
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Instagram, Mail } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { departments } from '../pages/departments';
 
-/* ─── Utilities ─────────────────────────────────────────────────────────── */
+/**
+ * CommitteeGrid — the 执委会, in the two tiers it actually has.
+ *
+ *   below md       each tier is a strip, stepped with arrows or a swipe — the
+ *                  pattern ptum.my uses for its committee. Two people show at
+ *                  a time on a phone, three from sm (640px). Fifteen cards
+ *                  laid out in full ran to three screens of scrolling before
+ *                  the page moved on.
+ *   md and up      each tier is laid out whole; there is room to.
+ *
+ * Differences from that reference, each on purpose:
+ *
+ *   · No autoplay. The arrows are the control, and content that moves on its
+ *     own with no way to stop it fails WCAG 2.2.2.
+ *   · No loop. Looping means cloning the slides — the carousel this replaced
+ *     rendered all fifteen cards twice. At each end the arrow simply goes.
+ *   · 44px arrows, not 11x22 chevrons, and they straddle the strip's edge
+ *     rather than sitting over the photos.
+ *   · Swiping comes from native scroll-snap, not script, so momentum and
+ *     rubber-banding feel like the phone's own.
+ *
+ * One constraint shapes the cards: a strip with overflow-x: auto clips
+ * vertical overflow too (overflow-y computes to auto). That is what hid the
+ * old carousel's email popup completely. Here it would slice the big
+ * `shadow-soft` off flat along the bottom, so inside the strip cards take a
+ * small shadow and the strip keeps a little padding; from md up they get the
+ * full one.
+ *
+ * Data lives in siteData.js `committee`.
+ */
 
-function copyToClipboard(text) {
-  if (!text) return;
-  navigator.clipboard?.writeText(text);
-}
+const photo = (image) => (image ? `/committee_photo/${image}` : null);
 
-/** Returns true when the user has enabled the 'prefer reduced motion' OS setting. */
-function prefersReducedMotion() {
-  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+/* A slide is the strip's width less its 10px gaps, shared out: two on a phone,
+   three from sm. At two, a 640–767px screen (a phone on its side, a small
+   foldable) got a pair of 320px cards with the photo filling under a third of
+   each, then jumped straight to four per row at md. snap-start stops each step
+   on a card edge.
+   The three-up width is written flat, 33.333% − 6.667px, rather than as
+   (100% − 20px) / 3: Tailwind's class scanner cannot read nested parentheses
+   in an arbitrary value and silently generates nothing for it. */
+const SLIDE = 'shrink-0 snap-start basis-[calc(50%-5px)] sm:basis-[calc(33.333%-6.667px)]';
+const STRIP_SHADOW = 'shadow-[0_6px_18px_rgba(17,24,39,0.06)] md:shadow-soft';
+const STRIP =
+  'flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-4 pt-[var(--strip-pad)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'md:snap-none md:overflow-visible md:p-0';
 
-/* ─── Auto-scroll constants ─────────────────────────────────────────────── */
-const SCROLL_SPEED = 0.6; // px / frame — baseline auto-scroll pace
-const RESUME_DELAY = 2500; // ms idle before resuming after wheel/arrow pause
-const THROW_FRICTION = 0.92; // velocity multiplier per frame (~1.5s to decay)
-const MAX_THROW = 25; // max throw px/frame (caps wild flicks)
+/* The three measurements the arrows are centred from, declared once on the
+   strip and read by both the cards and the arrows — see StripArrow.
+   The photo is 72px below 360px and 88px from there. At 96px on a 320px phone
+   the arrows sat 11px into the edge photos; 88px also happens to be exactly a
+   third of the 264px source, so the portraits stay sharp on 3x screens.
 
-/* ─── Avatar ────────────────────────────────────────────────────────────── */
+   Pixels, not rem — and the same goes for the arrows and the 10px gap. These
+   sizes were rem, so they grew with the reader's text setting while the cards,
+   whose width comes from the screen, did not: at 150% text a 132px photo sat
+   in a 159px card and the arrows covered 35px of it. A photograph has no
+   reason to scale with the font. The words on the card still do. */
+const STRIP_VARS =
+  '[--strip-pad:8px] [--card-pad:20px] [--photo:72px] min-[360px]:[--photo:88px]';
 
-function Avatar({ image, initials, color }) {
-  const imageSrc = image ? `/committee_photo/${image}` : null;
-
+/** Round portrait. Sources are 264x330, about 3x the circle, so they stay sharp
+ *  on high-density phones. alt is empty because the name is printed beside it —
+ *  a screen reader would otherwise read every name twice. */
+function Avatar({ member, className, tint }) {
+  const src = photo(member.image);
   return (
     <div
-      className={`flex h-[5.5rem] w-[5.5rem] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br ${color} text-2xl font-semibold text-white shadow-[0_20px_50px_rgba(17,24,39,0.18)]`}
+      className={`flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full ${className}`}
+      style={{ backgroundColor: tint }}
     >
-      {imageSrc ? (
-        <img src={imageSrc} alt="" className="h-full w-full object-cover" />
+      {src ? (
+        <img
+          src={src}
+          alt=""
+          width="264"
+          height="330"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
       ) : (
-        initials
+        <span className="text-xl font-semibold text-black/58">{member.name.charAt(0)}</span>
       )}
     </div>
   );
 }
 
-function getAvatarState(member) {
-  const isImageFile =
-    typeof member.image === 'string' &&
-    /\.(png|jpe?g|webp|gif|svg)$/i.test(member.image);
-
-  return {
-    image: isImageFile ? member.image : null,
-    initials:
-      member.initials ||
-      (!isImageFile ? member.image : '') ||
-      (member.name ? member.name.charAt(0) : ''),
-  };
-}
-
-/* ─── MemberCard ────────────────────────────────────────────────────────── */
-
-function MemberCard({
-  member,
-  index,
-  activeEmail,
-  setActiveEmail,
-  activeCardRef,
-  copiedEmail,
-  onCopy,
-  isClone,
-}) {
-  const avatar = getAvatarState(member);
-
+/** `relative z-10` keeps it clickable above a card's stretched link. */
+function InstagramLink({ member, className = '' }) {
+  if (!member.instagram) return null;
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.18 }}
-      transition={{ duration: 0.6, delay: Math.min(index * 0.07, 0.42) }}
-      className="group flex-shrink-0 w-[82vw] max-w-[340px] sm:w-[46vw] md:w-[320px] rounded-[32px] border border-black/6 bg-white p-6 sm:p-7 shadow-soft transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
-      style={{ scrollSnapAlign: 'start' }}
-      aria-hidden={isClone ? 'true' : undefined}
-      inert={isClone ? '' : undefined}
+    <a
+      href={`https://www.instagram.com/${member.instagram}/`}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`${member.name} 的 Instagram（@${member.instagram}）`}
+      className={`relative z-10 inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-black/8 bg-white text-black/58 transition duration-200 hover:border-umred/30 hover:text-umred ${className}`}
     >
-      <div className="flex items-start justify-between gap-4">
-        <Avatar image={avatar.image} initials={avatar.initials} color={member.color} />
-        <div className="mt-1 rounded-full border border-black/6 bg-[#fafafa] px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-widest2 text-black/40">
-          {member.role}
-        </div>
-      </div>
-      <h3 className="mt-6 sm:mt-7 text-xl sm:text-2xl font-semibold tracking-[-0.03em] text-ink">
-        {member.name}
-      </h3>
-      <p className="mt-2 text-sm leading-[1.8] text-black/55">
-        PBCUM 执委会成员
-      </p>
-      <div className="mt-6 sm:mt-7 flex items-center gap-3 text-black/35">
-        <a
-          href={member.instagram || '#'}
-          target={member.instagram ? '_blank' : undefined}
-          rel={member.instagram ? 'noreferrer' : undefined}
-          aria-label={`${member.name} 的 Instagram`}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-black/6 transition duration-300 hover:border-umred hover:text-umred"
-          tabIndex={isClone ? -1 : undefined}
-        >
-          <Instagram className="h-4 w-4" />
-        </a>
-        <div className="relative flex items-center justify-center">
-          <button
-            type="button"
-            onClick={(event) => {
-              if (isClone) return;
-              event.preventDefault();
-              if (member.email) {
-                const cardElement = event.currentTarget.closest('article');
-                activeCardRef.current = cardElement;
-                setActiveEmail(activeEmail === member.email ? null : member.email);
-              }
-            }}
-            aria-label={`发邮件给 ${member.name}`}
-            tabIndex={isClone ? -1 : undefined}
-            className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/6 p-0 transition duration-300 hover:border-umred hover:text-umred"
-          >
-            <Mail className="h-4 w-4" />
-          </button>
-
-          {!isClone && member.email && activeEmail === member.email && (
-            <motion.div
-              initial={{ opacity: 0, y: 6, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 6, scale: 0.98 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="absolute left-1/2 top-full z-20 mt-3 w-[min(240px,calc(100vw-3rem))] -translate-x-1/2 rounded-2xl border border-black/8 bg-white p-3.5 text-left shadow-[0_16px_40px_rgba(17,24,39,0.14)]"
-            >
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black/40">
-                联系方式
-              </p>
-              <div className="mt-2 rounded-xl border border-black/6 bg-[#fafafa] px-3 py-2">
-                <p className="select-text break-all text-xs sm:text-sm font-medium text-ink">
-                  {member.email}
-                </p>
-              </div>
-              <p className="mt-2 text-[11px] leading-5 text-black/55">
-                长按可复制地址，或点击下方按钮。
-              </p>
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onCopy(member.email);
-                }}
-                className="mt-3 inline-flex items-center rounded-full bg-[#111827] px-3.5 py-2 text-[11px] font-semibold text-white transition hover:bg-[#1f2937]"
-              >
-                {copiedEmail === member.email ? '已复制！' : '复制电邮'}
-              </button>
-            </motion.div>
-          )}
-        </div>
-      </div>
-    </motion.article>
+      <Instagram className="h-4 w-4" />
+    </a>
   );
 }
 
-/* ─── ArrowButton ───────────────────────────────────────────────────────── */
+function TierHeading({ id, title, note }) {
+  return (
+    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-black/8 pb-3">
+      <h3 id={id} className="text-lg font-semibold tracking-[-0.02em] text-ink sm:text-xl">
+        {title}
+      </h3>
+      <p className="text-sm text-black/58">{note}</p>
+    </div>
+  );
+}
 
-function ArrowButton({ direction, disabled, onClick }) {
+/* ─── The phone strip ─────────────────────────────────────────────────────── */
+
+/**
+ * A pointer and touch control only. It is out of the tab order and hidden from
+ * screen readers, for two reasons:
+ *
+ *   · It added nothing for a keyboard. Tabbing onto a card already scrolls the
+ *     strip to show it, and the arrows came after every card in the DOM, so a
+ *     keyboard user reached them only once they had passed everyone.
+ *   · It could strand focus. Pressing "next" until the end hid and disabled the
+ *     very button holding focus, leaving no focus indicator anywhere on screen.
+ *
+ * Screen reader users lose nothing: the list is read person by person, and the
+ * strip scrolls to whichever card they move to. preventDefault on mousedown
+ * stops a click giving the button focus in browsers that otherwise would.
+ *
+ * `top` is computed from the same three custom properties the cards are sized
+ * with (STRIP_VARS), so it stays on the centre of the photographs when any of
+ * them changes. It used to be a hard-coded 54px that silently drifted off the
+ * photos if the card padding or portrait size was touched. Inline rather than a
+ * Tailwind arbitrary value: this calc has custom-property names full of
+ * hyphens, which the class-name form is prone to mangling.
+ */
+function StripArrow({ direction, hidden, onClick }) {
+  const Icon = direction < 0 ? ChevronLeft : ChevronRight;
   return (
     <button
       type="button"
+      tabIndex={-1}
+      aria-hidden="true"
+      onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
-      disabled={disabled}
-      aria-label={direction === 'left' ? '向左滚动' : '向右滚动'}
-      className={[
-        'hidden md:flex',
-        'items-center justify-center',
-        'h-11 w-11 rounded-full',
-        'border border-black/10 bg-white shadow-[0_4px_16px_rgba(17,24,39,0.08)]',
-        'transition-all duration-200',
-        disabled
-          ? 'opacity-30 cursor-not-allowed'
-          : 'hover:border-[#A11217] hover:text-[#A11217] hover:shadow-[0_8px_24px_rgba(161,18,23,0.14)] cursor-pointer',
-      ].join(' ')}
+      disabled={hidden}
+      style={{ top: 'calc(var(--strip-pad) + var(--card-pad) + var(--photo) / 2 - 22px)' }}
+      className={`absolute z-20 flex h-[44px] w-[44px] items-center justify-center rounded-full border border-black/8 bg-white/95 text-ink shadow-[0_6px_20px_rgba(17,24,39,0.16)] backdrop-blur transition duration-200 active:scale-95 disabled:invisible md:hidden ${
+        direction < 0 ? '-left-[12px]' : '-right-[12px]'
+      }`}
     >
-      {direction === 'left' ? (
-        <ChevronLeft className="h-5 w-5" />
-      ) : (
-        <ChevronRight className="h-5 w-5" />
-      )}
+      <Icon className="h-5 w-5" />
     </button>
   );
 }
 
-/* ─── ScrollIndicator — thin progress bar on mobile ─────────────────────── */
-
-function ScrollIndicator({ trackRef, count }) {
-  const [progress, setProgress] = useState(0);
+function Strip({ className, children }) {
+  const trackRef = useRef(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
 
   useEffect(() => {
     const el = trackRef.current;
-    if (!el) return;
-
+    if (!el) return undefined;
+    // 2px of slack: snapping and fractional card widths rarely land on an
+    // exact integer, and an arrow that flickers at the end reads as broken.
     const update = () => {
-      const { scrollLeft, scrollWidth, clientWidth } = el;
-      const max = scrollWidth - clientWidth;
-      setProgress(max > 0 ? scrollLeft / max : 0);
+      setAtStart(el.scrollLeft <= 2);
+      setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 2);
     };
-
     update();
     el.addEventListener('scroll', update, { passive: true });
-    return () => el.removeEventListener('scroll', update);
-  }, [trackRef]);
+    // Crossing md turns the strip into a layout with nothing to scroll; rotating
+    // a phone changes how far there is to go.
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener('scroll', update);
+      ro.disconnect();
+    };
+  }, []);
 
-  const thumbPct = Math.min(60, Math.max(10, Math.round((1 / count) * 100) * 3));
-  const maxTranslate = (100 / thumbPct - 1) * thumbPct;
+  /** One person per press, as on the reference — measured, since a slide's
+   *  width follows the screen. */
+  const step = (direction) => {
+    const el = trackRef.current;
+    const slide = el?.firstElementChild;
+    if (!slide) return;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollBy({
+      left: direction * (slide.getBoundingClientRect().width + gap),
+      behavior: reduce ? 'auto' : 'smooth',
+    });
+  };
 
   return (
-    <div className="mt-5 flex justify-center md:hidden" role="presentation" aria-hidden="true">
-      <div className="relative h-[3px] w-32 overflow-hidden rounded-full bg-black/8">
-        <div
-          className="absolute left-0 top-0 h-full rounded-full bg-[#A11217] transition-transform duration-150 ease-out"
-          style={{
-            width: `${thumbPct}%`,
-            transform: `translateX(${progress * maxTranslate}%)`,
-          }}
-        />
-      </div>
+    <div className={`relative mt-3 md:mt-5 ${STRIP_VARS}`}>
+      <ul ref={trackRef} className={className}>
+        {children}
+      </ul>
+      <StripArrow direction={-1} hidden={atStart} onClick={() => step(-1)} />
+      <StripArrow direction={1} hidden={atEnd} onClick={() => step(1)} />
     </div>
   );
 }
 
-/* ─── CommitteeGrid (carousel + marquee auto-scroll) ────────────────────── */
+/* ─── 执行委员 ────────────────────────────────────────────────────────────── */
 
-export function CommitteeGrid({ members }) {
-  const [activeEmail, setActiveEmail] = useState(null);
-  const [copiedEmail, setCopiedEmail] = useState(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+/**
+ * An officer with a `link` leads to a section of the homepage — 俞嘉希, the
+ * 特别活动咨询委员, leads to the 五特活. It behaves exactly like the navbar's
+ * link to the same section (see handleNavClick in Navbar.jsx): a smooth scroll
+ * when already on the homepage, a route change to '/#section' from anywhere
+ * else. The card is a stretched link, as the group-lead cards are, so the
+ * Instagram button inside stays its own separate target.
+ */
+function OfficerCard({ member }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const link = member.link;
 
-  const activeCardRef = useRef(null);
-  const trackRef = useRef(null);
-
-  // Scroll loop refs
-  const rafId = useRef(null);
-  const firstSetWidth = useRef(0);
-  const throwVelocity = useRef(0);
-  const isPaused = useRef(false);
-  const resumeTimer = useRef(null);
-
-  // Drag state
-  const drag = useRef({ active: false, startX: 0, scrollLeft: 0, moved: false, isTouch: false });
-  const lastMove = useRef({ x: 0, t: 0 });
-  const dragVelocity = useRef(0);
-
-  /* Measure first-set width after mount */
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el || prefersReducedMotion()) return;
-
-    const raf = requestAnimationFrame(() => {
-      const cards = el.querySelectorAll('article');
-      const gap = 20; // gap-5 = 1.25rem ≈ 20px
-      let total = 0;
-      for (let i = 0; i < members.length; i++) {
-        if (cards[i]) total += cards[i].getBoundingClientRect().width + gap;
+  const goToSection = (e) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const el = document.getElementById(link.section);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#${link.section}`);
       }
-      firstSetWidth.current = total;
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [members.length]);
-
-  /* Unified rAF loop */
-  const startLoop = useCallback(() => {
-    if (prefersReducedMotion()) return;
-    if (rafId.current) return;
-
-    const tick = () => {
-      const el = trackRef.current;
-      if (!el || isPaused.current || document.visibilityState === 'hidden') {
-        rafId.current = null;
-        return;
-      }
-
-      throwVelocity.current *= THROW_FRICTION;
-      if (Math.abs(throwVelocity.current) < 0.05) throwVelocity.current = 0;
-
-      const net = SCROLL_SPEED + throwVelocity.current;
-      el.scrollLeft += net;
-
-      const setWidth = firstSetWidth.current;
-      if (setWidth > 0) {
-        if (el.scrollLeft >= setWidth) el.scrollLeft -= setWidth;
-        else if (el.scrollLeft < 0) el.scrollLeft += setWidth;
-      }
-
-      rafId.current = requestAnimationFrame(tick);
-    };
-
-    rafId.current = requestAnimationFrame(tick);
-  }, []);
-
-  const stopLoop = useCallback(() => {
-    if (rafId.current) {
-      cancelAnimationFrame(rafId.current);
-      rafId.current = null;
+    } else {
+      navigate(`/#${link.section}`);
     }
-  }, []);
-
-  const interruptForWheel = useCallback(() => {
-    isPaused.current = true;
-    throwVelocity.current = 0;
-    stopLoop();
-    if (resumeTimer.current) { clearTimeout(resumeTimer.current); resumeTimer.current = null; }
-  }, [stopLoop]);
-
-  const scheduleResume = useCallback(() => {
-    if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    resumeTimer.current = setTimeout(() => {
-      if (prefersReducedMotion()) return;
-      isPaused.current = false;
-      throwVelocity.current = 0;
-      startLoop();
-    }, RESUME_DELAY);
-  }, [startLoop]);
-
-  /* Start loop on mount */
-  useEffect(() => {
-    if (prefersReducedMotion()) return;
-    const t = setTimeout(() => { startLoop(); }, 300);
-    return () => { clearTimeout(t); stopLoop(); if (resumeTimer.current) clearTimeout(resumeTimer.current); };
-  }, [startLoop, stopLoop]);
-
-  /* Pause loop when tab hidden; resume on return */
-  useEffect(() => {
-    const onChange = () => {
-      if (document.visibilityState === 'hidden') {
-        stopLoop();
-      } else if (!isPaused.current && !prefersReducedMotion()) {
-        startLoop();
-      }
-    };
-    document.addEventListener('visibilitychange', onChange);
-    return () => document.removeEventListener('visibilitychange', onChange);
-  }, [startLoop, stopLoop]);
-
-  /* Email popup: close on outside click */
-  useEffect(() => {
-    if (!activeEmail) return;
-    const handleClickOutside = (event) => {
-      if (activeCardRef.current && !activeCardRef.current.contains(event.target)) {
-        setActiveEmail(null);
-        activeCardRef.current = null;
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [activeEmail]);
-
-  /* Arrow disabled state */
-  const updateArrows = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanScrollLeft(scrollLeft > 2);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 2);
-  }, []);
-
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    updateArrows();
-    el.addEventListener('scroll', updateArrows, { passive: true });
-    return () => el.removeEventListener('scroll', updateArrows);
-  }, [updateArrows]);
-
-  /* Arrow click */
-  const scrollByCard = useCallback((direction) => {
-    interruptForWheel();
-    scheduleResume();
-    const el = trackRef.current;
-    if (!el) return;
-    const firstCard = el.querySelector('article');
-    const gap = 20;
-    const cardWidth = firstCard ? firstCard.getBoundingClientRect().width + gap : 340;
-    const behavior = prefersReducedMotion() ? 'instant' : 'smooth';
-    el.scrollBy({ left: direction === 'right' ? cardWidth : -cardWidth, behavior });
-  }, [interruptForWheel, scheduleResume]);
-
-  /* Wheel → horizontal (desktop) */
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const onWheel = (e) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-      e.preventDefault();
-      interruptForWheel();
-      el.scrollBy({ left: e.deltaY, behavior: 'instant' });
-      scheduleResume();
-    };
-    el.addEventListener('wheel', onWheel, { passive: false });
-    return () => el.removeEventListener('wheel', onWheel);
-  }, [interruptForWheel, scheduleResume]);
-
-  /* Pointer / Drag handlers */
-  const onPointerDown = useCallback((e) => {
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
-    const el = trackRef.current;
-    if (!el) return;
-
-    stopLoop();
-
-    const isTouch = e.pointerType === 'touch';
-    drag.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft, moved: false, isTouch };
-    dragVelocity.current = 0;
-    lastMove.current = { x: e.clientX, t: performance.now() };
-
-    if (!isTouch) {
-      el.setPointerCapture(e.pointerId);
-      el.style.cursor = 'grabbing';
-      el.style.userSelect = 'none';
-    }
-  }, [stopLoop]);
-
-  const onPointerMove = useCallback((e) => {
-    if (!drag.current.active) return;
-    const el = trackRef.current;
-    if (!el) return;
-
-    const delta = e.clientX - drag.current.startX;
-    if (Math.abs(delta) > 4) drag.current.moved = true;
-    if (drag.current.moved) el.scrollLeft = drag.current.scrollLeft - delta;
-
-    const now = performance.now();
-    const dt = now - lastMove.current.t;
-    if (dt > 0) {
-      const rawVel = (e.clientX - lastMove.current.x) / dt;
-      dragVelocity.current = dragVelocity.current * 0.3 + rawVel * 0.7;
-    }
-    lastMove.current = { x: e.clientX, t: now };
-  }, []);
-
-  const onPointerUp = useCallback((e) => {
-    if (!drag.current.active) return;
-    const el = trackRef.current;
-    drag.current.active = false;
-
-    if (el && !drag.current.isTouch && el.hasPointerCapture?.(e.pointerId)) {
-      el.releasePointerCapture(e.pointerId);
-      el.style.cursor = '';
-      el.style.userSelect = '';
-    }
-
-    const pxPerFrame = dragVelocity.current * 16.67;
-    throwVelocity.current = Math.max(-MAX_THROW, Math.min(MAX_THROW, -pxPerFrame));
-
-    isPaused.current = false;
-    startLoop();
-  }, [startLoop]);
-
-  const onClickCapture = useCallback((e) => {
-    if (drag.current.moved) {
-      e.stopPropagation();
-      drag.current.moved = false;
-    }
-  }, []);
-
-  const handleCopy = (email) => {
-    copyToClipboard(email);
-    setCopiedEmail(email);
-    window.setTimeout(() => setCopiedEmail(null), 1400);
   };
 
   return (
-    <div className="mt-10 sm:mt-14">
-      <div className="relative">
-        {/* Left arrow */}
-        <div className="absolute left-0 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
-          <ArrowButton
-            direction="left"
-            disabled={!canScrollLeft}
-            onClick={() => scrollByCard('left')}
-          />
-        </div>
-        {/* Right arrow */}
-        <div className="absolute right-0 top-1/2 z-10 translate-x-1/2 -translate-y-1/2">
-          <ArrowButton
-            direction="right"
-            disabled={!canScrollRight}
-            onClick={() => scrollByCard('right')}
-          />
-        </div>
-        {/* Right-edge gradient fade */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute right-0 top-0 z-[5] h-full w-20 sm:w-28 transition-opacity duration-300"
-          style={{
-            background: 'linear-gradient(to left, #fafafa 10%, transparent 100%)',
-            opacity: canScrollRight ? 1 : 0,
-          }}
-        />
-        {/* Left-edge gradient */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-0 z-[5] h-full w-20 sm:w-28 transition-opacity duration-300"
-          style={{
-            background: 'linear-gradient(to right, #fafafa 10%, transparent 100%)',
-            opacity: canScrollLeft ? 1 : 0,
-          }}
-        />
-        {/* Scroll track */}
-        <div
-          ref={trackRef}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerCancel={onPointerUp}
-          onClickCapture={onClickCapture}
-          className="committee-carousel flex gap-4 sm:gap-5 overflow-x-auto pb-4 md:cursor-grab active:cursor-grabbing"
-          style={{
-            scrollSnapType: 'none',
-            WebkitOverflowScrolling: 'touch',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            touchAction: 'pan-y',
-          }}
-        >
-          {/* Original set */}
-          {members.map((member, index) => (
-            <MemberCard
-              key={`orig-${index}`}
-              member={member}
-              index={index}
-              activeEmail={activeEmail}
-              setActiveEmail={setActiveEmail}
-              activeCardRef={activeCardRef}
-              copiedEmail={copiedEmail}
-              onCopy={handleCopy}
-              isClone={false}
+    <li
+      className={`${SLIDE} group relative flex flex-col items-center rounded-[24px] border border-black/6 bg-white px-3 pb-4 pt-[var(--card-pad)] text-center ${STRIP_SHADOW} transition duration-300 md:basis-auto md:px-5 md:pb-5 md:pt-6 ${
+        link ? 'md:hover:-translate-y-0.5 md:hover:shadow-card-hover' : ''
+      }`}
+    >
+      <Avatar member={member} className="h-[var(--photo)] w-[var(--photo)] md:h-[96px] md:w-[96px]" tint="#F1ECE7" />
+      <h4 className="mt-3 text-lg font-semibold tracking-[-0.02em] text-ink transition group-hover:text-umred md:mt-4 md:text-xl">
+        {link ? (
+          <a
+            href={`/#${link.section}`}
+            onClick={goToSection}
+            className="after:absolute after:inset-0 after:rounded-[24px] after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-umred/40"
+          >
+            {member.name}
+            <ArrowUpRight
+              aria-hidden="true"
+              className="ml-1 inline h-3.5 w-3.5 -translate-y-px text-black/60 transition group-hover:text-umred"
             />
-          ))}
-          {/* Clone set */}
-          {members.map((member, index) => (
-            <MemberCard
-              key={`clone-${index}`}
-              member={member}
-              index={index}
-              activeEmail={activeEmail}
-              setActiveEmail={setActiveEmail}
-              activeCardRef={activeCardRef}
-              copiedEmail={copiedEmail}
-              onCopy={handleCopy}
-              isClone={true}
-            />
-          ))}
-          <div className="flex-shrink-0 w-4 md:hidden" aria-hidden="true" />
-        </div>
+            <span className="sr-only">，{member.role}，前往{link.label}</span>
+          </a>
+        ) : (
+          member.name
+        )}
+      </h4>
+      <p className="mb-3 mt-1 text-sm leading-snug text-black/58">{member.role}</p>
+      {/* mt-auto pins the button to the bottom edge, so cards side by side line
+          up even when one role — 特别活动咨询委员 — wraps and its neighbour's
+          does not. */}
+      <InstagramLink member={member} className="mt-auto" />
+    </li>
+  );
+}
+
+/* ─── 七小组负责人 ────────────────────────────────────────────────────────── */
+
+/**
+ * The whole card leads to the group's page, which is what a visitor looking at
+ * a group lead most likely wants. It is a stretched link — the name's anchor
+ * covers the card through ::after — not an <a> wrapped round everything,
+ * because the Instagram link inside would then be a link nested in a link:
+ * invalid HTML, announced unpredictably by screen readers.
+ *
+ * The focus ring is drawn on that same ::after, so the card lights up only when
+ * the group link itself has keyboard focus. It used to hang off the card's
+ * :focus-within, which also fired when focus was on the Instagram button —
+ * making the whole card look selected when it was not. The ring is inset:
+ * drawn outside the card, the phone strip would clip it along with the shadow.
+ *
+ * Name, colour and destination all come from the group's own page data, so a
+ * card cannot disagree with the page it opens.
+ */
+function GroupLeadCard({ member, dept }) {
+  const accent = dept?.accentHex ?? '#A11217';
+
+  const name = (
+    <>
+      {member.name}
+      {dept && (
+        <>
+          {/* 60%, not 35%: this arrow is the only thing on the card saying it
+              is a link, and at 35% it measured 2.44:1 — under the 3:1 WCAG
+              1.4.11 asks of a graphic that carries meaning. At 60% it is 5.7:1.
+              60, not 58: Tailwind's opacity scale moves in fives, and a value
+              off it (text-black/58) silently generates no CSS at all. */}
+          <ArrowUpRight
+            aria-hidden="true"
+            className="ml-1 inline h-3.5 w-3.5 -translate-y-px text-black/60 transition group-hover:text-umred"
+          />
+          <span className="sr-only">，{member.role}，前往{dept.title}的小组页面</span>
+        </>
+      )}
+    </>
+  );
+
+  return (
+    <li
+      className={`${SLIDE} group relative flex min-w-0 flex-col items-center rounded-[20px] border border-black/6 bg-white px-3 pb-4 pt-[var(--card-pad)] text-center ${STRIP_SHADOW} transition duration-300 md:basis-[calc(25%-0.6rem)] xl:flex-1 xl:basis-0 ${
+        dept ? 'md:hover:-translate-y-0.5 md:hover:shadow-card-hover' : ''
+      }`}
+    >
+      {/* `1F` is 12% alpha: the group's colour, quietly, behind a photo still loading. */}
+      <Avatar member={member} className="h-[var(--photo)] w-[var(--photo)] md:h-[64px] md:w-[64px]" tint={`${accent}1F`} />
+
+      <div className="mb-3 mt-3 w-full min-w-0">
+        <h4 className="text-base font-semibold tracking-[-0.02em] text-ink transition group-hover:text-umred">
+          {dept ? (
+            <Link
+              to={`/departments/${dept.slug}`}
+              className="after:absolute after:inset-0 after:rounded-[20px] after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-umred/40"
+            >
+              {name}
+            </Link>
+          ) : (
+            name
+          )}
+        </h4>
+        {/* Wraps rather than truncates, as the officers' roles already did.
+            Truncating cut all seven roles to "摇篮手…" at 150% text, and would
+            cut a full title like 摇篮手音乐创造坊坊长 even at normal size. The dot
+            is inline so it stays beside the first word when the line breaks. */}
+        <p className="mt-0.5 text-sm leading-snug text-black/58">
+          <span
+            aria-hidden="true"
+            className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full align-middle"
+            style={{ backgroundColor: accent }}
+          />
+          {member.role}
+        </p>
       </div>
-      <ScrollIndicator trackRef={trackRef} count={members.length} />
+
+      <InstagramLink member={member} className="mt-auto" />
+    </li>
+  );
+}
+
+/* ─── CommitteeGrid ───────────────────────────────────────────────────────── */
+
+const DEPT_BY_SLUG = new Map(departments.map((d) => [d.slug, d]));
+const DEPT_ORDER = new Map(departments.map((d, i) => [d.slug, i]));
+
+export function CommitteeGrid({ members }) {
+  const officers = members.filter((m) => !m.dept);
+  // The 七小组 order, not the order the data happens to be written in, so this
+  // row reads left to right exactly like the group grid higher up the page.
+  const leads = members
+    .filter((m) => m.dept)
+    .sort((a, b) => (DEPT_ORDER.get(a.dept) ?? 99) - (DEPT_ORDER.get(b.dept) ?? 99));
+
+  return (
+    <div className="mt-12 space-y-10 sm:mt-14 md:space-y-14">
+      {officers.length > 0 && (
+        <section aria-labelledby="committee-officers">
+          <TierHeading id="committee-officers" title="执行委员" note={`${officers.length} 位 · 统筹学会事务`} />
+          {/* From md, four columns: eight officers fill two rows exactly. */}
+          <Strip className={`${STRIP} md:grid md:grid-cols-4 md:gap-4`}>
+            {officers.map((m) => (
+              <OfficerCard key={m.name} member={m} />
+            ))}
+          </Strip>
+        </section>
+      )}
+
+      {leads.length > 0 && (
+        <section aria-labelledby="committee-leads">
+          <TierHeading id="committee-leads" title="七小组负责人" note="点击卡片，前往小组页面" />
+          {/* From md, four to a row with the remaining three centred beneath —
+              seven has no column count between one and seven it divides into,
+              and a card left alone at the start of a row reads as a gap. From
+              xl, one line of seven: the whole of 七小组 across the page.
+              25% − 0.6rem leaves 2.4px of slack over three 12px gaps, so
+              rounding can never push the fourth card onto the next line. */}
+          <Strip className={`${STRIP} md:flex-wrap md:justify-center md:gap-3 xl:flex-nowrap xl:gap-4`}>
+            {leads.map((m) => (
+              <GroupLeadCard key={m.name} member={m} dept={DEPT_BY_SLUG.get(m.dept)} />
+            ))}
+          </Strip>
+        </section>
+      )}
     </div>
   );
 }

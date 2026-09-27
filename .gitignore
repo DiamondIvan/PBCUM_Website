@@ -6,3 +6,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# Full-resolution photo originals. Kept out of public/ so they are never
+# deployed, and out of git so the repo does not carry ~90 MB per group.
+# Back these up somewhere durable — they are the only copies.
+photo-originals/

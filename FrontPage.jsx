@@ -8,6 +8,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { sectionData } from './src/data/siteData';
+import { departments } from './src/pages/departments';
+import { events } from './src/pages/events';
 import { AnimatedSection, SectionHeading } from './src/components/ui/SectionHeading';
 import { GradientOrbs } from './src/components/ui/GradientOrbs';
 import { MotionCard } from './src/components/ui/MotionCard';
@@ -18,7 +20,6 @@ import { CommitteeGrid } from './src/components/CommitteeGrid';
 import { SponsorMarquee } from './src/components/SponsorMarquee';
 import { Footer } from './src/components/Footer';
 import { Navbar } from './src/components/Navbar';
-import { ActivityShowcase } from './src/components/ActivityShowcase';
 import { WuteSection, QixiaozuSection } from './src/components/ProgramsGrid';
 import { EventCalendar } from './src/components/EventCalendar';
 
@@ -60,8 +61,20 @@ function HeroGallerySlider({ items }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.45, ease: 'easeOut' }}
-          className={`absolute inset-0 bg-gradient-to-br ${current.tone} rounded-[22px]`}
+          className="absolute inset-0 overflow-hidden rounded-[22px]"
         >
+          {/* The photograph itself. Entries without one fall back to their
+              gradient, which is all this slider used to show. */}
+          {current.src ? (
+            <img
+              src={current.src}
+              alt=""
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : (
+            <div className={`absolute inset-0 bg-gradient-to-br ${current.tone ?? ''}`} />
+          )}
           {/* Overlay */}
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.04),rgba(0,0,0,0.48))] rounded-[22px]" />
           {/* Text */}
@@ -71,22 +84,36 @@ function HeroGallerySlider({ items }) {
             </span>
             <div>
               <p className="font-latin text-[9px] uppercase tracking-widest3 text-white/55">PBCUM</p>
-              <h3 className="mt-1.5 text-lg font-semibold tracking-[-0.03em]">{current.title}</h3>
+              <h3 className="mt-1.5 text-lg font-semibold tracking-[-0.03em]">
+                {current.alt ?? current.title}
+              </h3>
             </div>
           </div>
         </motion.div>
       </AnimatePresence>
-      {/* Dot indicators */}
-      <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
-        {items.map((_, i) => (
+      {/* Dot indicators.
+          The visible mark stays 6px; the button around it is 28x44, which is
+          the tap area. Not the full 44 wide — eight of these sit side by side
+          and 8x44 does not fit a 375px phone — but comfortably over the 24x24
+          WCAG 2.5.8 floor, where a 6px dot was not. Names come from the photo
+          each dot leads to, so a screen reader announces something better
+          than "button". */}
+      <div className="absolute bottom-0 left-1/2 z-10 flex -translate-x-1/2">
+        {items.map((item, i) => (
           <button
             key={i}
             type="button"
             onClick={() => setIndex(i)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/45'
-            }`}
-          />
+            aria-label={`查看第 ${i + 1} 张照片：${item.alt ?? item.category ?? ''}`}
+            aria-current={i === index ? 'true' : undefined}
+            className="group/dot flex h-11 w-7 items-center justify-center"
+          >
+            <span
+              className={`block h-1.5 rounded-full transition-all duration-300 ${
+                i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/45 group-hover/dot:bg-white/70'
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>
@@ -210,7 +237,7 @@ function HeroSection() {
                 transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
                 className="rounded-[24px] sm:rounded-[30px] border border-black/6 bg-[#fbfbfb] p-6 sm:p-7 shadow-[0_20px_60px_rgba(17,24,39,0.06)]"
               >
-                <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-black/42">即将举办</p>
+                <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-black/58">即将举办</p>
                 <h3 className="mt-2.5 sm:mt-3 text-xl sm:text-2xl font-semibold leading-snug text-ink">月夜文化论坛</h3>
                 <p className="mt-2.5 sm:mt-3 text-sm leading-[1.8] text-black/58">
                   一场融合交流、表演与视觉叙事的精彩夜间体验。
@@ -222,14 +249,16 @@ function HeroSection() {
               </motion.div>
               <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
                 <div className="rounded-[24px] sm:rounded-[28px] border border-black/6 bg-white p-5 shadow-[0_20px_60px_rgba(17,24,39,0.06)]">
-                  <p className="text-sm font-medium text-black/45">会员增长</p>
+                  <p className="text-sm font-medium text-black/58">会员增长</p>
                   <div className="mt-3 sm:mt-4 flex items-end gap-2">
                     <span className="font-latin text-3xl sm:text-4xl font-bold tracking-[-0.04em] text-ink">1.2K</span>
-                    <span className="mb-1 text-xs sm:text-sm text-emerald-600">+18% 今年</span>
+                    {/* emerald-700, not 600: at 12px the lighter green came in
+                        at 3.8:1 on white, under the 4.5:1 AA floor. */}
+                    <span className="mb-1 text-xs sm:text-sm text-emerald-700">+18% 今年</span>
                   </div>
                 </div>
                 <div className="rounded-[24px] sm:rounded-[28px] border border-black/6 bg-white p-5 shadow-[0_20px_60px_rgba(17,24,39,0.06)]">
-                  <p className="text-sm font-medium text-black/45">校园覆盖</p>
+                  <p className="text-sm font-medium text-black/58">校园覆盖</p>
                   <div className="mt-3 sm:mt-4 flex items-center gap-2.5 sm:gap-3 text-sm font-medium text-ink">
                     <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-emerald-500" />
                     活跃于各学院及学生空间
@@ -283,7 +312,7 @@ function AboutSection() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="font-latin text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest2 text-black/38">
+                  <p className="font-latin text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest2 text-black/58">
                     {stat.label}
                   </p>
                   <div className="mt-3 sm:mt-4 flex items-end gap-2">
@@ -331,33 +360,42 @@ function WhyJoinSection() {
 function ActivitiesSection() {
   return (
     <>
-      {/* ── 五特活 ── editorial grid, white background ──────────────── */}
-      <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="五大特色活动"
-            title="每一项活动，都是一段难以忘怀的体验。"
-            description="从舞台演出到文化探索，五特活是 PBCUM 最具代表性的年度项目。点击任意卡片，了解更多。"
-          />
-          <div className="mt-14">
-            <WuteSection items={sectionData.wuteActivities} />
+      {/* ── 五特活 ── editorial grid, white background ────────────────
+          The heading only appears if there is something under it. While the
+          remaining activities are still being written they are filtered out
+          (see src/data/publishing.js), and a section title standing over an
+          empty grid reads as a page that failed to load rather than one with
+          nothing to say yet. */}
+      {events.length > 0 && (
+        <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+              eyebrow="五大特别活动"
+              title="每一项活动，都是一段难以忘怀的体验。"
+              description="从舞台演出到文化探索，五特活是 PBCUM 最具代表性的年度项目。点击任意卡片，了解更多。"
+            />
+            <div className="mt-14">
+              <WuteSection items={events} />
+            </div>
           </div>
-        </div>
-      </AnimatedSection>
+        </AnimatedSection>
+      )}
 
       {/* ── 七小组 ── dense directory grid, tinted background ───────── */}
-      <AnimatedSection id="groups" className="bg-[#fafafa] py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading
-            eyebrow="七大工作小组"
-            title="找到属于你的位置，发现你的舞台。"
-            description="七小组涵盖创意、技术、公关等多元领域，总有一个团队等待你的加入。"
-          />
-          <div className="mt-14">
-            <QixiaozuSection items={sectionData.qixiaozuGroups} />
+      {departments.length > 0 && (
+        <AnimatedSection id="groups" className="bg-[#fafafa] py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+              eyebrow="七大工作小组"
+              title="找到属于你的位置，发现你的舞台。"
+              description="七小组涵盖创意、技术、公关等多元领域，总有一个团队等待你的加入。"
+            />
+            <div className="mt-14">
+              <QixiaozuSection items={departments} />
+            </div>
           </div>
-        </div>
-      </AnimatedSection>
+        </AnimatedSection>
+      )}
     </>
   );
 }
@@ -368,12 +406,164 @@ function CommitteeSection() {
   return (
     <AnimatedSection id="committee" className="bg-[#fafafa] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* The previous heading and standfirst described the cards ("每张个人
+            卡片都经过精心设计，而非仓促拼凑") rather than the people on them. A
+            visitor here wants to know who runs the society, so that is what
+            this says. How to reach a group is said once, in the note beside
+            the group-lead cards, rather than twice. */}
         <SectionHeading
           eyebrow="执委会"
-          title="认识我们清晰、温暖、精致呈现的领导团队。"
-          description="每个职位都有充裕的展示空间，每张个人卡片都经过精心设计，而非仓促拼凑。"
+          title="带领学会前行的，是这一群人。"
+          description="执行委员统筹学会的日常运作与年度活动，七小组则各由一位负责人带领。"
         />
         <CommitteeGrid members={sectionData.committee} />
+      </div>
+    </AnimatedSection>
+  );
+}
+
+/* ─── CalendarSection ───────────────────────────────────────────────────
+ * Its own section rather than a tile inside the gallery grid: the calendar is
+ * navigable content, not a photograph, and one grid cell capped it at a single
+ * column's width.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * The 回纹 the programme cards carry, blown up as a watermark. It lives on the
+ * section rather than on the calendar card: the card's header and legend are
+ * both occupied, and a motif there landed on top of the view toggle.
+ */
+function HuiwenWatermark({ className = '' }) {
+  return (
+    <svg
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 44 44"
+      className={`pointer-events-none absolute text-umred ${className}`}
+    >
+      <rect x="0" y="0" width="44" height="3" fill="currentColor" />
+      <rect x="41" y="0" width="3" height="44" fill="currentColor" />
+      <rect x="9" y="9" width="29" height="3" fill="currentColor" fillOpacity="0.55" />
+      <rect x="35" y="9" width="3" height="29" fill="currentColor" fillOpacity="0.55" />
+      <rect x="18" y="18" width="16" height="2" fill="currentColor" fillOpacity="0.30" />
+      <rect x="30" y="18" width="2" height="16" fill="currentColor" fillOpacity="0.30" />
+    </svg>
+  );
+}
+
+/* ─── HistorySection — 学会简史 ──────────────────────────────────────────
+ * Sits at the foot of the page: a reader who has come this far has seen what
+ * the society does, and this is what it came from. The three dated milestones
+ * are pulled out of the prose because a closure and a twelve-year fight to
+ * reopen carry more weight as a timeline than as a clause.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+const HISTORY_MILESTONES = [
+  {
+    year: '1960年代',
+    title: '第一阶段成立',
+    body: '于马来亚大学吉隆坡院校创立初期成立，是马来西亚历史最悠久的大专华人学生组织之一。',
+  },
+  {
+    year: '1974',
+    title: '遭令关闭',
+    body: '在 1970 年代大专运中极具影响力，后因国会下议院白皮书指控涉及颠覆活动被关闭。',
+  },
+  {
+    year: '1986',
+    title: '获准复办',
+    body: '经过 12 年争取，第二阶段华文学会于 12 月 11 日获准重新成立。',
+  },
+];
+
+function HistorySection() {
+  return (
+    <AnimatedSection id="history" className="relative isolate overflow-hidden bg-white py-24 sm:py-32">
+      <HuiwenWatermark className="-right-12 top-12 h-44 w-44 opacity-[0.05] sm:h-64 sm:w-64" />
+
+      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="学会简史"
+          title="六十年，两个阶段，一个学会。"
+          description="马来亚大学华文学会（Persatuan Bahasa Cina Universiti Malaya，缩写 PBCUM）是马大规模最大的华人学生组织。学会不仅致力于推广华文与中华文化，在促进各民族学生交流方面亦扮演着重要角色。"
+        />
+
+        {/* Timeline */}
+        <ol className="mt-14 space-y-0">
+          {HISTORY_MILESTONES.map((m, i) => (
+            <li key={m.year} className="relative flex gap-6 pb-10 last:pb-0 sm:gap-8">
+              {/* Rail — drawn per item so the last one does not trail off. */}
+              {i < HISTORY_MILESTONES.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-[7px] top-4 h-full w-px bg-gradient-to-b from-umred/30 to-umred/5"
+                />
+              )}
+              <span
+                aria-hidden="true"
+                className="relative mt-1.5 h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-umred bg-white"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
+                  {m.year}
+                </p>
+                <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-ink sm:text-2xl">
+                  {m.title}
+                </h3>
+                <p className="mt-2.5 max-w-2xl text-base leading-[1.9] text-black/62">{m.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        {/* What the society runs today — the sections above, named in one place. */}
+        <div className="mt-12 grid gap-4 rounded-[28px] border border-black/6 bg-[#fafafa] p-7 sm:mt-14 sm:grid-cols-2 sm:p-9">
+          {[
+            // Titles are the page headings, and 全中华's runs onto a second
+            // line. A chip wants the name, not the whole banner.
+            { label: '七小组', items: departments.map((d) => d.title.split('\n')[0]) },
+            { label: '五特活', items: events.map((e) => e.title.split('\n')[0]) },
+          ].map((group) => (
+            <div key={group.label}>
+              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/58">
+                {group.label}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {group.items.map((name) => (
+                  <span
+                    key={name}
+                    className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-sm text-black/65 shadow-sm"
+                  >
+                    {name}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </AnimatedSection>
+  );
+}
+
+function CalendarSection() {
+  return (
+    <AnimatedSection id="calendar" className="relative isolate overflow-hidden bg-soft-radial py-24 sm:py-32">
+      {/* Behind everything, and out of the way of the card itself. overflow-hidden
+          on the section keeps them from widening the page. */}
+      <HuiwenWatermark className="-left-10 top-8 h-40 w-40 -scale-x-100 opacity-[0.07] sm:h-56 sm:w-56" />
+      <HuiwenWatermark className="-right-10 bottom-8 h-40 w-40 -scale-y-100 opacity-[0.07] sm:h-56 sm:w-56" />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="活动日历"
+          title="学会全年的行事历，一目了然。"
+          description="点击有标记的日期，查看当天的活动详情并前往该活动的页面。"
+        />
+        <div className="mx-auto mt-14 max-w-3xl">
+          {/* Takes no props — it collects everything dated itself. */}
+          <EventCalendar />
+        </div>
       </div>
     </AnimatedSection>
   );
@@ -391,10 +581,7 @@ function GallerySection() {
           description="用影像讲述每一个珍贵时刻，以精致的空间节奏展现视觉故事。"
         />
         <div className="mt-14">
-          <GalleryLightbox
-            items={sectionData.gallery}
-            calendarSlot={<EventCalendar events={sectionData.calendarEvents} />}
-          />
+          <GalleryLightbox items={sectionData.gallery} />
         </div>
       </div>
     </AnimatedSection>
@@ -428,7 +615,7 @@ function SponsorsSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-9 flex items-end justify-between gap-6">
           <div>
-            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/38">
+            <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/58">
               赞助商 / 合作伙伴
             </p>
             <h2 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
@@ -454,13 +641,13 @@ function JoinCtaSection() {
             <div>
               <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-white/65">加入我们</p>
               <h2 className="mt-4 sm:mt-5 max-w-2xl text-3xl font-semibold leading-[1.2] tracking-[-0.04em] sm:text-5xl">
-                带着你的语言、你的热忱与你的理想，加入 PBCUM。
+                带着你的热忱与理想，加入 PBCUM。
               </h2>
               <p className="mt-5 sm:mt-7 max-w-xl text-sm sm:text-base leading-[1.85] text-white/75">
                 我们正在建设一个精致、包容、面向未来的学会。如果你希望在推动文化的同时，成长为一名领导者，这里就是你的归属之地。
               </p>
               <div className="mt-8 sm:mt-9 flex flex-col gap-3.5 sm:flex-row sm:gap-4">
-                <a href="mailto:pbcum@um.edu.my" className="btn-primary bg-white text-umred hover:bg-white/95 shadow-none">
+                <a href="mailto:pbcum41@gmail.com" className="btn-primary bg-white text-umred hover:bg-white/95 shadow-none">
                   联系执委会
                   <MessageCircleMore className="h-4 w-4" />
                 </a>
@@ -493,15 +680,19 @@ function HomePage() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-soft-radial text-ink">
       <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <WhyJoinSection />
-      <ActivitiesSection />
-      <CommitteeSection />
-      <GallerySection />
-      <TestimonialsSection />
-      <SponsorsSection />
-      <JoinCtaSection />
+      <main id="main">
+        <HeroSection />
+        <AboutSection />
+        <WhyJoinSection />
+        <ActivitiesSection />
+        <CommitteeSection />
+        <GallerySection />
+        <CalendarSection />
+        <TestimonialsSection />
+        <SponsorsSection />
+        <JoinCtaSection />
+        <HistorySection />
+      </main>
       <Footer />
     </div>
   );

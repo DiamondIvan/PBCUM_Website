@@ -1,6 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './FrontPage.js', './FrontPage.jsx', './src/**/*.{js,jsx,ts,tsx}'],
+  // Every hover: style is wrapped in @media (hover: hover) and (pointer: fine).
+  // A phone or tablet has no hover, but it fires :hover on tap and leaves it
+  // stuck until the next tap somewhere else — so a card lifted and its name
+  // turned red on touch, and stayed that way after coming back to the page.
+  // Anything hidden until hover must hide behind the same media query, or on a
+  // touch screen it will never show; see the 了解更多 row in ProgramsGrid.jsx.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       fontFamily: {
@@ -13,6 +22,17 @@ export default {
         glow: '0 0 0 1px rgba(161, 18, 23, 0.12), 0 24px 80px rgba(161, 18, 23, 0.18)',
         'card-hover': '0 32px 80px rgba(17, 24, 39, 0.12)',
         'nav': '0 10px 40px rgba(17, 24, 39, 0.09)',
+      },
+      // pt-18 / sm:py-18 / sm:py-4.5 / group-hover:scale-106 are used across the
+      // pages but are not part of Tailwind's default scales, so they silently
+      // generated nothing. Values interpolated to match the built-in ramps
+      // (16=4rem, 20=5rem -> 18=4.5rem; 4=1rem, 5=1.25rem -> 4.5=1.125rem).
+      spacing: {
+        '4.5': '1.125rem',
+        '18': '4.5rem',
+      },
+      scale: {
+        '106': '1.06',
       },
       colors: {
         umred: '#A11217',

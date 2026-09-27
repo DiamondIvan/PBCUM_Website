@@ -9,6 +9,30 @@ import { Link } from 'react-router-dom';
 
 const easing = [0.22, 1, 0.36, 1];
 
+/* ────────────────────────────────────────────────────────────────────────
+ * Card colour
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/**
+ * The one colour an item is themed by, sampled from its own logo.
+ * Regenerate with `python scripts/logo-colors.py` after swapping a logo.
+ */
+function itemColor(item) {
+  return item.accentHex;
+}
+
+/** Darkens #RRGGBB by `amount` (0-1) so a flat card colour can form a gradient. */
+function darken(hex, amount = 0.34) {
+  const n = parseInt(hex.slice(1), 16);
+  const f = 1 - amount;
+  return `rgb(${Math.round(((n >> 16) & 255) * f)}, ${Math.round(((n >> 8) & 255) * f)}, ${Math.round((n & 255) * f)})`;
+}
+
+/** Gradient for the modal header bar and icon tile, built from the card colour. */
+function colorGradient(color, dir = 'to right') {
+  return `linear-gradient(${dir}, ${color}, ${darken(color)})`;
+}
+
 /** Returns stagger variants that honour prefers-reduced-motion. */
 function useCardVariants() {
   const reduced = useReducedMotion();
@@ -55,8 +79,10 @@ const backdropVariants = {
 function ProgramModal({ item, type, onClose }) {
   const closeRef = useRef(null);
   const isEvent = type === 'event';
-  const isImgIcon = typeof item.icon === 'string';
+  const isImgIcon = typeof item.logo === 'string';
   const Icon = isImgIcon ? null : item.icon;
+  // Same colour the card is tinted with, so opening a card does not change hue.
+  const color = itemColor(item);
 
   useEffect(() => { closeRef.current?.focus(); }, []);
 
@@ -90,20 +116,23 @@ function ProgramModal({ item, type, onClose }) {
         variants={modalVariants}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top accent bar */}
-        <div className={`h-2 w-full bg-gradient-to-r ${item.accent}`} />
+        {/* Top accent bar — matches the card's own logo colour */}
+        {color && <div className="h-2 w-full" style={{ background: colorGradient(color) }} />}
 
         <div className="max-h-[85dvh] overflow-y-auto">
           {/* Header row */}
           <div className="flex items-start justify-between gap-4 px-6 sm:px-8 pt-6 sm:pt-7 pb-0">
             <div className="flex items-center gap-3.5 sm:gap-4">
               {!isImgIcon && (
-                <div className={`flex h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm`}>
+                <div
+                  className="flex h-11 w-11 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-2xl shadow-sm"
+                  style={color ? { background: colorGradient(color, 'to bottom right') } : undefined}
+                >
                   <Icon className="h-5 w-5 text-white" />
                 </div>
               )}
               <div>
-                <p className="font-latin text-[10px] font-semibold uppercase tracking-widest3 text-black/38">
+                <p className="font-latin text-[10px] font-semibold uppercase tracking-widest3 text-black/58">
                   {isEvent ? '五特活' : '七小组'}
                 </p>
                 <h2 className="mt-0.5 text-lg sm:text-xl font-semibold leading-tight text-ink">
@@ -114,7 +143,7 @@ function ProgramModal({ item, type, onClose }) {
             <button
               ref={closeRef}
               onClick={onClose}
-              className="group flex h-10 w-10 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/50 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80"
+              className="group flex h-10 w-10 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/58 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80"
               aria-label="关闭"
             >
               <X className="h-4 w-4" />
@@ -124,16 +153,22 @@ function ProgramModal({ item, type, onClose }) {
           {/* Centered logo (image icons only) */}
           {isImgIcon && (
             <div className="flex justify-center px-6 sm:px-8 pt-5 sm:pt-6 pb-2">
-              <img src={item.icon} alt="" className="h-24 w-24 sm:h-28 sm:w-28 object-contain drop-shadow-lg" />
+              <img src={item.logo} alt="" className="h-24 w-24 sm:h-28 sm:w-28 object-contain drop-shadow-lg" />
             </div>
           )}
 
           {/* Body */}
           <div className="px-6 sm:px-8 pt-4 sm:pt-5 pb-7 sm:pb-8">
-            <p className="text-sm sm:text-base leading-[1.8] text-black/58">{item.teaser}</p>
-            <div className="mt-4 sm:mt-5 rounded-[18px] border border-black/6 bg-[#fafafa] px-5 sm:px-6 py-4 sm:py-5">
-              <p className="whitespace-pre-line text-xs sm:text-sm leading-[1.85] text-black/55">{item.detail}</p>
-            </div>
+            {item.teaser && (
+              <p className="text-sm sm:text-base leading-[1.8] text-black/58">{item.teaser}</p>
+            )}
+            {/* No grey box at all for a group still gathering its words — an
+                empty one reads as a rendering fault. */}
+            {item.detail && (
+              <div className="mt-4 sm:mt-5 rounded-[18px] border border-black/6 bg-[#fafafa] px-5 sm:px-6 py-4 sm:py-5">
+                <p className="whitespace-pre-line text-xs sm:text-sm leading-[1.85] text-black/55">{item.detail}</p>
+              </div>
+            )}
             <Link
               to={isEvent ? `/events/${item.slug}` : `/departments/${item.slug}`}
               onClick={onClose}
@@ -155,14 +190,13 @@ function ProgramModal({ item, type, onClose }) {
  * Color & motif system (per-logo extraction):
  *
  *  五特活 (events):
- *    item.themeColor → bottom gradient wash (45% card height, fades from
+ *    item.accentHex → bottom gradient wash (45% card height, fades from
  *    ~30% colour at the base to transparent at top) + bottom-right corner
  *    回纹 L-bar fragment. Card background stays white; all text stays dark.
  *
  *  七小组 (departments):
  *    item.accentHex → 5px top accent bar + top-right corner 回纹 L-bar
  *    fragment. White card body, dark text, unchanged from previous.
- *    (Will switch to item.themeColor once dept logos are processed.)
  *
  *  Both corner motifs share the same nested-L-bar SVG shape; only their
  *  corner anchor (bottom-right vs top-right) differs. All decorative layers
@@ -171,13 +205,12 @@ function ProgramModal({ item, type, onClose }) {
 
 function ProgramCard({ item, index, type, onOpen, variants }) {
   const isEvent = type === 'event';
-  const isImgIcon = typeof item.icon === 'string';
+  const isImgIcon = typeof item.logo === 'string';
   const Icon = isImgIcon ? null : item.icon;
 
-  // Color source per section:
-  //   Events      → item.themeColor (extracted from each event's own logo)
-  //   Departments → item.accentHex  (temp palette; replaced after logo extraction)
-  const color = isEvent ? item.themeColor : item.accentHex;
+  // A stale hex here is invisible until someone notices the card no longer
+  // matches its logo — which is exactly how 新血营 and 全中华 drifted.
+  const color = itemColor(item);
 
   return (
     <motion.article
@@ -276,26 +309,19 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
       {isImgIcon ? (
         <div className="relative flex w-full justify-center">
           <img
-            src={item.icon}
+            src={item.logo}
             alt=""
             className="h-28 w-28 object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-105"
           />
-          {isEvent && (
-            <span className="absolute right-0 top-0 font-latin text-[11px] font-bold tracking-widest2 text-black/22">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-          )}
         </div>
       ) : (
         <div className="relative flex items-center justify-between">
-          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} shadow-sm transition-transform duration-300 group-hover:scale-110`}>
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-2xl shadow-sm transition-transform duration-300 group-hover:scale-110"
+            style={color ? { background: colorGradient(color, 'to bottom right') } : undefined}
+          >
             <Icon className="h-5 w-5 text-white" />
           </div>
-          {isEvent && (
-            <span className="font-latin text-[11px] font-bold tracking-widest2 text-black/22">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-          )}
         </div>
       )}
 
@@ -304,20 +330,33 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
         <h3 className="whitespace-pre-line text-lg font-semibold leading-snug text-ink">
           {item.title}
         </h3>
-        <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">
-          {item.teaser}
-        </p>
+        {/* Says up front that this one's write-up is not ready, so the card
+            sets the right expectation before a reader spends a tap on it. */}
+        {item.isDraft && (
+          <span className="mt-2 inline-flex w-fit items-center rounded-full border border-black/8 bg-black/[0.04] px-2.5 py-0.5 text-[11px] font-medium text-black/58">
+            内容筹备中
+          </span>
+        )}
+        {item.teaser && (
+          <p className="mt-2 line-clamp-1 text-sm leading-[1.75] text-black/55">
+            {item.teaser}
+          </p>
+        )}
       </div>
 
       {/* ── Divider ── */}
       <div className="relative mt-5 h-px w-full bg-black/6 transition-colors duration-300 group-hover:bg-umred/20" />
 
-      {/* ── 了解更多 — visible on touch/mobile, slides up on desktop hover ── */}
+      {/* ── 了解更多 — visible on touch, slides up on hover where there is one ──
+          Hidden behind the same media query Tailwind now puts every hover:
+          style behind (future.hoverOnlyWhenSupported). It used to hide from
+          640px up, as a stand-in for "desktop" — which also hid it on an iPad,
+          where nothing could ever hover it back into view. */}
       <div className="relative mt-4 flex items-center gap-1.5">
-        <span className="text-sm font-medium text-umred opacity-100 sm:translate-y-1 sm:opacity-0 transition-[transform,opacity] duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
+        <span className="text-sm font-medium text-umred opacity-100 transition-[transform,opacity] duration-300 [@media(hover:hover)_and_(pointer:fine)]:translate-y-1 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
           {item.cta}
         </span>
-        <ArrowUpRight className="h-4 w-4 text-umred opacity-100 sm:translate-y-1 sm:opacity-0 transition-[transform,opacity] duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100" />
+        <ArrowUpRight className="h-4 w-4 text-umred opacity-100 transition-[transform,opacity] duration-300 [@media(hover:hover)_and_(pointer:fine)]:translate-y-1 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 group-hover:translate-y-0 group-hover:opacity-100" />
       </div>
     </motion.article>
   );
