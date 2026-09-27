@@ -93,13 +93,13 @@ export const STATUS_CONFIG = {
  *   stops    — array of { label, date, location } from the event data
  *   accent   — Tailwind gradient string for the step chip (e.g. event.accent)
  *   title    — optional eyebrow override (default: '全年时间线')
- *   subtitle — optional h2 override
+ *   subtitle — optional h2 override; each event can set its own as `timelineTitle`
  */
 export function TourSchedule({
   stops,
   accent,
   title = '全年时间线',
-  subtitle = '每一阶段，都是扬帆的足迹。',
+  subtitle = '一步一步，走到这一刻。',
 }) {
   if (!stops?.length) return null;
   return (

@@ -1,15 +1,16 @@
 import { ArrowUpRight, ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { departments } from '../pages/departments';
 
 /**
  * CommitteeGrid — the 执委会, in the two tiers it actually has.
  *
- *   phone (< md)   each tier is a strip showing two people, stepped with
- *                  arrows or a swipe — the pattern ptum.my uses for its
- *                  committee. Fifteen cards laid out in full ran to three
- *                  screens of scrolling before the page moved on.
+ *   below md       each tier is a strip, stepped with arrows or a swipe — the
+ *                  pattern ptum.my uses for its committee. Two people show at
+ *                  a time on a phone, three from sm (640px). Fifteen cards
+ *                  laid out in full ran to three screens of scrolling before
+ *                  the page moved on.
  *   md and up      each tier is laid out whole; there is room to.
  *
  * Differences from that reference, each on purpose:
@@ -46,16 +47,22 @@ const photo = (image) => (image ? `/committee_photo/${image}` : null);
 const SLIDE = 'shrink-0 snap-start basis-[calc(50%-5px)] sm:basis-[calc(33.333%-6.667px)]';
 const STRIP_SHADOW = 'shadow-[0_6px_18px_rgba(17,24,39,0.06)] md:shadow-soft';
 const STRIP =
-  'flex snap-x snap-mandatory gap-2.5 overflow-x-auto pb-4 pt-[var(--strip-pad)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
+  'flex snap-x snap-mandatory gap-[10px] overflow-x-auto pb-4 pt-[var(--strip-pad)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ' +
   'md:snap-none md:overflow-visible md:p-0';
 
 /* The three measurements the arrows are centred from, declared once on the
    strip and read by both the cards and the arrows — see StripArrow.
    The photo is 72px below 360px and 88px from there. At 96px on a 320px phone
    the arrows sat 11px into the edge photos; 88px also happens to be exactly a
-   third of the 264px source, so the portraits stay sharp on 3x screens. */
+   third of the 264px source, so the portraits stay sharp on 3x screens.
+
+   Pixels, not rem — and the same goes for the arrows and the 10px gap. These
+   sizes were rem, so they grew with the reader's text setting while the cards,
+   whose width comes from the screen, did not: at 150% text a 132px photo sat
+   in a 159px card and the arrows covered 35px of it. A photograph has no
+   reason to scale with the font. The words on the card still do. */
 const STRIP_VARS =
-  '[--strip-pad:0.5rem] [--card-pad:1.25rem] [--photo:4.5rem] min-[360px]:[--photo:5.5rem]';
+  '[--strip-pad:8px] [--card-pad:20px] [--photo:72px] min-[360px]:[--photo:88px]';
 
 /** Round portrait. Sources are 264x330, about 3x the circle, so they stay sharp
  *  on high-density phones. alt is empty because the name is printed beside it —
@@ -144,9 +151,9 @@ function StripArrow({ direction, hidden, onClick }) {
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       disabled={hidden}
-      style={{ top: 'calc(var(--strip-pad) + var(--card-pad) + var(--photo) / 2 - 1.375rem)' }}
-      className={`absolute z-20 flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white/95 text-ink shadow-[0_6px_20px_rgba(17,24,39,0.16)] backdrop-blur transition duration-200 active:scale-95 disabled:invisible md:hidden ${
-        direction < 0 ? '-left-3' : '-right-3'
+      style={{ top: 'calc(var(--strip-pad) + var(--card-pad) + var(--photo) / 2 - 22px)' }}
+      className={`absolute z-20 flex h-[44px] w-[44px] items-center justify-center rounded-full border border-black/8 bg-white/95 text-ink shadow-[0_6px_20px_rgba(17,24,39,0.16)] backdrop-blur transition duration-200 active:scale-95 disabled:invisible md:hidden ${
+        direction < 0 ? '-left-[12px]' : '-right-[12px]'
       }`}
     >
       <Icon className="h-5 w-5" />
@@ -207,14 +214,56 @@ function Strip({ className, children }) {
 
 /* ─── 执行委员 ────────────────────────────────────────────────────────────── */
 
+/**
+ * An officer with a `link` leads to a section of the homepage — 俞嘉希, the
+ * 特别活动咨询委员, leads to the 五特活. It behaves exactly like the navbar's
+ * link to the same section (see handleNavClick in Navbar.jsx): a smooth scroll
+ * when already on the homepage, a route change to '/#section' from anywhere
+ * else. The card is a stretched link, as the group-lead cards are, so the
+ * Instagram button inside stays its own separate target.
+ */
 function OfficerCard({ member }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const link = member.link;
+
+  const goToSection = (e) => {
+    e.preventDefault();
+    if (location.pathname === '/') {
+      const el = document.getElementById(link.section);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#${link.section}`);
+      }
+    } else {
+      navigate(`/#${link.section}`);
+    }
+  };
+
   return (
     <li
-      className={`${SLIDE} flex flex-col items-center rounded-[24px] border border-black/6 bg-white px-3 pb-4 pt-[var(--card-pad)] text-center ${STRIP_SHADOW} md:basis-auto md:px-5 md:pb-5 md:pt-6`}
+      className={`${SLIDE} group relative flex flex-col items-center rounded-[24px] border border-black/6 bg-white px-3 pb-4 pt-[var(--card-pad)] text-center ${STRIP_SHADOW} transition duration-300 md:basis-auto md:px-5 md:pb-5 md:pt-6 ${
+        link ? 'md:hover:-translate-y-0.5 md:hover:shadow-card-hover' : ''
+      }`}
     >
-      <Avatar member={member} className="h-[var(--photo)] w-[var(--photo)] md:h-24 md:w-24" tint="#F1ECE7" />
-      <h4 className="mt-3 text-lg font-semibold tracking-[-0.02em] text-ink md:mt-4 md:text-xl">
-        {member.name}
+      <Avatar member={member} className="h-[var(--photo)] w-[var(--photo)] md:h-[96px] md:w-[96px]" tint="#F1ECE7" />
+      <h4 className="mt-3 text-lg font-semibold tracking-[-0.02em] text-ink transition group-hover:text-umred md:mt-4 md:text-xl">
+        {link ? (
+          <a
+            href={`/#${link.section}`}
+            onClick={goToSection}
+            className="after:absolute after:inset-0 after:rounded-[24px] after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-umred/40"
+          >
+            {member.name}
+            <ArrowUpRight
+              aria-hidden="true"
+              className="ml-1 inline h-3.5 w-3.5 -translate-y-px text-black/60 transition group-hover:text-umred"
+            />
+            <span className="sr-only">，{member.role}，前往{link.label}</span>
+          </a>
+        ) : (
+          member.name
+        )}
       </h4>
       <p className="mb-3 mt-1 text-sm leading-snug text-black/58">{member.role}</p>
       {/* mt-auto pins the button to the bottom edge, so cards side by side line
@@ -251,9 +300,14 @@ function GroupLeadCard({ member, dept }) {
       {member.name}
       {dept && (
         <>
+          {/* 60%, not 35%: this arrow is the only thing on the card saying it
+              is a link, and at 35% it measured 2.44:1 — under the 3:1 WCAG
+              1.4.11 asks of a graphic that carries meaning. At 60% it is 5.7:1.
+              60, not 58: Tailwind's opacity scale moves in fives, and a value
+              off it (text-black/58) silently generates no CSS at all. */}
           <ArrowUpRight
             aria-hidden="true"
-            className="ml-1 inline h-3.5 w-3.5 -translate-y-px text-black/35 transition group-hover:text-umred"
+            className="ml-1 inline h-3.5 w-3.5 -translate-y-px text-black/60 transition group-hover:text-umred"
           />
           <span className="sr-only">，{member.role}，前往{dept.title}的小组页面</span>
         </>
@@ -268,7 +322,7 @@ function GroupLeadCard({ member, dept }) {
       }`}
     >
       {/* `1F` is 12% alpha: the group's colour, quietly, behind a photo still loading. */}
-      <Avatar member={member} className="h-[var(--photo)] w-[var(--photo)] md:h-16 md:w-16" tint={`${accent}1F`} />
+      <Avatar member={member} className="h-[var(--photo)] w-[var(--photo)] md:h-[64px] md:w-[64px]" tint={`${accent}1F`} />
 
       <div className="mb-3 mt-3 w-full min-w-0">
         <h4 className="text-base font-semibold tracking-[-0.02em] text-ink transition group-hover:text-umred">
@@ -283,9 +337,17 @@ function GroupLeadCard({ member, dept }) {
             name
           )}
         </h4>
-        <p className="mt-0.5 flex items-center justify-center gap-1.5 text-sm text-black/58">
-          <span aria-hidden="true" className="h-1.5 w-1.5 flex-shrink-0 rounded-full" style={{ backgroundColor: accent }} />
-          <span className="truncate">{member.role}</span>
+        {/* Wraps rather than truncates, as the officers' roles already did.
+            Truncating cut all seven roles to "摇篮手…" at 150% text, and would
+            cut a full title like 摇篮手音乐创造坊坊长 even at normal size. The dot
+            is inline so it stays beside the first word when the line breaks. */}
+        <p className="mt-0.5 text-sm leading-snug text-black/58">
+          <span
+            aria-hidden="true"
+            className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full align-middle"
+            style={{ backgroundColor: accent }}
+          />
+          {member.role}
         </p>
       </div>
 

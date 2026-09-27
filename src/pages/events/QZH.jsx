@@ -41,7 +41,7 @@ export const CONTENT = {
   // date: '',
   // location: '',
   // hook: '',
-  intro: '全国中学华文学会生活营简介\n\n全国中学华文学会生活营（全中华）是马大华文学会旗下的特别活动。其宗旨是为了提高中学华文学会的素质。营会以游戏与课程并重的形式进行，以培养中学生的团队精神、领导能力及个人素养。课程涵盖个人提升、组织运作、中华文化与华教，推动营员珍惜母语及多元文化。全中华以全国巡回形式举办，为各地中学生提供交流、学习与成长的平台。《续章·扬帆》承接二十载精神，续写新篇章，扬起青春之帆，勇敢迈向未来。 ',
+  intro: '全国中学华文学会生活营（全中华）是马大华文学会旗下的特别活动。其宗旨是为了提高中学华文学会的素质。营会以游戏与课程并重的形式进行，以培养中学生的团队精神、领导能力及个人素养。课程涵盖个人提升、组织运作、中华文化与华教，推动营员珍惜母语及多元文化。全中华以全国巡回形式举办，为各地中学生提供交流、学习与成长的平台。《续章·扬帆》承接二十载精神，续写新篇章，扬起青春之帆，勇敢迈向未来。',
   /**
    * tourStops — full-year timeline for 全中华.
    * Each entry: { label, date, location }
@@ -56,8 +56,11 @@ export const CONTENT = {
    *   end date past                  → 已结束   (muted)
    *   unparseable / '待定'           → 待定     (grey)
    */
+  // 扬帆 is 全中华's own theme (续章·扬帆), so the line is set here rather
+  // than being every activity's default.
+  timelineTitle: '每一阶段，都是扬帆的足迹。',
   tourStops: [
-    { label: '迎新日', date: '26.10.2026', location: '待定' },
+    { label: '迎新日', date: '24.10.2026', location: '待定' },
     { label: '培训营1.0', date: '30.10.2026-1.11.2026', location: '待定' },
     { label: '培训营2.0', date: '21.11.2026-22.11.2026', location: '待定' },
     { label: '北马分站', date: '4.12.2026-6.12.2026', location: '待定' },
@@ -186,8 +189,8 @@ export const CONTENT = {
     },
   ],
   closingLine: '贰续华章，以梦为帆',
-  ctaLabel: '关注下一场活动',
-  ctaHref: '#footer',
+  ctaLabel: '查看活动日历',
+  ctaHref: '/#calendar',
 
 };
 

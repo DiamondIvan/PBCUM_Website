@@ -21,11 +21,12 @@
 import { useState, useRef, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
 import { Footer } from '../Footer';
 import { NotFoundEvent, TourSchedule } from './EventPageShared';
+import { IntroCard } from './IntroCard';
 import { Reveal } from '../../hooks/useInView.jsx';
 import { parseDate } from '../../data/dates';
 import { withoutScaffold } from '../../data/publishing';
@@ -38,6 +39,21 @@ function formatDate(value) {
   if (!d) return value;
   return d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 }
+
+/** A multi-day activity shows its whole span, not just the day it opens —
+ *  a three-day camp read as a one-day event. Whatever the two dates share is
+ *  said once: 2025年10月10日–12日, 2026年4月30日–5月3日. */
+function formatDateRange(start, end) {
+  const a = parseDate(start);
+  const b = parseDate(end);
+  if (!a || !b || b <= a) return formatDate(start);
+  if (a.getFullYear() !== b.getFullYear()) return `${formatDate(start)}–${formatDate(end)}`;
+  if (a.getMonth() !== b.getMonth()) return `${formatDate(start)}–${b.getMonth() + 1}月${b.getDate()}日`;
+  return `${formatDate(start)}–${b.getDate()}日`;
+}
+
+const CTA_CLASS =
+  'inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-umred shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0';
 
 export function EventPageLayout({ content }) {
   /* Strip the scaffold here rather than trusting the caller. Each activity
@@ -132,7 +148,7 @@ export function EventPageLayout({ content }) {
               {event.date && (
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm text-white/80 backdrop-blur-md">
                   <CalendarDays className="h-4 w-4 opacity-75" />
-                  {formatDate(event.date)}
+                  {formatDateRange(event.date, event.endDate)}
                 </span>
               )}
               {event.location && (
@@ -178,10 +194,9 @@ export function EventPageLayout({ content }) {
         {event.intro && (
           <Reveal delay={0.05}>
             <div className="mt-16 sm:mt-20">
-              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">活动简介</p>
-              <p className="mt-5 max-w-3xl whitespace-pre-line text-justify text-xl leading-[1.85] text-black/68 sm:text-2xl">
+              <IntroCard eyebrow="活动简介" accent={event.accentHex}>
                 {event.intro}
-              </p>
+              </IntroCard>
             </div>
           </Reveal>
         )}
@@ -189,7 +204,7 @@ export function EventPageLayout({ content }) {
         {/* ── Tour schedule (only for multi-stop / timeline events) ── */}
         {event.tourStops?.length > 0 && (
           <Reveal delay={0.06}>
-            <TourSchedule stops={event.tourStops} accent={event.accent} />
+            <TourSchedule stops={event.tourStops} accent={event.accent} subtitle={event.timelineTitle} />
           </Reveal>
         )}
 
@@ -308,13 +323,20 @@ export function EventPageLayout({ content }) {
                   {event.closingLine ?? '想知道下一场什么时候开始？'}
                 </h2>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                  <a
-                    href={event.ctaHref}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-umred shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0"
-                  >
-                    {event.ctaLabel}
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
+                  {/* A path inside the site goes through the router. A plain <a>
+                      to '/#calendar' reloads the whole app and replays the intro
+                      splash before it gets there. */}
+                  {event.ctaHref?.startsWith('/') ? (
+                    <Link to={event.ctaHref} className={CTA_CLASS}>
+                      {event.ctaLabel}
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  ) : (
+                    <a href={event.ctaHref} className={CTA_CLASS}>
+                      {event.ctaLabel}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  )}
                   <button
                     onClick={goBack}
                     className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/18"

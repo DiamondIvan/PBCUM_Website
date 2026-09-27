@@ -347,12 +347,16 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
       {/* ── Divider ── */}
       <div className="relative mt-5 h-px w-full bg-black/6 transition-colors duration-300 group-hover:bg-umred/20" />
 
-      {/* ── 了解更多 — visible on touch/mobile, slides up on desktop hover ── */}
+      {/* ── 了解更多 — visible on touch, slides up on hover where there is one ──
+          Hidden behind the same media query Tailwind now puts every hover:
+          style behind (future.hoverOnlyWhenSupported). It used to hide from
+          640px up, as a stand-in for "desktop" — which also hid it on an iPad,
+          where nothing could ever hover it back into view. */}
       <div className="relative mt-4 flex items-center gap-1.5">
-        <span className="text-sm font-medium text-umred opacity-100 sm:translate-y-1 sm:opacity-0 transition-[transform,opacity] duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
+        <span className="text-sm font-medium text-umred opacity-100 transition-[transform,opacity] duration-300 [@media(hover:hover)_and_(pointer:fine)]:translate-y-1 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 group-hover:translate-y-0 group-hover:opacity-100">
           {item.cta}
         </span>
-        <ArrowUpRight className="h-4 w-4 text-umred opacity-100 sm:translate-y-1 sm:opacity-0 transition-[transform,opacity] duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100" />
+        <ArrowUpRight className="h-4 w-4 text-umred opacity-100 transition-[transform,opacity] duration-300 [@media(hover:hover)_and_(pointer:fine)]:translate-y-1 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 group-hover:translate-y-0 group-hover:opacity-100" />
       </div>
     </motion.article>
   );

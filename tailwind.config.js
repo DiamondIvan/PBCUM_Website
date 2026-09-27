@@ -1,6 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './FrontPage.js', './FrontPage.jsx', './src/**/*.{js,jsx,ts,tsx}'],
+  // Every hover: style is wrapped in @media (hover: hover) and (pointer: fine).
+  // A phone or tablet has no hover, but it fires :hover on tap and leaves it
+  // stuck until the next tap somewhere else — so a card lifted and its name
+  // turned red on touch, and stayed that way after coming back to the page.
+  // Anything hidden until hover must hide behind the same media query, or on a
+  // touch screen it will never show; see the 了解更多 row in ProgramsGrid.jsx.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   theme: {
     extend: {
       fontFamily: {

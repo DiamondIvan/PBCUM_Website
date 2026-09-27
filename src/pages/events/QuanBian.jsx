@@ -10,7 +10,7 @@
  */
 
 import { Trophy } from 'lucide-react';
-import { EventPageLayout } from '../../components/shared/EventPageLayout';
+import { EventPageLayout } from '../../components/shared/EventPageLayout'
 
 export const CONTENT = {
   /* ── Homepage card ─────────────────────────────────────────────────
@@ -36,7 +36,7 @@ export const CONTENT = {
   date: '// TODO',
   location: '// TODO',
   hook: '// TODO',
-  intro: '全国大专辩论会简介 \n\n 全国大专辩论会（简称"全辩"），是马来西亚首个全国性两年一度的大专级别华语辩论比赛。1988 年创立至今，是马来西亚迄今历史最悠久的华语辩论比赛，今年已迈入第 38 个年头。',
+  intro: '全国大专辩论会（简称"全辩"），是马来西亚首个全国性两年一度的大专级别华语辩论比赛。1988 年创立至今，是马来西亚迄今历史最悠久的华语辩论比赛，今年已迈入第 38 个年头。',
   gallery: [
     { src: null, alt: '// TODO', category: '精彩瞬间', tone: 'from-[#7c3aed] to-[#4f46e5]', span: 'md:col-span-2 md:row-span-2' },
     { src: null, alt: '// TODO', category: '活动现场', tone: 'from-[#1f2937] to-[#111827]', span: 'md:row-span-2' },
@@ -50,8 +50,8 @@ export const CONTENT = {
     { label: '// TODO', caption: '// TODO' },
   ],
   closingLine: '// TODO',
-  ctaLabel: '关注下一场活动',
-  ctaHref: '#footer',
+  ctaLabel: '查看活动日历',
+  ctaHref: '/#calendar',
 
 };
 

@@ -105,7 +105,10 @@ export const sectionData = {
     { name: '陈彦德', role: '总财政',           image: 'andy.jpeg',     instagram: 'andychan.0111' },
     { name: '徐伟伦', role: '副总秘书',         image: 'weilun.jpeg',   instagram: 'wl0804' },
     { name: '温滢薪', role: '副总财政',         image: 'yingxin.jpeg',  instagram: 'yingxin_oon' },
-    { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg',    instagram: 'karheyyy' },
+    // The one officer whose remit maps to a section of the page: 特别活动
+    // is the 五特活, so the card scrolls to them like the nav's 精彩活动 does.
+    { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg',    instagram: 'karheyyy',
+      link: { section: 'activities', label: '精彩活动' } },
 
     { name: '林家修', role: '相声组组长',       image: 'jiashiu.jpeg',  instagram: 'limjiashiu',      dept: 'dept-01' },
     { name: '伍詠诗', role: '文化组组长',       image: 'yongshi.jpeg',  instagram: '___its.alice',    dept: 'dept-02' },

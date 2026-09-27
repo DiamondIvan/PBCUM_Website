@@ -52,8 +52,8 @@ export const CONTENT = {
     { label: '// TODO', caption: '// TODO' },
   ],
   closingLine: '// TODO',
-  ctaLabel: '关注下一场活动',
-  ctaHref: '#footer',
+  ctaLabel: '查看活动日历',
+  ctaHref: '/#calendar',
 
 };
 

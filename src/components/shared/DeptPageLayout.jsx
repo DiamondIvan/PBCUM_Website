@@ -36,6 +36,7 @@ import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
 import { Footer } from '../Footer';
 import { InitialsAvatar, NotFoundDept } from './DeptPageShared';
+import { IntroCard } from './IntroCard';
 import { Reveal } from '../../hooks/useInView.jsx';
 import { withoutScaffold } from '../../data/publishing';
 
@@ -184,18 +185,9 @@ export function DeptPageLayout({ content }) {
         {/* ═══ 2 · 简介 ═════════════════════════════════════════════════ */}
         {dept.description && (
           <Section>
-            <div className="flex items-start gap-6">
-              <div
-                className="mt-1 w-1 flex-shrink-0 self-stretch rounded-full opacity-60"
-                style={{ background: `linear-gradient(to bottom, ${dept.accentHex}, transparent)` }}
-              />
-              <div className="flex-1">
-                <Eyebrow>简介</Eyebrow>
-                <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-[1.9] text-black/62 sm:text-lg">
-                  {dept.description}
-                </p>
-              </div>
-            </div>
+            <IntroCard eyebrow="简介" accent={dept.accentHex}>
+              {dept.description}
+            </IntroCard>
           </Section>
         )}
 

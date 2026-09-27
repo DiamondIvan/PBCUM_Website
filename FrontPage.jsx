@@ -370,7 +370,7 @@ function ActivitiesSection() {
         <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SectionHeading
-              eyebrow="五大特色活动"
+              eyebrow="五大特别活动"
               title="每一项活动，都是一段难以忘怀的体验。"
               description="从舞台演出到文化探索，五特活是 PBCUM 最具代表性的年度项目。点击任意卡片，了解更多。"
             />
@@ -408,12 +408,13 @@ function CommitteeSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* The previous heading and standfirst described the cards ("每张个人
             卡片都经过精心设计，而非仓促拼凑") rather than the people on them. A
-            visitor here wants to know who runs the society and how to reach
-            the group they are curious about — so that is what this says. */}
+            visitor here wants to know who runs the society, so that is what
+            this says. How to reach a group is said once, in the note beside
+            the group-lead cards, rather than twice. */}
         <SectionHeading
           eyebrow="执委会"
           title="带领学会前行的，是这一群人。"
-          description="执行委员统筹学会的日常运作与年度活动，七小组则各由一位负责人带领。想认识某个小组，点进负责人的卡片就能直达小组页面。"
+          description="执行委员统筹学会的日常运作与年度活动，七小组则各由一位负责人带领。"
         />
         <CommitteeGrid members={sectionData.committee} />
       </div>
@@ -640,7 +641,7 @@ function JoinCtaSection() {
             <div>
               <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-white/65">加入我们</p>
               <h2 className="mt-4 sm:mt-5 max-w-2xl text-3xl font-semibold leading-[1.2] tracking-[-0.04em] sm:text-5xl">
-                带着你的语言、你的热忱与你的理想，加入 PBCUM。
+                带着你的热忱与理想，加入 PBCUM。
               </h2>
               <p className="mt-5 sm:mt-7 max-w-xl text-sm sm:text-base leading-[1.85] text-white/75">
                 我们正在建设一个精致、包容、面向未来的学会。如果你希望在推动文化的同时，成长为一名领导者，这里就是你的归属之地。
