@@ -109,9 +109,8 @@ function HeroGallerySlider({ items }) {
             className="group/dot flex h-11 w-7 items-center justify-center"
           >
             <span
-              className={`block h-1.5 rounded-full transition-all duration-300 ${
-                i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/45 group-hover/dot:bg-white/70'
-              }`}
+              className={`block h-1.5 rounded-full transition-all duration-300 ${i === index ? 'w-5 bg-white' : 'w-1.5 bg-white/45 group-hover/dot:bg-white/70'
+                }`}
             />
           </button>
         ))}
@@ -459,20 +458,136 @@ function HuiwenWatermark({ className = '' }) {
  * ──────────────────────────────────────────────────────────────────────── */
 
 const HISTORY_MILESTONES = [
+  /* ── 第一章 ──────────────────────────────────────────────────────────── */
   {
-    year: '1960年代',
-    title: '第一阶段成立',
-    body: '于马来亚大学吉隆坡院校创立初期成立，是马来西亚历史最悠久的大专华人学生组织之一。',
+    era: '1962–1970',
+    chapter: '创立与早期发展',
+    body:
+      '学会于 1962 年创立于马来亚大学，' +
+      '这一年份来自学会内部一份成立史讲稿，' +
+      '为目前所掌握资料中唯一明确记载创立年份的来源，' +
+      '与“第 10 届执委会倒推约 1962 年”这一线索大致吸合。' +
+      '学会创立初期规模不大，' +
+      '活动以文化艺术、文学讲座及出版文学刊物为主。' +
+      '1960 年代的详细记录与创会人名单目前仍待核实，' +
+      '这段空白本身也是历史的一部分：' +
+      '它说明了学生社团在早年依靠口耳相传与零星记录维系的常态。',
+    bullets: [
+      '活动以文化艺术、文学讲座及出版刊物为主',
+      '至 1971 年已具备稳定的年度改选机制',
+    ],
+    note: '1962 年创立目前仅有单一史料记载，1960 年代的会议记录与创会人名单现仍待核实。',
   },
+  /* ── 第二章 ──────────────────────────────────────────────────────────── */
   {
-    year: '1974',
-    title: '遭令关闭',
-    body: '在 1970 年代大专运中极具影响力，后因国会下议院白皮书指控涉及颠覆活动被关闭。',
+    era: '1971–1973',
+    chapter: '路向转变与健康文艺实践',
+    body:
+      '1971 年 6 月第 10 届执委会改选后，学会明确将“关注社会现实、服务基层”列为方针，' +
+      '活动方向从一般性联谊转向贴近社会基层的文艺实践，' +
+      '与香港銀星艺术团在马演出后激起的“健康文艺”风潮相呼应。' +
+      '这一时期活跃于学会的代表人物为吴建成与杨亚柒。',
+    bullets: [
+      '1971 年 9 月 16 日：《看，生活多美丽》文娱晚会，马大东姑礼堂，约 60—70 人出席',
+      '1972 年 4 月 30 日—5 月 5 日（另 5 月 7 日加演）：《春自人间来》联演，逾 10 个艺术团体参与',
+      '1972 年：约 80 人的南马巡回演出，走访马六甲、新山、鹻势等地',
+      '1973 年 4 月 9—15 日：《春自人间来》大汇演，联合 19 个艺术团体，马大东姑礼堂',
+      '1973 年中：第 13 届改选，杨亚柒当选主席，姚丽芳出任总秘书',
+    ],
+    note: '南马巡回演出的具体月份，现存两份内部记录分别写作 7 月或 8 月，确切日期尚待考证。',
   },
+  /* ── 第三章 ──────────────────────────────────────────────────────────── */
   {
-    year: '1986',
-    title: '获准复办',
-    body: '经过 12 年争取，第二阶段华文学会于 12 月 11 日获准重新成立。',
+    era: '1974–1985',
+    chapter: '《春雷》、查禁与历史中断',
+    muted: true,
+    body:
+      '1974 年，学会与多个团体联合筹备《春雷》文艺大汇演，' +
+      '计划于 5 月 23—24 日在雪兰莪中华大会堂演出，最终未获当局批准而被迫放弃。' +
+      '同年 12 月，警方突袭八打箃再也一处由学会成员租住的排屋，' +
+      '搜获《春雷》演出道具（仿制木枪与旧军服），官方媒体随即指控学会涉及颜覆活动。' +
+      '吴建成与杨亚柒依据《1960 年内部安全法令》（ISA）被拘捕；' +
+      '其后，马来西亚国会发布《白皮书》，正式下令关闭学会，学会进入长达十余年的中断期。',
+    quoteContext:
+      '杨亚柒被扣留约五年，获释后因长期单独监禁而出现严重精神状况，' +
+      '于 1980 年 7 月 3 日在吉打北部老家辞世，得年二十九岁。' +
+      '家人在其身后发现一封遗书，其中写道：',
+    quote:
+      '「本人对于一切……在心理对于本人的残害表示最严重的抗议……' +
+      '本人严正地要求这一切的残害与束缚刁难即刻地停止。」',
+    quoteAttr: '—— 杨亚柒遗书（转引自学会内部成立史讲稿）',
+    bodyAfterQuote:
+      '吴建成被扣留约八年，至 1982 年获释，其后投身华文教育界，' +
+      '先后出任江沙崇华独中、吉兰丹中华独中及吉隆坡尊孔独中校长。' +
+      '中断期间，一批关心学会存续的成员组成复办笹委会，' +
+      '历经多次签名运动与陈情，啵持争取复办逾六年。',
+    bullets: [
+      '1974 年 12 月 3 日：数千名大专生示威，声援华玲农民',
+      '1974 年 12 月 7—8 日：警方进入马大校园展开搜捕行动',
+      '1974 年 12 月 9 日：警方突袭搜获《春雷》道具，吴建成、杨亚柒依 ISA 被捕',
+      '1974 年 12 月 19 日（另一记录作 29 日）：国会《白皮书》发布，学会遇令关闭',
+      '1979 年 12 月 17 日：复办笹委会提交首封注册申请信',
+      '1981 年 12 月 31 日—1982 年 1 月 10 日：第一次签名运动，收集 2,067 人签名',
+      '1983/1984 年：第二次签名运动，收集 2,316 人签名',
+      '1984/1985 年：复办笹委会获批主办复办后首场活动——中秋晚会',
+    ],
+    note:
+      '《白皮书》发布日期（12 月 19 日或 29 日）两说并存，尚未核实；' +
+      '杨亚柒获释经过及逃世细节，均转引自档案库尚未收录、亦未能核实的外部文件。',
+  },
+  /* ── 第四章 ──────────────────────────────────────────────────────────── */
+  {
+    era: '1986–1990年代',
+    chapter: '复办与组织重建',
+    body:
+      '1986 年 12 月 2 日，Ungku Aziz 皇家教授正式通知执委，' +
+      '学会已获大学理事会批准成立；同月，大学公共关系部于 Rumah Universiti 召开记者招待会，' +
+      '由校长亲自宣布学会复办。首届会员大会于 1987 年 1 月 3 日召开，' +
+      '学会由此进入漫长的重建阶段。',
+    bullets: [
+      '复办初期延续“股长制”：训育、学术、文学、文娱、联谊、编辑各股长分工负责',
+      '1990 年代起增设组织秘书、外务副主席、内务副主席，架构渐趋明确',
+      '1990 年代委员规模有所收缩，学会稳步积累经验，重新站稳脚步',
+    ],
+  },
+  /* ── 第五章 ──────────────────────────────────────────────────────────── */
+  {
+    era: '约 2000–2016',
+    chapter: '延续、调整与公共参与',
+    body:
+      '进入 2000 年代，学会确立了以总秘书处、总财政处为核心，' +
+      '配合辩论组、华文班、社服组、文化组、相声组、摇篮手组等多个组别的运作架构，' +
+      '构成此后近二十年的基本骨架。学会亦在此期间更主动参与公共议题，' +
+      '以第 22 届（2007/2008 年度）为代表：该届就华文学会注册自由、母语教育等议题积极表态，' +
+      '并与多所大专的华文学会联合发声，同时着手推行更规范的内部治理。',
+    bullets: [
+      '2007 年：参与全国大专华文学会注册运动，主张学生组织自由',
+      '2007 年：五校华文学会联合声援遵校方起诉的博大学生李松荣',
+      '年度文化品牌持续运转：辩论、相声观摩会、摇篮手发表会、“全中华”生活营',
+      '废除执委不得兼任其他社团职务的条规；推行更规范的财务与会务制度',
+    ],
+    note:
+      '囿于现有资料，2000 年代其余各届及 2010 年代前期的具体情形暂时未能逐一还原；' +
+      '第 22 届仅作为例证，并不代表其他年度没有类似的公共参与。',
+  },
+  /* ── 第六章 ──────────────────────────────────────────────────────────── */
+  {
+    era: '2017–2026',
+    chapter: '冻结、复苏与制度传承',
+    body:
+      '2017 年，学会遇校方冻结，具体经过（冻结主体、原因、起止日期）现存资料尚未逐一核实。' +
+      '时任总秘书李洲意学长在冻结期间发起联署声明名单，为争取各界声援奠定了基础。' +
+      '学会其后恢复运作，并在第 40 届（2025/2026 年度）任内迎来重要的制度建设：' +
+      '首次系统整理历届执委名录、完成现行《章程》修订，并建立传承档案制度。' +
+      '这部简史本身，也是这一重建工作的产物。',
+    bullets: [
+      '2017 年：学会遇校方冻结（详情尚待核实）',
+      '2025/2026 年：第 40 届任内举办四十周年纪念晚室',
+      '2025/2026 年：首次系统整理《历届执行委员会名录》',
+      '2026 年 7 月 20 日：现行《章程》经会员大会通过，翡日起生效',
+      '建立传承档案制度，为历史延续奠立基础',
+    ],
+    note: '2017 年冻结事件现仅有一份 27 页影像资料，尚待逐页转录及核实。',
   },
 ];
 
@@ -488,59 +603,97 @@ function HistorySection() {
           description="马来亚大学华文学会（Persatuan Bahasa Cina Universiti Malaya，缩写 PBCUM）是马大规模最大的华人学生组织。学会不仅致力于推广华文与中华文化，在促进各民族学生交流方面亦扮演着重要角色。"
         />
 
-        {/* Timeline */}
+        {/* Timeline — six eras, one node each */}
         <ol className="mt-14 space-y-0">
           {HISTORY_MILESTONES.map((m, i) => (
-            <li key={m.year} className="relative flex gap-6 pb-10 last:pb-0 sm:gap-8">
-              {/* Rail — drawn per item so the last one does not trail off. */}
+            <li key={m.era} className="relative flex gap-6 pb-12 last:pb-0 sm:gap-8">
+              {/* Vertical rail — omitted on the last item so it does not trail past the node */}
               {i < HISTORY_MILESTONES.length - 1 && (
                 <span
                   aria-hidden="true"
-                  className="absolute left-[7px] top-4 h-full w-px bg-gradient-to-b from-umred/30 to-umred/5"
+                  className={`absolute left-[7px] top-4 h-full w-px bg-gradient-to-b ${m.muted
+                    ? 'from-zinc-300/70 to-zinc-200/20'
+                    : 'from-umred/30 to-umred/5'
+                    }`}
                 />
               )}
+              {/* Node dot — grey for the 1974–1985 era, red for all others */}
               <span
                 aria-hidden="true"
-                className="relative mt-1.5 h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 border-umred bg-white"
+                className={`relative mt-1.5 h-3.5 w-3.5 flex-shrink-0 rounded-full border-2 ${m.muted ? 'border-zinc-400 bg-zinc-50' : 'border-umred bg-white'
+                  }`}
               />
+
               <div className="min-w-0 flex-1">
-                <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
-                  {m.year}
+                {/* Era date range */}
+                <p
+                  className={`font-latin text-[11px] font-semibold uppercase tracking-widest3 ${m.muted ? 'text-zinc-500' : 'text-umred/68'
+                    }`}
+                >
+                  {m.era}
                 </p>
+                {/* Chapter title */}
                 <h3 className="mt-2 text-xl font-semibold tracking-[-0.03em] text-ink sm:text-2xl">
-                  {m.title}
+                  {m.chapter}
                 </h3>
-                <p className="mt-2.5 max-w-2xl text-base leading-[1.9] text-black/62">{m.body}</p>
+                {/* Body prose */}
+                <p className="mt-3 max-w-2xl text-base leading-[1.9] text-black/62">{m.body}</p>
+
+                {/* Sentence before the blockquote — rendered only when a quote is present */}
+                {m.quoteContext && (
+                  <p className="mt-3 max-w-2xl text-base leading-[1.9] text-black/62">
+                    {m.quoteContext}
+                  </p>
+                )}
+
+                {/* Blockquote — present only in Chapter 3 */}
+                {m.quote && (
+                  <blockquote className="mt-4 border-l-2 border-zinc-300 pl-4">
+                    <p className="text-sm italic leading-[1.85] text-black/55">{m.quote}</p>
+                    {m.quoteAttr && (
+                      <footer className="mt-2 text-xs text-black/38">{m.quoteAttr}</footer>
+                    )}
+                  </blockquote>
+                )}
+
+                {/* Continuation prose after the blockquote */}
+                {m.bodyAfterQuote && (
+                  <p className="mt-3 max-w-2xl text-base leading-[1.9] text-black/62">
+                    {m.bodyAfterQuote}
+                  </p>
+                )}
+
+                {/* Key-event bullet list */}
+                {m.bullets?.length > 0 && (
+                  <ul className="mt-4 space-y-1.5">
+                    {m.bullets.map((b) => (
+                      <li
+                        key={b}
+                        className="flex items-start gap-2.5 text-sm leading-[1.75] text-black/55"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`mt-[5px] h-1.5 w-1.5 flex-shrink-0 rounded-full ${m.muted ? 'bg-zinc-400' : 'bg-umred/45'
+                            }`}
+                        />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Source note — where the PDF flags uncertainty or single-source records */}
+                {m.note && (
+                  <p className="mt-3.5 text-xs italic leading-[1.75] text-black/38">
+                    ※ {m.note}
+                  </p>
+                )}
               </div>
             </li>
           ))}
         </ol>
 
         {/* What the society runs today — the sections above, named in one place. */}
-        <div className="mt-12 grid gap-4 rounded-[28px] border border-black/6 bg-[#fafafa] p-7 sm:mt-14 sm:grid-cols-2 sm:p-9">
-          {[
-            // Titles are the page headings, and 全中华's runs onto a second
-            // line. A chip wants the name, not the whole banner.
-            { label: '七小组', items: departments.map((d) => d.title.split('\n')[0]) },
-            { label: '五特活', items: events.map((e) => e.title.split('\n')[0]) },
-          ].map((group) => (
-            <div key={group.label}>
-              <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-black/58">
-                {group.label}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {group.items.map((name) => (
-                  <span
-                    key={name}
-                    className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-sm text-black/65 shadow-sm"
-                  >
-                    {name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </AnimatedSection>
   );

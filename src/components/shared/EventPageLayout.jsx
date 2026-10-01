@@ -226,6 +226,38 @@ export function EventPageLayout({ content }) {
           </Reveal>
         )}
 
+        {/* ── Photo Sections (one per named album / sub-event) ─────────
+            Same pattern as DeptPageLayout's photoSections: each entry gets its
+            own eyebrow, title, optional standfirst and its own lightbox grid.
+            Omit `photoSections` on any event and nothing here renders.
+
+              photoSections: [
+                { eyebrow: '大型相声观摩会', title: '……', description: '……',
+                  photos: [{ src, alt, category, tone, span }] },
+              ] */}
+        {event.photoSections?.map((sec, i) =>
+          sec.photos?.length > 0 && (
+            <Reveal key={sec.title ?? sec.eyebrow ?? i} delay={0.08}>
+              <div className="mt-16 sm:mt-20">
+                <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
+                  {sec.eyebrow ?? '精彩相册'}
+                </p>
+                <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
+                  {sec.title}
+                </h2>
+                {sec.description && (
+                  <p className="mt-4 max-w-3xl text-[15px] leading-[1.95] text-black/62 whitespace-pre-line">
+                    {sec.description}
+                  </p>
+                )}
+                <div className="mt-8">
+                  <GalleryLightbox items={sec.photos} />
+                </div>
+              </div>
+            </Reveal>
+          )
+        )}
+
         {/* ── Highlights (Horizontal Scrollable Carousel) ──────────── */}
         {event.highlights?.length > 0 && (
         <Reveal delay={0.05}>
