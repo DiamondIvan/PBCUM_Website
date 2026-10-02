@@ -98,25 +98,27 @@ export const sectionData = {
    * member; the society's shared address is in the footer.
    * ──────────────────────────────────────────────────────────────────── */
   committee: [
-    { name: '刘善勤', role: '主席',             image: 'sken.jpeg',     instagram: 'shanken09' },
-    { name: '方骏涛', role: '外务副主席',       image: 'ivan.jpeg',     instagram: 'fong_ivan.jt' },
-    { name: '彭凯铃', role: '内务副主席',       image: 'kailing.jpeg',  instagram: 'kayleen.kling_' },
-    { name: '苏冠霖', role: '总秘书',           image: 'guanlin.jpeg',  instagram: 'sohgl_31' },
-    { name: '陈彦德', role: '总财政',           image: 'andy.jpeg',     instagram: 'andychan.0111' },
-    { name: '徐伟伦', role: '副总秘书',         image: 'weilun.jpeg',   instagram: 'wl0804' },
-    { name: '温滢薪', role: '副总财政',         image: 'yingxin.jpeg',  instagram: 'yingxin_oon' },
+    { name: '刘善勤', role: '主席', image: 'sken.jpeg', instagram: 'shanken09' },
+    { name: '方骏涛', role: '外务副主席', image: 'ivan.jpeg', instagram: 'fong_ivan.jt' },
+    { name: '彭凯铃', role: '内务副主席', image: 'kailing.jpeg', instagram: 'kayleen.kling_' },
+    { name: '苏冠霖', role: '总秘书', image: 'guanlin.jpeg', instagram: 'sohgl_31' },
+    { name: '陈彦德', role: '总财政', image: 'andy.jpeg', instagram: 'andychan.0111' },
+    { name: '徐伟伦', role: '副总秘书', image: 'weilun.jpeg', instagram: 'wl0804' },
+    { name: '温滢薪', role: '副总财政', image: 'yingxin.jpeg', instagram: 'yingxin_oon' },
     // The one officer whose remit maps to a section of the page: 特别活动
     // is the 五特活, so the card scrolls to them like the nav's 精彩活动 does.
-    { name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg',    instagram: 'karheyyy',
-      link: { section: 'activities', label: '精彩活动' } },
+    {
+      name: '俞嘉希', role: '特别活动咨询委员', image: 'jiaxi.jpeg', instagram: 'karheyyy',
+      link: { section: 'activities', label: '精彩活动' }
+    },
 
-    { name: '林家修', role: '相声组组长',       image: 'jiashiu.jpeg',  instagram: 'limjiashiu',      dept: 'dept-01' },
-    { name: '伍詠诗', role: '文化组组长',       image: 'yongshi.jpeg',  instagram: '___its.alice',    dept: 'dept-02' },
-    { name: '符凌绮', role: '辩论组组长',       image: 'lingqi.jpeg',   instagram: 'lingyiiiii.1222', dept: 'dept-03' },
-    { name: '刘奕君', role: '华文班班长',       image: 'yijun.jpeg',    instagram: 'yijun0803',       dept: 'dept-04' },
-    { name: '陈永进', role: '摇篮手坊长',       image: 'yongjin.jpeg',  instagram: 'tyongjing',       dept: 'dept-05' },
-    { name: '林筱萱', role: '升讯团团长',       image: 'xiaoxuan.jpeg', instagram: 'xiaoooxuannn06',  dept: 'dept-06' },
-    { name: '陈丽文', role: '社服组组长',       image: 'liwen.jpeg',    instagram: 'leiwennnn',       dept: 'dept-07' },
+    { name: '林家修', role: '相声组组长', image: 'jiashiu.jpeg', instagram: 'limjiashiu', dept: 'dept-01' },
+    { name: '伍詠诗', role: '文化组组长', image: 'yongshi.jpeg', instagram: '___its.alice', dept: 'dept-02' },
+    { name: '符凌绮', role: '辩论组组长', image: 'lingqi.jpeg', instagram: 'lingyiiiii.1222', dept: 'dept-03' },
+    { name: '刘奕君', role: '华文班班长', image: 'yijun.jpeg', instagram: 'yijun0803', dept: 'dept-04' },
+    { name: '陈永进', role: '摇篮手坊长', image: 'yongjin.jpeg', instagram: 'tyongjing', dept: 'dept-05' },
+    { name: '林筱萱', role: '升讯团团长', image: 'xiaoxuan.jpeg', instagram: 'xiaoooxuannn06', dept: 'dept-06' },
+    { name: '陈丽文', role: '社服组组长', image: 'liwen.jpeg', instagram: 'leiwennnn', dept: 'dept-07' },
   ],
 
   /* ─── 相册 — homepage gallery ────────────────────────────────────────
@@ -201,7 +203,7 @@ export const sectionData = {
     {
       quote: '委员会将视觉一致性与专业度带入校园生活，这种用心在其他学会里很难见到。',
       name: '欣怡',
-      role: '项目义工',
+      role: '理学院学生',
     },
     {
       quote: '人生短短三万天，不敬自由等何年',
@@ -209,7 +211,7 @@ export const sectionData = {
       role: '外务副主席',
     }
   ],
-  partners: ['马来亚大学', 'UM 学生事务处', 'PBCUM 校友会', '校园文化实验室', 'Redline Print', 'Moonstage Media'],
+  partners: ['马来亚大学', 'UM 学生事务处', 'PBCUM 校友会', '校园文化实验室'],
 
   /* ─── 学会活动 — society-wide dates ──────────────────────────────────
    * The calendar builds itself from the 五特活 and 七小组 content: put a
