@@ -38,7 +38,9 @@ function shouldShowSplash() {
 const T = {
   BEAT_PAUSE:  300,
   SLIDE_DUR:   900,
-  UNMOUNT_BUF: 120,
+  // Bumped from 120 → 200 ms: gives slower Android devices more headroom
+  // for the CSS transition to visually complete before the element unmounts.
+  UNMOUNT_BUF: 200,
   MAX_WAIT:    5000,
 };
 
@@ -216,15 +218,22 @@ export function IntroSplash({ onDone }) {
   return (
     <div
       aria-hidden="true"
+      // BUG 2 FIX: height is set via CSS class (intro-splash-overlay in index.css)
+      // so the browser can cascade `height: 100vh` (fallback) then `height: 100dvh`
+      // (override). A React inline style object is a plain JS object — setting the
+      // same key twice just overwrites it, so the dvh/vh dual-value must live in CSS.
+      className="intro-splash-overlay"
       style={{
         position: 'fixed',
         inset: 0,
         width: '100vw',
-        height: '100dvh',
         zIndex: 9999,
         overflow: 'hidden',
-        // Disable pointer events once animating — never traps clicks or scroll
-        pointerEvents: animating ? 'none' : 'all',
+        // BUG 1 FIX: Always 'none' — the overlay is purely visual and must never
+        // intercept taps at any point, even before the animation starts.
+        // Previously 'all' during the pre-animation phase silently swallowed
+        // every touch that landed while the page was loading.
+        pointerEvents: 'none',
       }}
     >
       {/* TOP panel */}

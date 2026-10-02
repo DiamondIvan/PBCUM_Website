@@ -16,6 +16,19 @@
 
 /* ─── Global Font Stacks ───────────────────────────────────────────────── */
 
+/* ─── BUG 2 FIX: Intro splash overlay height — dvh with vh fallback ─────
+ * React inline style objects are plain JS objects: setting `height` twice
+ * just overwrites the first value, so the browser only ever sees one.
+ * CSS cascade is the only way to express "100vh for old engines, 100dvh
+ * for modern ones that support dynamic viewport units."
+ * `100dvh` (dynamic) shrinks when the Android address bar appears, so the
+ * overlay never shows a gap at the bottom caused by the collapsing bar.
+ * ──────────────────────────────────────────────────────────────────────── */
+.intro-splash-overlay {
+  height: 100vh;        /* Universal fallback: old Android Chrome, any browser */
+  height: 100dvh;       /* Override: dynamic viewport height where supported   */
+}
+
 /* Chinese text → KaiTi (楷体) */
 body,
 h1, h2, h3, h4, h5, h6,
@@ -184,8 +197,60 @@ p {
 
 .glass-panel {
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+/* ─── BUG 2 FIX: backdrop-filter Android fallback ──────────────────────────
+ * Android WebView / older Chrome versions (pre-76, or some OEM WebViews) do
+ * not support backdrop-filter. Without a fallback the navbar becomes a fully
+ * transparent bar — text and icons vanish against the page content.
+ *
+ * Strategy:
+ *   1. Tailwind's backdrop-blur-* utilities now get a -webkit- prefix via the
+ *      rules below, which covers most modern Android Chrome (flags-enabled or
+ *      76+).
+ *   2. The @supports block provides a solid opaque fallback for browsers where
+ *      neither vendor-prefixed nor unprefixed backdrop-filter is available,
+ *      ensuring the navbar is always legible.
+ *
+ * We target only the backdrop-blur values actually used by the Navbar
+ * (backdrop-blur-xl = 24px, backdrop-blur-2xl = 40px).
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/* Add -webkit- prefix so older Chrome for Android recognises the property */
+.backdrop-blur-xl {
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+.backdrop-blur-2xl {
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
+}
+.backdrop-blur-sm {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.backdrop-blur-md {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* Solid-background fallback when neither form of backdrop-filter is available */
+@supports not (backdrop-filter: blur(1px)) {
+  /* Navbar bar — make it fully opaque so text stays legible */
+  header.fixed .mx-auto {
+    background-color: rgba(255, 255, 255, 0.97) !important;
+  }
+  /* Glass modal/overlay fallbacks */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.97);
+  }
+  /* GalleryLightbox / ProgramModal backdrop blur */
+  .fixed.inset-0.backdrop-blur-2xl,
+  .fixed.inset-0.backdrop-blur-sm {
+    background: rgba(0, 0, 0, 0.78) !important;
+  }
 }
 
 /* ─── Noise Overlay ─────────────────────────────────────────────────────── */
