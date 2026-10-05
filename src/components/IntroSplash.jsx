@@ -65,6 +65,8 @@ export function IntroSplash({ onDone }) {
 
   const [animating, setAnimating] = useState(false);
   const [mounted,   setMounted]   = useState(show);
+  const topPanelRef = useRef(null);
+  const doneRef     = useRef(false);
 
   // Prefers-reduced-motion check (once, at mount)
   const reducedMotion = useRef(
@@ -72,42 +74,50 @@ export function IntroSplash({ onDone }) {
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   ).current;
 
+  const finish = () => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    setMounted(false);
+    onDone?.();
+  };
+
   useEffect(() => {
     if (!show) {
-      onDone?.();
+      finish();
       return;
     }
 
-    let beatTimer, unmountTimer, maxWaitTimer;
+    let beatTimer, fallbackTimer, maxWaitTimer;
 
-    /* ── startSequence: fires after load event (or max-wait cap) ──────── */
+    /* ── startSequence: fires after load/interactive state (or max-wait cap) ──────── */
     function startSequence() {
       if (reducedMotion) {
         // Respect reduced-motion: skip animation entirely, unmount immediately
-        setMounted(false);
-        onDone?.();
+        finish();
         return;
       }
 
       beatTimer = setTimeout(() => {
         setAnimating(true);
 
-        unmountTimer = setTimeout(() => {
-          setMounted(false);
-          onDone?.();
-        }, T.SLIDE_DUR + T.UNMOUNT_BUF);
+        // Fallback safety timer: in case transitionend is dropped or suppressed
+        // by battery-saver / backgrounding, ensure splash unmounts reliably.
+        fallbackTimer = setTimeout(() => {
+          finish();
+        }, T.SLIDE_DUR + 500);
       }, T.BEAT_PAUSE);
     }
 
-    /* ── waitForLoad: waits for window 'load', with 5 s cap ──────────── */
+    /* ── waitForLoad: wait for page readiness with safety cap ──────────── */
     function waitForLoad() {
-      if (document.readyState === 'complete') {
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
         startSequence();
         return;
       }
 
       maxWaitTimer = setTimeout(() => {
         window.removeEventListener('load', onLoad);
+        window.removeEventListener('DOMContentLoaded', onLoad);
         startSequence();
       }, T.MAX_WAIT);
 
@@ -116,6 +126,7 @@ export function IntroSplash({ onDone }) {
         startSequence();
       }
 
+      window.addEventListener('DOMContentLoaded', onLoad, { once: true });
       window.addEventListener('load', onLoad, { once: true });
     }
 
@@ -135,7 +146,7 @@ export function IntroSplash({ onDone }) {
 
     return () => {
       clearTimeout(beatTimer);
-      clearTimeout(unmountTimer);
+      clearTimeout(fallbackTimer);
       clearTimeout(maxWaitTimer);
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
@@ -156,22 +167,22 @@ export function IntroSplash({ onDone }) {
     willChange: 'transform',
     transition,
     overflow: 'hidden',
+    pointerEvents: 'none',
   };
 
   const topPanel = {
     ...panelCommon,
     top: 0,
-    // Warm cream — noticeably lighter than dark, clearly distinct from the
-    // homepage's pure-white background so the reveal edge stays visible
+    // Warm cream background
     background: 'linear-gradient(180deg, #f5f0ea 0%, #ede7df 100%)',
-    transform: animating ? 'translateY(-100%)' : 'translateY(0)',
+    transform: animating ? 'translate3d(0, -100%, 0)' : 'translate3d(0, 0, 0)',
   };
 
   const bottomPanel = {
     ...panelCommon,
     bottom: 0,
     background: 'linear-gradient(0deg, #f5f0ea 0%, #ede7df 100%)',
-    transform: animating ? 'translateY(100%)' : 'translateY(0)',
+    transform: animating ? 'translate3d(0, 100%, 0)' : 'translate3d(0, 0, 0)',
   };
 
   const logoStyle = {
@@ -181,22 +192,20 @@ export function IntroSplash({ onDone }) {
     width: 'clamp(100px, 18vw, 140px)',
     maxWidth: '80vw',
     height: 'auto',
-    // Own bounding-box center as origin — shield is not top-bottom symmetric.
-    // No rotation — logo shrinks and fades in place only.
     transformOrigin: 'center center',
     transform: animating
-      ? 'translate(-50%, -50%) scale(0)'
-      : 'translate(-50%, -50%) scale(1)',
+      ? 'translate3d(-50%, -50%, 0) scale(0)'
+      : 'translate3d(-50%, -50%, 0) scale(1)',
     opacity: animating ? 0 : 1,
-    transition: `transform ${T.SLIDE_DUR}ms ${EASE}, opacity ${Math.round(T.SLIDE_DUR * 0.75)}ms ${EASE}, filter ${T.SLIDE_DUR}ms ${EASE}`,
-    // Softer shadow on light panels — less black, more brand-red warmth
-    filter: animating
-      ? 'drop-shadow(0 0 0px rgba(161,18,23,0))'
-      : 'drop-shadow(0 0 20px rgba(161,18,23,0.35)) drop-shadow(0 6px 18px rgba(0,0,0,0.18))',
+    // Note: dropped 'filter' from CSS transition because animating blur/drop-shadow
+    // on Android causes severe frame drops and visual stutter. Opacity handles the fade smoothly.
+    transition: `transform ${T.SLIDE_DUR}ms ${EASE}, opacity ${Math.round(T.SLIDE_DUR * 0.75)}ms ${EASE}`,
+    filter: 'drop-shadow(0 0 20px rgba(161,18,23,0.35)) drop-shadow(0 6px 18px rgba(0,0,0,0.18))',
     willChange: 'transform, opacity',
     zIndex: 10,
     userSelect: 'none',
     WebkitUserDrag: 'none',
+    pointerEvents: 'none',
   };
 
   const seamLine = {
@@ -205,8 +214,7 @@ export function IntroSplash({ onDone }) {
     left: 0,
     right: 0,
     height: '1px',
-    transform: 'translateY(-50%)',
-    // Slightly stronger on light panels so the seam is visible
+    transform: 'translate3d(0, -50%, 0)',
     background:
       'linear-gradient(90deg, transparent 0%, rgba(161,18,23,0.45) 25%, rgba(161,18,23,0.90) 50%, rgba(161,18,23,0.45) 75%, transparent 100%)',
     opacity: animating ? 0 : 1,
@@ -215,37 +223,40 @@ export function IntroSplash({ onDone }) {
     zIndex: 5,
   };
 
+  const handlePanelTransitionEnd = (e) => {
+    // Only respond to the transform completion on the panel itself
+    if (e.target === topPanelRef.current && e.propertyName === 'transform') {
+      finish();
+    }
+  };
+
   return (
     <div
       aria-hidden="true"
-      // BUG 2 FIX: height is set via CSS class (intro-splash-overlay in index.css)
-      // so the browser can cascade `height: 100vh` (fallback) then `height: 100dvh`
-      // (override). A React inline style object is a plain JS object — setting the
-      // same key twice just overwrites it, so the dvh/vh dual-value must live in CSS.
       className="intro-splash-overlay"
       style={{
         position: 'fixed',
         inset: 0,
-        width: '100vw',
+        width: '100%',
         zIndex: 9999,
         overflow: 'hidden',
-        // BUG 1 FIX: Always 'none' — the overlay is purely visual and must never
-        // intercept taps at any point, even before the animation starts.
-        // Previously 'all' during the pre-animation phase silently swallowed
-        // every touch that landed while the page was loading.
         pointerEvents: 'none',
       }}
     >
-      {/* TOP panel */}
-      <div style={topPanel}>
+      {/* TOP panel — triggers unmount via onTransitionEnd */}
+      <div
+        ref={topPanelRef}
+        onTransitionEnd={handlePanelTransitionEnd}
+        style={topPanel}
+      >
         {/* Subtle brand warmth tint — lighter on cream background */}
         <div style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'linear-gradient(160deg, rgba(161,18,23,0.06) 0%, transparent 55%)',
         }} />
-        {/* Bottom edge accent toward the seam — stronger on light panels */}
+        {/* Bottom edge accent toward the seam */}
         <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px',
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px', pointerEvents: 'none',
           background: 'linear-gradient(90deg, transparent, rgba(161,18,23,0.35) 50%, transparent)',
         }} />
       </div>
@@ -253,12 +264,12 @@ export function IntroSplash({ onDone }) {
       {/* BOTTOM panel */}
       <div style={bottomPanel}>
         <div style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'linear-gradient(200deg, rgba(161,18,23,0.05) 0%, transparent 50%)',
         }} />
         {/* Top edge accent toward the seam */}
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+          position: 'absolute', top: 0, left: 0, right: 0, height: '1px', pointerEvents: 'none',
           background: 'linear-gradient(90deg, transparent, rgba(161,18,23,0.35) 50%, transparent)',
         }} />
       </div>

@@ -25,8 +25,11 @@
  * overlay never shows a gap at the bottom caused by the collapsing bar.
  * ──────────────────────────────────────────────────────────────────────── */
 .intro-splash-overlay {
+  height: 100%;
   height: 100vh;        /* Universal fallback: old Android Chrome, any browser */
   height: 100dvh;       /* Override: dynamic viewport height where supported   */
+  width: 100%;
+  pointer-events: none;
 }
 
 /* Chinese text → KaiTi (楷体) */
@@ -69,11 +72,17 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  min-height: 100dvh;
-  min-height: 100vh; /* fallback */
+  min-height: 100vh;  /* Fallback: older Android Chrome / WebViews without dvh support */
+  min-height: 100dvh; /* Modern dynamic viewport height: adapts to mobile address bar */
   background: #fff;
   line-height: 1.7;
   overflow-x: hidden;
+}
+
+/* Ensure full screen height across devices and eliminate mobile address bar jump */
+.min-h-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 * {
@@ -111,6 +120,7 @@ p {
   border-radius: 9999px;
   background: #A11217;
   padding: 0.875rem 2rem;
+  min-height: 44px;
   font-size: 0.9375rem;
   font-weight: 600;
   color: #fff;
@@ -125,18 +135,6 @@ p {
   white-space: nowrap;
 }
 
-.btn-primary:hover {
-  background: #881116;
-  transform: translateY(-2px);
-  box-shadow:
-    0 0 0 1px rgba(161, 18, 23, 0.18),
-    0 32px 100px rgba(161, 18, 23, 0.22);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -146,6 +144,7 @@ p {
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fff;
   padding: 0.875rem 2rem;
+  min-height: 44px;
   font-size: 0.9375rem;
   font-weight: 600;
   color: #222222;
@@ -158,16 +157,6 @@ p {
   white-space: nowrap;
 }
 
-.btn-secondary:hover {
-  transform: translateY(-2px);
-  border-color: rgba(161, 18, 23, 0.25);
-  color: #A11217;
-}
-
-.btn-secondary:active {
-  transform: translateY(0);
-}
-
 .btn-ghost-white {
   display: inline-flex;
   align-items: center;
@@ -177,10 +166,12 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.1);
   padding: 0.875rem 2rem;
+  min-height: 44px;
   font-size: 0.9375rem;
   font-weight: 600;
   color: #fff;
   letter-spacing: 0.01em;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   transition:
     transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
@@ -188,9 +179,37 @@ p {
   white-space: nowrap;
 }
 
-.btn-ghost-white:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.16);
+/* Guard hover transformations so touch devices don't jump or require double-taps */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    background: #881116;
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(161, 18, 23, 0.18),
+      0 32px 100px rgba(161, 18, 23, 0.22);
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    border-color: rgba(161, 18, 23, 0.25);
+    color: #A11217;
+  }
+
+  .btn-ghost-white:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 32px 80px rgba(17, 24, 39, 0.12);
+  }
+}
+
+.btn-primary:active,
+.btn-secondary:active,
+.btn-ghost-white:active {
+  transform: scale(0.98);
 }
 
 /* ─── Glass Panel ───────────────────────────────────────────────────────── */
@@ -237,19 +256,42 @@ p {
 }
 
 /* Solid-background fallback when neither form of backdrop-filter is available */
-@supports not (backdrop-filter: blur(1px)) {
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   /* Navbar bar — make it fully opaque so text stays legible */
   header.fixed .mx-auto {
-    background-color: rgba(255, 255, 255, 0.97) !important;
+    background-color: rgba(255, 255, 255, 0.98) !important;
   }
   /* Glass modal/overlay fallbacks */
   .glass-panel {
-    background: rgba(255, 255, 255, 0.97);
+    background: rgba(255, 255, 255, 0.98);
   }
   /* GalleryLightbox / ProgramModal backdrop blur */
   .fixed.inset-0.backdrop-blur-2xl,
   .fixed.inset-0.backdrop-blur-sm {
-    background: rgba(0, 0, 0, 0.78) !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+  }
+}
+
+/* Modal and dialog dynamic height fallbacks for older engines */
+.modal-viewport-height {
+  max-height: 90vh;
+  max-height: 90dvh;
+}
+
+.modal-program-height {
+  max-height: 85vh;
+  max-height: 85dvh;
+}
+
+.modal-image-height {
+  height: 32vh;
+  height: 32dvh;
+}
+
+@media (min-width: 640px) {
+  .modal-image-height {
+    height: 48vh;
+    height: 48dvh;
   }
 }
 
@@ -267,6 +309,7 @@ p {
   );
   background-size: 10px 10px;
   mix-blend-mode: soft-light;
+  transform: translateZ(0);
 }
 
 /* ─── Card Hover Elevation ──────────────────────────────────────────────── */
