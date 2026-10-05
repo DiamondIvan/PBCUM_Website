@@ -124,7 +124,7 @@ function HeroGallerySlider({ items }) {
 function IconCard({ icon: Icon, title, description }) {
   return (
     <MotionCard className="group relative overflow-hidden rounded-[30px] border border-white/62 bg-white p-8 shadow-soft backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.07),transparent_45%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.07),transparent_45%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="relative flex h-full flex-col gap-6">
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-umred/10 text-umred transition duration-300 group-hover:scale-110 group-hover:bg-umred group-hover:text-white">
           <Icon className="h-6 w-6" />
@@ -280,7 +280,7 @@ function AboutSection() {
       <div className="mx-auto grid max-w-7xl gap-10 sm:gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14 lg:px-8">
         {/* Left – brand card */}
         <div className="relative overflow-hidden rounded-[32px] sm:rounded-[38px] bg-[linear-gradient(160deg,rgba(161,18,23,0.97),rgba(81,11,14,0.97))] p-6 sm:p-11 text-white shadow-soft">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_44%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_44%)]" />
           <div className="relative">
             <p className="font-latin text-[11px] uppercase tracking-widest3 text-white/65">关于 PBCUM</p>
             <h2 className="mt-4 text-2xl font-semibold leading-[1.25] tracking-[-0.04em] sm:text-4xl">
@@ -789,7 +789,7 @@ function JoinCtaSection() {
     <AnimatedSection id="join" className="bg-[#fafafa] py-20 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-[32px] sm:rounded-[42px] bg-hero-gradient px-6 py-10 text-white shadow-[0_40px_120px_rgba(161,18,23,0.28)] sm:px-14 sm:py-18">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.09),transparent_34%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.09),transparent_34%)]" />
           <div className="relative grid gap-10 sm:gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-white/65">加入我们</p>

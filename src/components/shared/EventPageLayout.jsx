@@ -103,8 +103,8 @@ export function EventPageLayout({ content }) {
       {/* ── Hero banner ─────────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden pt-24 sm:pt-28">
         <div className={`relative mx-4 overflow-hidden rounded-[36px] bg-gradient-to-br ${event.accent} sm:mx-6 lg:mx-8`}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_44%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(0,0,0,0.22),transparent_50%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_44%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(0,0,0,0.22),transparent_50%)]" />
 
           <div className="relative px-8 py-14 text-white sm:px-14 sm:py-20 lg:py-28">
             <button
@@ -305,7 +305,7 @@ export function EventPageLayout({ content }) {
                   onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setActiveHighlight(h)}
                   className="group relative flex w-[300px] flex-shrink-0 cursor-pointer snap-start flex-col overflow-hidden rounded-[28px] border border-black/6 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-umred sm:w-[340px] md:w-[360px]"
                 >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.05),transparent_50%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.05),transparent_50%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
                   {/* Photo header — only when image is provided */}
                   {h.image ? (
@@ -344,7 +344,7 @@ export function EventPageLayout({ content }) {
         <Reveal delay={0.05}>
           <div className="mt-16 mb-20 sm:mt-20 sm:mb-28">
             <div className={`relative overflow-hidden rounded-[36px] bg-gradient-to-br ${event.accent} px-9 py-14 text-white shadow-[0_30px_90px_rgba(17,24,39,0.18)] sm:px-14 sm:py-18`}>
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_40%)]" />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_40%)]" />
               <div className="relative max-w-2xl">
                 <p className="font-latin text-[11px] uppercase tracking-widest3 text-white/58">参与未来</p>
                 {/* The closing line is one of the fields an unwritten activity

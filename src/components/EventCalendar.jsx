@@ -372,28 +372,28 @@ export function EventCalendar() {
         </div>
         <span className={`text-sm font-semibold text-ink ${listClass}`}>活动一览</span>
 
-        <div className="flex items-center gap-1 rounded-full border border-black/8 bg-black/[0.03] p-0.5">
+        <div className="flex items-center gap-1 rounded-full border border-black/8 bg-black/[0.03] p-1">
           <button
             type="button"
             onClick={() => setView('list')}
             aria-label="列表检视"
             aria-pressed={view === 'list'}
-            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 ${
+            className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 active:scale-95 ${
               view === 'list' ? 'bg-white text-ink shadow-sm' : 'text-black/58 hover:text-ink'
             }`}
           >
-            <List className="h-3.5 w-3.5" />
+            <List className="h-4 w-4" />
           </button>
           <button
             type="button"
             onClick={() => setView('grid')}
             aria-label="月历检视"
             aria-pressed={view === 'grid'}
-            className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 ${
+            className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 active:scale-95 ${
               view === 'grid' ? 'bg-white text-ink shadow-sm' : 'text-black/58 hover:text-ink'
             }`}
           >
-            <CalendarDays className="h-3.5 w-3.5" />
+            <CalendarDays className="h-4 w-4" />
           </button>
         </div>
       </div>
@@ -431,9 +431,9 @@ export function EventCalendar() {
                 type="button"
                 onClick={() => setSelectedKey(null)}
                 aria-label="关闭"
-                className="flex h-6 w-6 items-center justify-center rounded-full text-black/58 transition-colors hover:bg-black/5 hover:text-ink"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-black/58 transition-colors hover:bg-black/5 hover:text-ink active:scale-95"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
             <div className="max-h-52 overflow-y-auto">

@@ -119,7 +119,7 @@ function ProgramModal({ item, type, onClose }) {
         {/* Top accent bar — matches the card's own logo colour */}
         {color && <div className="h-2 w-full" style={{ background: colorGradient(color) }} />}
 
-        <div className="max-h-[85dvh] overflow-y-auto">
+        <div className="max-h-[85vh] max-h-[85dvh] overflow-y-auto">
           {/* Header row */}
           <div className="flex items-start justify-between gap-4 px-6 sm:px-8 pt-6 sm:pt-7 pb-0">
             <div className="flex items-center gap-3.5 sm:gap-4">
@@ -143,7 +143,7 @@ function ProgramModal({ item, type, onClose }) {
             <button
               ref={closeRef}
               onClick={onClose}
-              className="group flex h-10 w-10 sm:h-9 sm:w-9 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/58 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80"
+              className="group flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-black/58 transition-colors duration-200 hover:border-black/20 hover:bg-black/[0.08] hover:text-black/80 active:scale-95"
               aria-label="关闭"
             >
               <X className="h-4 w-4" />
@@ -172,7 +172,7 @@ function ProgramModal({ item, type, onClose }) {
             <Link
               to={isEvent ? `/events/${item.slug}` : `/departments/${item.slug}`}
               onClick={onClose}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-umred px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#881116] active:translate-y-0"
+              className="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-full bg-umred px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#881116] active:translate-y-0"
             >
               查看完整详情
               <ArrowUpRight className="h-4 w-4" />

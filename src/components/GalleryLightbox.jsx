@@ -68,10 +68,10 @@ export function ImageDetailModal({ item, onClose }) {
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 20, opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        className="relative max-h-[90dvh] overflow-y-auto w-full max-w-4xl rounded-[28px] sm:rounded-[36px] border border-white/12 bg-white shadow-[0_30px_120px_rgba(0,0,0,0.38)]"
+        className="relative max-h-[90vh] max-h-[90dvh] overflow-y-auto w-full max-w-4xl rounded-[28px] sm:rounded-[36px] border border-white/12 bg-white shadow-[0_30px_120px_rgba(0,0,0,0.38)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative h-[32dvh] overflow-hidden sm:h-[48dvh]">
+        <div className="relative h-[32vh] h-[32dvh] overflow-hidden sm:h-[48vh] sm:h-[48dvh]">
           {imageSrc ? (
             <img
               src={imageSrc}
@@ -89,7 +89,7 @@ export function ImageDetailModal({ item, onClose }) {
                 type="button"
                 aria-label="关闭图片"
                 onClick={onClose}
-                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white/14 text-white backdrop-blur-md transition hover:bg-white/22"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/14 text-white backdrop-blur-md transition hover:bg-white/22 active:scale-95"
               >
                 <X className="h-5 w-5" />
               </button>

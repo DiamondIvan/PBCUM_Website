@@ -28,7 +28,7 @@ export const CONTENT = {
   id: 'wute-03',
   slug: 'event-03',
   teaser: '三场演出，把相声带到每一位观众面前。',
-  detail: '大象相声 — 全年三场，从全国中学生比赛到大型观摩会再到小型相声日，相声不停。',
+  detail: '大相 — 全年三场，从全国中学生比赛到大型观摩会再到小型相声日，相声不停。',
   cta: '了解活动',
   accentHex: '#3F3A36', // Warm Ink — DXlogo is a pure black-and-white seal; no hue to follow
   title: '大型相声观摩会',

@@ -57,20 +57,28 @@ export function Navbar() {
 
   const handleNavClick = (e, item) => {
     e.preventDefault();
+    document.body.style.overflow = '';
     setMobileOpen(false);
 
     if (location.pathname === '/') {
-      const el = document.getElementById(item.id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        window.history.pushState(null, '', `/#${item.id}`);
-      }
+      const targetId = item.id;
+      // Allow the mobile menu close and overflow lock release to settle before scrolling
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+            window.history.pushState(null, '', `/#${targetId}`);
+          }
+        }, 50);
+      });
     } else {
       navigate(`/#${item.id}`);
     }
   };
 
   const handleLogoClick = (e) => {
+    document.body.style.overflow = '';
     setMobileOpen(false);
     if (location.pathname === '/') {
       e.preventDefault();
@@ -80,13 +88,13 @@ export function Navbar() {
   };
 
   return (
-    <header className="fixed left-0 top-0 z-40 w-full px-4 pt-3 sm:px-6 sm:pt-4">
+    <header className="fixed left-0 top-0 z-40 w-full px-4 pt-3 sm:px-6 sm:pt-4 pointer-events-none">
       {/* First thing in the tab order on every page. Hidden until focused, so
           a keyboard user can jump the nav instead of tabbing through it on all
           fourteen pages. Every layout wraps its content in <main id="main">. */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-5 focus:z-50 focus:rounded-full focus:bg-umred focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white focus:shadow-glow"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-5 focus:z-50 focus:rounded-full focus:bg-umred focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-white focus:shadow-glow pointer-events-auto"
       >
         跳至主要内容
       </a>
@@ -95,7 +103,7 @@ export function Navbar() {
         animate={{ y: 0, opacity: 1 }}
         initial={{ y: -16, opacity: 0 }}
         transition={{ duration: MOTION.duration * 0.8, ease: MOTION.ease }}
-        className={`mx-auto max-w-7xl rounded-[24px] sm:rounded-[28px] border transition-[background-color,border-color,box-shadow] duration-300 ${
+        className={`mx-auto max-w-7xl rounded-[24px] sm:rounded-[28px] border transition-[background-color,border-color,box-shadow] duration-300 pointer-events-auto ${
           mobileOpen
             ? 'border-black/8 bg-white/95 shadow-xl backdrop-blur-2xl'
             : scrolled
@@ -158,7 +166,7 @@ export function Navbar() {
               transition={{ duration: 0.25, ease: 'easeOut' }}
               className="overflow-hidden border-t border-black/6"
             >
-              <div className="max-h-[calc(100dvh-6rem)] overflow-y-auto px-5 pb-5 pt-3">
+              <div className="max-h-[calc(100vh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto px-5 pb-5 pt-3">
                 <div className="flex flex-col gap-1">
                   {navItems.map((item) => (
                     <a
@@ -173,7 +181,10 @@ export function Navbar() {
                   <Link
                     to="/join"
                     className="mt-2.5 inline-flex items-center justify-center gap-2 rounded-2xl bg-umred px-5 py-3.5 text-base font-semibold text-white shadow-glow active:scale-[0.99]"
-                    onClick={() => setMobileOpen(false)}
+                    onClick={() => {
+                      document.body.style.overflow = '';
+                      setMobileOpen(false);
+                    }}
                   >
                     <Sparkles className="h-4 w-4" />
                     加入 PBCUM
