@@ -296,8 +296,27 @@ export function EventCalendar() {
   const [viewYear, setViewYear] = useState(initial.year);
   const [viewMonth, setViewMonth] = useState(initial.month);
   const [selectedKey, setSelectedKey] = useState(null);
-  // 'auto' follows the viewport; picking a view pins it.
-  const [view, setView] = useState('auto');
+  const [preferredView, setPreferredView] = useState(null);
+  const [wideScreen, setWideScreen] = useState(() => window.matchMedia('(min-width: 768px)').matches);
+  const view = preferredView ?? (wideScreen ? 'grid' : 'list');
+
+  useEffect(() => {
+    if (preferredView) return undefined;
+
+    const breakpoint = window.matchMedia('(min-width: 768px)');
+    const sync = () => {
+      setWideScreen(breakpoint.matches);
+      setSelectedKey(null);
+    };
+    breakpoint.addEventListener('change', sync);
+    sync();
+    return () => breakpoint.removeEventListener('change', sync);
+  }, [preferredView]);
+
+  const changeView = (nextView) => {
+    setSelectedKey(null);
+    setPreferredView(nextView);
+  };
 
   const step = (delta) => {
     setSelectedKey(null);
@@ -335,16 +354,8 @@ export function EventCalendar() {
     month: 'long',
   });
 
-  /* Visibility for the two views. The display value has to be passed in: an
-     element that is `flex` needs `md:flex` to come back, and `md:block` would
-     silently override it and stack its children. */
-  const showFor = (which, display = 'block') => {
-    if (view === which) return display === 'flex' ? 'flex' : '';
-    if (view !== 'auto') return 'hidden';
-    return which === 'grid' ? `hidden md:${display}` : `${display === 'flex' ? 'flex' : ''} md:hidden`;
-  };
-  const gridClass = showFor('grid');
-  const listClass = showFor('list');
+  const gridClass = view === 'grid' ? '' : 'hidden';
+  const listClass = view === 'list' ? '' : 'hidden';
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-[32px] border border-black/6 bg-[#F3F4F7] shadow-soft">
@@ -353,7 +364,7 @@ export function EventCalendar() {
 
       {/* Header — month navigation, and the view toggle */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/6 px-3 py-3 sm:gap-3 sm:px-5 sm:py-4">
-        <div className={`items-center gap-1 ${showFor('grid', 'flex')}`}>
+        <div className={`items-center gap-1 ${view === 'grid' ? 'flex' : 'hidden'}`}>
           <button
             id="cal-prev-month"
             type="button"
@@ -381,7 +392,7 @@ export function EventCalendar() {
         <div className="flex items-center gap-1 rounded-full border border-black/8 bg-black/[0.03] p-1">
           <button
             type="button"
-            onClick={() => setView('list')}
+            onClick={() => changeView('list')}
             aria-label="列表检视"
             aria-pressed={view === 'list'}
             className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 active:scale-95 ${
@@ -392,7 +403,7 @@ export function EventCalendar() {
           </button>
           <button
             type="button"
-            onClick={() => setView('grid')}
+            onClick={() => changeView('grid')}
             aria-label="月历检视"
             aria-pressed={view === 'grid'}
             className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 active:scale-95 ${
@@ -421,7 +432,7 @@ export function EventCalendar() {
 
         {/* Day popup — a day may hold several entries, so it always offers a
             choice rather than guessing which one was meant. */}
-        {selected.length > 0 && (
+        {view === 'grid' && selected.length > 0 && (
           <div
             ref={popupRef}
             className="absolute inset-x-4 bottom-4 z-20 rounded-[22px] border border-black/8 bg-white p-3 shadow-[0_16px_50px_rgba(17,24,39,0.16)]"

@@ -8,6 +8,7 @@
 
 import { CalendarDays, ChevronLeft, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { parseRange } from '../../data/dates';
 
 /* ─── NotFoundEvent ─────────────────────────────────────────────────── */
 
@@ -26,38 +27,15 @@ export function NotFoundEvent() {
 
 /* ─── TourSchedule helpers ──────────────────────────────────────────── */
 
-/**
- * Parses a DD.MM.YYYY string into a local Date.
- * Returns null if the string does not match the expected format.
- */
-export function parseLocalDate(ddmmyyyy) {
-  const m = ddmmyyyy.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-  if (!m) return null;
-  return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
-}
+export function deriveStatus(date, endDate) {
+  const range = parseRange(date, endDate);
+  if (!range) return 'tbd';
 
-/**
- * Derives a display status from a date string.
- * Accepts DD.MM.YYYY (single day) or DD.MM.YYYY-DD.MM.YYYY (range).
- * Falls back to 'tbd' for any unparseable / '待定' string.
- *
- * Returns: 'upcoming' | 'current' | 'past' | 'tbd'
- */
-export function deriveStatus(dateStr) {
-  if (!dateStr || dateStr === '待定') return 'tbd';
-  const rangeParts = dateStr.split(/(?<=\d{4})-/);
-  const start = parseLocalDate(rangeParts[0]);
-  if (!start) return 'tbd';
+  const [start, end] = range;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  if (rangeParts.length > 1) {
-    const end = parseLocalDate(rangeParts[1]);
-    if (end) {
-      if (end < today)    return 'past';
-      if (start <= today) return 'current';
-    }
-  }
-  return start > today ? 'upcoming' : 'past';
+  if (today < start) return 'upcoming';
+  return today <= end ? 'current' : 'past';
 }
 
 export const STATUS_CONFIG = {
@@ -112,7 +90,7 @@ export function TourSchedule({
       </h2>
       <div className="mt-8 divide-y divide-black/6 overflow-hidden rounded-[28px] border border-black/6 bg-white shadow-soft">
         {stops.map((stop, i) => {
-          const status = deriveStatus(stop.date);
+          const status = deriveStatus(stop.date, stop.endDate);
           const cfg = STATUS_CONFIG[status];
           const isPast = status === 'past';
           const hasLocation = stop.location && stop.location !== '待定';

@@ -31,7 +31,7 @@ import {
   Facebook, Instagram, Quote, Users,
 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
 import { Footer } from '../Footer';
@@ -75,7 +75,6 @@ export function DeptPageLayout({ content }) {
      `// TODO` example before rendering, so a group added as a scaffold shows
      a short "being written" page rather than the example text. */
   const dept = useMemo(() => withoutScaffold(content), [content]);
-  const navigate = useNavigate();
   const [activeActivity, setActiveActivity] = useState(null);
   const [activeMoment, setActiveMoment] = useState(null);
   const momentsRef = useRef(null);
@@ -89,11 +88,6 @@ export function DeptPageLayout({ content }) {
     const amount = el.clientWidth * 0.75;
     el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
   };
-
-  function goBack() {
-    if (window.history.length > 1) navigate(-1);
-    else navigate('/#groups');
-  }
 
   const social = dept.social ?? {};
   const hasSocial = social.facebook || social.instagram;
@@ -109,13 +103,13 @@ export function DeptPageLayout({ content }) {
           {/* -ml-3 keeps the text optically aligned with the content below while
               the padding gives the control a 44px-tall tap area. At 20px it was
               the smallest target on the page and also the main way back. */}
-          <button
-            onClick={goBack}
+          <Link
+            to="/#groups"
             className="-ml-3 inline-flex min-h-[44px] items-center gap-2 rounded-full px-3 text-sm font-medium text-black/60 transition-colors duration-200 hover:bg-black/[0.04] hover:text-umred"
           >
             <ChevronLeft className="h-4 w-4" />
             返回小组列表
-          </button>
+          </Link>
 
           <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
             {/* The group's own logo, matching the card it was opened from.
@@ -300,7 +294,11 @@ export function DeptPageLayout({ content }) {
                       onClick={clickable ? () => setActiveActivity(item) : undefined}
                       onKeyDown={
                         clickable
-                          ? (e) => (e.key === 'Enter' || e.key === ' ') && setActiveActivity(item)
+                          ? (e) => {
+                              if (e.key !== 'Enter' && e.key !== ' ') return;
+                              e.preventDefault();
+                              setActiveActivity(item);
+                            }
                           : undefined
                       }
                       className={`group relative flex h-full flex-col overflow-hidden rounded-[24px] border border-black/6 bg-white shadow-soft transition-[transform,box-shadow] duration-300 ${
@@ -409,7 +407,11 @@ export function DeptPageLayout({ content }) {
                   role="button"
                   tabIndex={0}
                   onClick={() => setActiveMoment(m)}
-                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setActiveMoment(m)}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    setActiveMoment(m);
+                  }}
                   className="group relative flex w-[280px] flex-shrink-0 cursor-pointer snap-start flex-col overflow-hidden rounded-[28px] border border-black/6 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-umred sm:w-[320px]"
                 >
                   <div className="relative h-48 w-full overflow-hidden bg-black/5">
@@ -621,10 +623,10 @@ export function DeptPageLayout({ content }) {
                       <ArrowRight className="h-4 w-4" />
                     </a>
                   )}
-                  <button onClick={goBack} className="btn-secondary whitespace-nowrap">
+                  <Link to="/#groups" className="btn-secondary whitespace-nowrap">
                     <ChevronLeft className="h-4 w-4" />
                     其他小组
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

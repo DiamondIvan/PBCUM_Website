@@ -21,7 +21,7 @@
 import { useState, useRef, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { GalleryLightbox, ImageDetailModal } from '../GalleryLightbox';
 import { Navbar } from '../Navbar';
 import { Footer } from '../Footer';
@@ -62,7 +62,6 @@ export function EventPageLayout({ content }) {
      detail pages still rendering `// TODO` — which is exactly what happened.
      Doing it at the layout means every page is covered by one rule. */
   const event = useMemo(() => withoutScaffold(content), [content]);
-  const navigate = useNavigate();
   const scrollRef = useRef(null);
   const [activeHighlight, setActiveHighlight] = useState(null);
 
@@ -87,14 +86,6 @@ export function EventPageLayout({ content }) {
      so they are filtered out and the section disappears with them. */
   const gallery = (event.gallery ?? []).filter((g) => g.src || g.alt);
 
-  function goBack() {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/#activities');
-    }
-  }
-
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-soft-radial text-ink">
       <Navbar />
@@ -107,13 +98,13 @@ export function EventPageLayout({ content }) {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom_right,rgba(0,0,0,0.22),transparent_50%)]" />
 
           <div className="relative px-8 py-14 text-white sm:px-14 sm:py-20 lg:py-28">
-            <button
-              onClick={goBack}
+            <Link
+              to="/#activities"
               className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white/80 backdrop-blur-md transition-colors duration-200 hover:bg-white/18 hover:text-white"
             >
               <ChevronLeft className="h-4 w-4" />
               返回活动列表
-            </button>
+            </Link>
 
             {/* The activity's own logo, matching the card it was opened from.
                 Sits on a light card because the marks are dark-on-transparent
@@ -311,7 +302,11 @@ export function EventPageLayout({ content }) {
                   role="button"
                   tabIndex={0}
                   onClick={() => setActiveHighlight(h)}
-                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setActiveHighlight(h)}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    e.preventDefault();
+                    setActiveHighlight(h);
+                  }}
                   className="group relative flex w-[300px] flex-shrink-0 cursor-pointer snap-start flex-col overflow-hidden rounded-[28px] border border-black/6 bg-white shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-umred sm:w-[340px] md:w-[360px]"
                 >
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.05),transparent_50%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -380,13 +375,13 @@ export function EventPageLayout({ content }) {
                       <ArrowRight className="h-4 w-4" />
                     </a>
                   )}
-                  <button
-                    onClick={goBack}
+                  <Link
+                    to="/#activities"
                     className="inline-flex items-center gap-2 rounded-full border border-white/22 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/18"
                   >
                     <ChevronLeft className="h-4 w-4" />
                     查看其他活动
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
