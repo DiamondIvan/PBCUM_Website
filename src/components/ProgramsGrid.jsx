@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useModalInteraction } from '../hooks/useModalInteraction';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -77,6 +79,7 @@ const backdropVariants = {
  * ──────────────────────────────────────────────────────────────────────── */
 
 function ProgramModal({ item, type, onClose }) {
+  const dialogRef = useRef(null);
   const closeRef = useRef(null);
   const isEvent = type === 'event';
   const isImgIcon = typeof item.logo === 'string';
@@ -84,21 +87,11 @@ function ProgramModal({ item, type, onClose }) {
   // Same colour the card is tinted with, so opening a card does not change hue.
   const color = itemColor(item);
 
-  useEffect(() => { closeRef.current?.focus(); }, []);
+  useModalInteraction(dialogRef, closeRef, onClose);
 
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
-
-  return (
+  return createPortal(
     <motion.div
+      ref={dialogRef}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8"
       variants={backdropVariants}
       initial="hidden"
@@ -180,7 +173,8 @@ function ProgramModal({ item, type, onClose }) {
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 }
 
@@ -223,7 +217,11 @@ function ProgramCard({ item, index, type, onOpen, variants }) {
       role="button"
       tabIndex={0}
       aria-label={`了解更多：${item.title}`}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpen(item)}
+      onKeyDown={(e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        onOpen(item);
+      }}
       className="group relative flex cursor-pointer flex-col overflow-hidden rounded-[28px] border border-black/6 bg-white p-7 shadow-soft outline-none transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-[6px] hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-umred focus-visible:ring-offset-2"
     >
       {/* ── Hover colour wash (subtle red radial — both sections) ── */}

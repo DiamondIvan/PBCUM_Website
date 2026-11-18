@@ -1,43 +1,16 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Expand, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useModalInteraction } from '../hooks/useModalInteraction';
 import { createPortal } from 'react-dom';
 
 /**
  * ImageDetailModal — Full-screen lightbox modal for a single photo item
  */
 export function ImageDetailModal({ item, onClose }) {
+  const dialogRef = useRef(null);
   const closeRef = useRef(null);
-  // The element that was focused before the modal opened, so focus can be put
-  // back where the user left it rather than dropped on <body>.
-  const returnFocusRef = useRef(null);
-
-  // Same pattern as ProgramModal: focus the close control on open, close on
-  // Escape. Without this a keyboard user who opens the lightbox — the most
-  // widely reused modal in the app — has no keyboard way to close it.
-  useEffect(() => {
-    if (!item) return undefined;
-    returnFocusRef.current = document.activeElement;
-    closeRef.current?.focus();
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      // Only restore if focus is still somewhere in the (now unmounting) modal;
-      // if the user has since clicked elsewhere, leave their choice alone.
-      returnFocusRef.current?.focus?.();
-    };
-  }, [item, onClose]);
-
-  // Hold the page still behind the overlay. ProgramModal already does this;
-  // without it a swipe on a phone scrolls the page under the photo, and closing
-  // the lightbox leaves the reader somewhere they never navigated to.
-  useEffect(() => {
-    if (!item) return undefined;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = previous; };
-  }, [item]);
+  useModalInteraction(dialogRef, closeRef, onClose, Boolean(item));
 
   if (!item) return null;
 
@@ -53,6 +26,7 @@ export function ImageDetailModal({ item, onClose }) {
   // element instead of the viewport and push the modal below the fold.
   return createPortal(
     <motion.div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={title}

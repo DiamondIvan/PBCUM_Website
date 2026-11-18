@@ -42,14 +42,18 @@ export function Footer() {
           </p>
           <div className="mt-7 flex items-center gap-3 text-black/58">
             <a
-              href="#"
+              href="https://www.instagram.com/pbcum_/"
+              target="_blank"
+              rel="noreferrer"
               aria-label="Instagram"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
               <Instagram className="h-4 w-4" />
             </a>
             <a
-              href="#"
+              href="https://www.facebook.com/pbcum2u"
+              target="_blank"
+              rel="noreferrer"
               aria-label="Facebook"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white transition duration-300 hover:border-umred hover:text-umred hover:shadow-sm"
             >
