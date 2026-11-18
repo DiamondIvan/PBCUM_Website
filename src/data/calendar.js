@@ -54,8 +54,8 @@ export { parseDate, toKey };
  * One calendar entry. `color` is the item's own accent, sampled from its logo,
  * so a dot on the calendar matches the card and the page it leads to.
  */
-function entry({ title, start, end, type, label, href, color, parent }) {
-  return { title, start, end, type, label, href, color, parent, key: toKey(start) };
+function entry({ title, start, end, type, label, href, color, parent, time, location, registrationHref }) {
+  return { title, start, end, type, label, href, color, parent, time, location, registrationHref, key: toKey(start) };
 }
 
 function collectFrom(items, { type, label, routeBase }) {
@@ -70,7 +70,7 @@ function collectFrom(items, { type, label, routeBase }) {
     if (own) {
       out.push(entry({
         title: item.title, start: own[0], end: own[1],
-        type, label, href, color,
+        type, label, href, color, time: item.time, location: item.location, registrationHref: item.registrationHref,
       }));
     }
 
@@ -81,6 +81,7 @@ function collectFrom(items, { type, label, routeBase }) {
         out.push(entry({
           title: a.name, start: r[0], end: r[1],
           type, label, href, color, parent: item.title,
+          time: a.time, location: a.location, registrationHref: a.registrationHref,
         }));
       }
     }
@@ -92,6 +93,7 @@ function collectFrom(items, { type, label, routeBase }) {
         out.push(entry({
           title: stop.label, start: r[0], end: r[1],
           type, label, href, color, parent: item.title,
+          time: stop.time, location: stop.location, registrationHref: stop.registrationHref,
         }));
       }
     }
@@ -116,7 +118,7 @@ export function collectCalendarEntries() {
       return [entry({
         title: o.title, start: r[0], end: r[1],
         type: 'other', label: o.label ?? '学会活动',
-        href: o.href, color: o.color ?? '#A11217',
+        href: o.href, time: o.time, location: o.location, registrationHref: o.registrationHref, color: o.color ?? '#A11217',
       })];
     }),
   ];

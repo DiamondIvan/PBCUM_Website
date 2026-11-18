@@ -1,12 +1,13 @@
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { Menu, Sparkles, X } from 'lucide-react';
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { MOTION } from './ui/animations';
 
 const navItems = [
   { label: '关于我们', id: 'about' },
-  { label: '精彩活动', id: 'activities' },
+  { label: '五特活', id: 'activities' },
+  { label: '七小组', id: 'groups' },
   { label: '执委会', id: 'committee' },
   { label: '相册', id: 'gallery' },
   { label: '活动日历', id: 'calendar' },
@@ -20,6 +21,7 @@ export function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const barRef = useRef(null);
+  const toggleRef = useRef(null);
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     const nextScrolled = latest > 20;
@@ -34,7 +36,19 @@ export function Navbar() {
   useEffect(() => {
     if (!mobileOpen) return undefined;
 
-    const onKey = (e) => { if (e.key === 'Escape') setMobileOpen(false); };
+    const desktop = window.matchMedia('(min-width: 1280px)');
+    const closeOnDesktop = () => { if (desktop.matches) setMobileOpen(false); };
+    if (desktop.matches) {
+      closeOnDesktop();
+      return undefined;
+    }
+    desktop.addEventListener('change', closeOnDesktop);
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
     const onDown = (e) => {
       if (barRef.current && !barRef.current.contains(e.target)) setMobileOpen(false);
     };
@@ -45,6 +59,7 @@ export function Navbar() {
     // tap that lands outside never also activates something underneath.
     document.addEventListener('pointerdown', onDown);
     return () => {
+      desktop.removeEventListener('change', closeOnDesktop);
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('pointerdown', onDown);
@@ -57,7 +72,6 @@ export function Navbar() {
 
   const handleNavClick = (e, item) => {
     e.preventDefault();
-    document.body.style.overflow = '';
     setMobileOpen(false);
 
     if (location.pathname === '/') {
@@ -78,7 +92,6 @@ export function Navbar() {
   };
 
   const handleLogoClick = (e) => {
-    document.body.style.overflow = '';
     setMobileOpen(false);
     if (location.pathname === '/') {
       e.preventDefault();
@@ -123,77 +136,51 @@ export function Navbar() {
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-0.5 xl:gap-1 lg:flex">
+          <nav aria-label="网站导航" className="hidden items-center gap-0.5 xl:gap-1 xl:flex">
             {navItems.map((item) => (
               <a
                 key={item.label}
                 href={`/#${item.id}`}
                 onClick={(e) => handleNavClick(e, item)}
-                className="cursor-pointer rounded-full px-3.5 py-2.5 text-base font-medium text-black/58 transition duration-300 hover:bg-black/5 hover:text-ink xl:px-5 xl:py-3 xl:text-lg"
+                className="cursor-pointer rounded-full px-3.5 py-2.5 text-base font-medium text-black/58 transition duration-300 hover:bg-black/5 hover:text-ink xl:px-3 xl:py-3"
               >
                 {item.label}
               </a>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 xl:gap-4 md:flex">
-            <Link
-              to="/join"
-              className="inline-flex items-center gap-2 rounded-full border border-black/8 bg-white px-4 py-2.5 text-base font-semibold text-ink shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-umred/25 hover:text-umred hover:shadow-md xl:px-6 xl:py-3 xl:text-lg"
-            >
-              <Sparkles className="h-4 w-4" />
-              加入我们
-            </Link>
-          </div>
-
           <button
+            ref={toggleRef}
             type="button"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
             aria-label={mobileOpen ? '关闭菜单' : '打开菜单'}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white text-ink transition hover:border-umred/20 hover:text-umred lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/8 bg-white text-ink transition hover:border-umred/20 hover:text-umred shrink-0 xl:hidden"
             onClick={() => setMobileOpen((v) => !v)}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
-        {/* Mobile menu dropdown */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="overflow-hidden border-t border-black/6"
-            >
-              <div className="max-h-[calc(100vh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto px-5 pb-5 pt-3">
-                <div className="flex flex-col gap-1">
-                  {navItems.map((item) => (
-                    <a
-                      key={item.label}
-                      href={`/#${item.id}`}
-                      onClick={(e) => handleNavClick(e, item)}
-                      className="cursor-pointer rounded-2xl px-4 py-3 text-base font-medium text-black/70 transition hover:bg-black/4 hover:text-ink active:bg-black/6"
-                    >
-                      {item.label}
-                    </a>
-                  ))}
-                  <Link
-                    to="/join"
-                    className="mt-2.5 inline-flex items-center justify-center gap-2 rounded-2xl bg-umred px-5 py-3.5 text-base font-semibold text-white shadow-glow active:scale-[0.99]"
-                    onClick={() => {
-                      document.body.style.overflow = '';
-                      setMobileOpen(false);
-                    }}
-                  >
-                    <Sparkles className="h-4 w-4" />
-                    加入 PBCUM
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <nav
+          id="mobile-navigation"
+          aria-label="网站导航"
+          hidden={!mobileOpen}
+          className="max-h-[calc(100dvh-6rem)] overflow-y-auto border-t border-black/6 px-5 pb-5 pt-3 xl:hidden"
+        >
+          <div className="flex flex-col gap-1">
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`/#${item.id}`}
+                onClick={(e) => handleNavClick(e, item)}
+                className="rounded-2xl px-4 py-3 text-base font-medium text-black/70 hover:bg-black/5"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </nav>
       </motion.div>
     </header>
   );

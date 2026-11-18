@@ -48,9 +48,9 @@ export function IntroCard({ eyebrow, accent = '#A11217', children }) {
         >
           {eyebrow}
         </p>
-        <p className="mt-4 max-w-3xl whitespace-pre-line text-base leading-[1.95] text-black/70 sm:text-lg">
+        <div className="mt-4 max-w-3xl whitespace-pre-line text-base leading-[1.95] text-black/70 sm:text-lg">
           {children}
-        </p>
+        </div>
       </div>
     </div>
   );

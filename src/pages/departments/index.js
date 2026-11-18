@@ -19,11 +19,11 @@ import { CONTENT as shefu } from './SheFu';
 export const allDepartments = [
   xiangsheng,
   wenhua,
+  yaolanshou,
   bianlun,
   huawenban,
-  yaolanshou,
-  shengxun,
   shefu,
+  shengxun,
 ];
 
 /* All seven are written, so this currently changes nothing. It is here so a

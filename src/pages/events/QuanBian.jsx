@@ -1,4 +1,4 @@
-﻿/**
+/**
  * QuanBian.jsx — 全国大专辩论会（全辩）(event-04)
  *
  * Everything this page says lives in CONTENT below. Edit it freely — it affects
@@ -50,9 +50,10 @@ export const CONTENT = {
   // location: '',
 
   /* ── § 活动简介 ─────────────────────────────────────────────────── */
+  edition: { title: '全辩 21', description: '本届主赛为全国大专辩论会。下方相册收录比赛现场与筹委工作照片，历届记录另列于精彩时刻。' },
   intro:
     '全国大专辩论会（简称"全辩"），是马来西亚首个全国性、年度举办的大专级别华语辩论比赛。' +
-    '1988 年创立至今，是马来西亚迄今历史最悠久的华语辩论比赛，今年已迈入第 38 个年头。\n' +
+    '自 1988 年创办以来，全辩为各地学生提供华语辩论与交流的机会。\n' +
     '全辩旗下每年举办三项活动：全国大专辩论会（主赛）、全辩·中学冠军联赛，' +
     '以及辩论海啸。三者共同构成全辩独树一格的赛事生态，' +
     '为来自全国各地的辩论队伍提供切磋、交流与展演的舞台——' +
@@ -174,7 +175,7 @@ export const CONTENT = {
     {
       label: '第一届全辩·中学冠军联赛',
       caption: '中学辩论新舞台，从第一届开始。',
-      image: '/quanbian/highlights/第一届全辩·中学冠军联赛.jpg',
+      image: '/quanbian/highlights/第一届全辩 · 中学冠军联赛.jpg',
       description:
         '全辩·中学冠军联赛首届面世，为全国中学辩论冠军队伍搭建一个' +
         '相互切磋的高水准舞台。',
@@ -183,7 +184,7 @@ export const CONTENT = {
     {
       label: '第二届全辩·中学冠军联赛',
       caption: '延续首届的精彩，全国中学辩论精英再聚。',
-      image: '/quanbian/highlights/第二届全辩·中学冠军联赛.jpg',
+      image: '/quanbian/highlights/第二届全辩 · 中学冠军联赛.jpg',
       description:
         '第二届中学冠军联赛延续首届反响，' +
         '更多中学冠军队伍参与其中，赛事规模与质素双双提升。',
