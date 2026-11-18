@@ -1,19 +1,17 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   ChevronRight,
-  Languages,
-  MessageCircleMore,
-  Sparkles,
 } from 'lucide-react';
 import { sectionData } from './src/data/siteData';
+import { emblemDetails, societyGoals, societyPurposes } from './src/data/about';
+import { historyMilestones, historySource } from './src/data/history';
 import { departments } from './src/pages/departments';
 import { events } from './src/pages/events';
 import { AnimatedSection, SectionHeading } from './src/components/ui/SectionHeading';
 import { GradientOrbs } from './src/components/ui/GradientOrbs';
-import { MotionCard } from './src/components/ui/MotionCard';
-import { StatCounter } from './src/components/ui/StatCounter';
 import { GalleryLightbox } from './src/components/GalleryLightbox';
 import { TestimonialsCarousel } from './src/components/TestimonialsCarousel';
 import { CommitteeGrid } from './src/components/CommitteeGrid';
@@ -23,32 +21,26 @@ import { Navbar } from './src/components/Navbar';
 import { WuteSection, QixiaozuSection } from './src/components/ProgramsGrid';
 import { EventCalendar } from './src/components/EventCalendar';
 
-/* ─── Hero static data ─────────────────────────────────────────────── */
-
-const heroBadges = [
-  '马来亚大学华文学会',
-  '创立于 1962 年',
-  '文化 · 社群 · 卓越',
+const galleryAlbums = [
+  {
+    title: '五特活',
+    items: events.flatMap((event) => {
+      const photos = event.gallery ?? event.photoSections?.flatMap((section) => section.photos.slice(0, 1)) ?? [];
+      return photos.filter((photo) => photo.src).slice(0, 2);
+    }),
+  },
+  { title: '七小组', items: departments.flatMap((group) => (group.gallery ?? []).filter((photo) => photo.src).slice(0, 1)) },
+  { title: '四十周年纪念晚宴', items: sectionData.gallery },
 ];
 
-const joinHighlights = [
-  '精致的学会体验，以文化为核心驱动力。',
-  '领导力路径、语言沉浸式体验，以及高水准的校园活动。',
-  '一个充满热情、用心经营、值得期待的温馨社群。',
+const heroPhotos = [
+  ...events.flatMap(({ gallery }) => (gallery ?? []).filter((photo) => photo.src).slice(0, 1)),
+  ...galleryAlbums[1].items.slice(0, 1),
+  ...sectionData.gallery.slice(0, 1),
 ];
-
-/* ─── HeroGallerySlider — auto-cycles through sectionData.gallery ──── */
 
 function HeroGallerySlider({ items }) {
   const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    if (items.length < 2) return;
-    const timer = setInterval(() => {
-      setIndex((i) => (i + 1) % items.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [items.length]);
 
   const current = items[index];
 
@@ -119,30 +111,9 @@ function HeroGallerySlider({ items }) {
   );
 }
 
-/* ─── IconCard ──────────────────────────────────────────────────────── */
-
-function IconCard({ icon: Icon, title, description }) {
-  return (
-    <MotionCard className="group relative overflow-hidden rounded-[30px] border border-white/62 bg-white p-8 shadow-soft backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(161,18,23,0.07),transparent_45%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      <div className="relative flex h-full flex-col gap-6">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-umred/10 text-umred transition duration-300 group-hover:scale-110 group-hover:bg-umred group-hover:text-white">
-          <Icon className="h-6 w-6" />
-        </div>
-        <div>
-          <h3 className="text-xl font-semibold text-ink">{title}</h3>
-          <p className="mt-3 text-sm leading-[1.85] text-black/60">{description}</p>
-        </div>
-      </div>
-    </MotionCard>
-  );
-}
-
-/* ─── HeroSection ───────────────────────────────────────────────────── */
-
 function HeroSection() {
   return (
-    <section className="relative isolate overflow-hidden pt-28 sm:pt-34 lg:pt-38">
+    <section className="relative isolate overflow-hidden pt-28 sm:pt-36 lg:pt-40">
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-72"
         style={{
@@ -154,32 +125,24 @@ function HeroSection() {
       <div className="mx-auto grid max-w-7xl items-center gap-12 sm:gap-16 px-4 pb-20 sm:px-6 sm:pb-24 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:pb-32">
         {/* Left column */}
         <div className="max-w-3xl">
-          <div className="mb-7 sm:mb-9 flex flex-wrap gap-2 sm:gap-2.5">
-            {heroBadges.map((badge) => (
-              <span
-                key={badge}
-                className="rounded-full border border-black/8 bg-white/78 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium tracking-wider sm:tracking-widest2 text-black/55 shadow-[0_10px_30px_rgba(17,24,39,0.05)] backdrop-blur-md"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
           <motion.h1
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="max-w-4xl text-4xl font-semibold leading-[1.15] tracking-[-0.04em] sm:text-6xl lg:text-[5.2rem]"
+            className="max-w-4xl text-4xl font-semibold leading-[1.15] tracking-[-0.04em] sm:text-5xl xl:text-6xl"
           >
-            扎实为经<br />·
-            <span className="block text-umred">回馈为纬</span>
+            马来亚大学华文学会
           </motion.h1>
+          <p lang="ms" className="mt-3 font-latin text-sm font-semibold text-umred sm:text-base">
+            Persatuan Bahasa Cina Universiti Malaya（PBCUM）
+          </p>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.12 }}
             className="mt-6 sm:mt-8 max-w-2xl text-base leading-[1.85] text-black/58 sm:text-lg"
           >
-            PBCUM 汇聚一群珍视语言、认同文化、追求有意义校园生活的学子。我们为文化、领导力与现代学生生活，打造一个精致的数字家园。
+            马来亚大学华文学会是马大的学生社团。学会通过华语学习、文艺演出、辩论、生活营与社区服务，推动中华文化交流，并让学生在活动筹办与服务中学习。
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -187,18 +150,24 @@ function HeroSection() {
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.22 }}
             className="mt-8 sm:mt-10 flex flex-col gap-3.5 sm:flex-row sm:gap-4"
           >
-            <a href="#join" className="btn-primary">
-              加入我们的大家庭
+            <Link to="/join" className="btn-primary">
+              入会咨询
               <ArrowRight className="h-4 w-4" />
-            </a>
+            </Link>
             <a href="#about" className="btn-secondary">
-              探索 PBCUM
+              认识学会
               <ChevronRight className="h-4 w-4" />
             </a>
           </motion.div>
-          <div className="mt-10 sm:mt-12 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
-            {sectionData.stats.map((stat) => (
-              <StatCounter key={stat.label} value={stat.value} label={stat.label} icon={stat.icon} />
+          <div className="mt-8 grid grid-cols-2 gap-3">
+            {[
+              { href: '#activities', count: events.length, label: '五特活' },
+              { href: '#groups', count: departments.length, label: '七小组' },
+            ].map(({ href, count, label }) => (
+              <a key={href} href={href} className="rounded-2xl border border-black/10 bg-white p-4 hover:border-umred">
+                <span className="font-latin text-2xl font-bold text-umred">{count}</span>
+                <span className="ml-2 text-sm font-semibold">{label}</span>
+              </a>
             ))}
           </div>
         </div>
@@ -214,56 +183,11 @@ function HeroSection() {
             <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.38),rgba(255,255,255,0.05))]" />
             {/* Main gradient panel */}
             <div className="relative rounded-[26px] sm:rounded-[32px] bg-hero-gradient p-6 sm:p-8 text-white">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-white/68">
-                    PBCUM 体验
-                  </p>
-                  <h2 className="mt-2.5 sm:mt-3 text-xl sm:text-2xl font-semibold leading-tight">
-                    为马大学子打造的优质文化社群
-                  </h2>
-                </div>
-                <div className="flex h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-white/14 backdrop-blur-md">
-                  <Languages className="h-6 w-6 sm:h-7 sm:w-7" />
-                </div>
-              </div>
-              <HeroGallerySlider items={sectionData.gallery} />
-            </div>
-            {/* Stats row */}
-            <div className="relative mt-4 grid gap-4 md:grid-cols-[1.15fr_0.85fr]">
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
-                className="rounded-[24px] sm:rounded-[30px] border border-black/6 bg-[#fbfbfb] p-6 sm:p-7 shadow-[0_20px_60px_rgba(17,24,39,0.06)]"
-              >
-                <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-black/58">即将举办</p>
-                <h3 className="mt-2.5 sm:mt-3 text-xl sm:text-2xl font-semibold leading-snug text-ink">月夜文化论坛</h3>
-                <p className="mt-2.5 sm:mt-3 text-sm leading-[1.8] text-black/58">
-                  一场融合交流、表演与视觉叙事的精彩夜间体验。
-                </p>
-                <div className="mt-5 sm:mt-6 inline-flex items-center gap-2 rounded-full bg-umred/10 px-4 py-2 text-sm font-medium text-umred">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  优质校园活动
-                </div>
-              </motion.div>
-              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1">
-                <div className="rounded-[24px] sm:rounded-[28px] border border-black/6 bg-white p-5 shadow-[0_20px_60px_rgba(17,24,39,0.06)]">
-                  <p className="text-sm font-medium text-black/58">会员增长</p>
-                  <div className="mt-3 sm:mt-4 flex items-end gap-2">
-                    <span className="font-latin text-3xl sm:text-4xl font-bold tracking-[-0.04em] text-ink">1.2K</span>
-                    {/* emerald-700, not 600: at 12px the lighter green came in
-                        at 3.8:1 on white, under the 4.5:1 AA floor. */}
-                    <span className="mb-1 text-xs sm:text-sm text-emerald-700">+18% 今年</span>
-                  </div>
-                </div>
-                <div className="rounded-[24px] sm:rounded-[28px] border border-black/6 bg-white p-5 shadow-[0_20px_60px_rgba(17,24,39,0.06)]">
-                  <p className="text-sm font-medium text-black/58">校园覆盖</p>
-                  <div className="mt-3 sm:mt-4 flex items-center gap-2.5 sm:gap-3 text-sm font-medium text-ink">
-                    <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-emerald-500" />
-                    活跃于各学院及学生空间
-                  </div>
-                </div>
-              </div>
+              <h2 className="text-xl font-semibold sm:text-2xl">学会精彩瞬间</h2>
+              <HeroGallerySlider items={heroPhotos} />
+              <a href="#gallery" className="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold">
+                浏览精彩相册 <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </a>
             </div>
           </motion.div>
         </div>
@@ -276,85 +200,79 @@ function HeroSection() {
 
 function AboutSection() {
   return (
-    <AnimatedSection id="about" className="bg-white py-20 sm:py-32">
-      <div className="mx-auto grid max-w-7xl gap-10 sm:gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14 lg:px-8">
-        {/* Left – brand card */}
-        <div className="relative overflow-hidden rounded-[32px] sm:rounded-[38px] bg-[linear-gradient(160deg,rgba(161,18,23,0.97),rgba(81,11,14,0.97))] p-6 sm:p-11 text-white shadow-soft">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_44%)]" />
-          <div className="relative">
-            <p className="font-latin text-[11px] uppercase tracking-widest3 text-white/65">关于 PBCUM</p>
-            <h2 className="mt-4 text-2xl font-semibold leading-[1.25] tracking-[-0.04em] sm:text-4xl">
-              以语言为桥，以文化为魂，以领导力为志。
-            </h2>
-            <p className="mt-5 sm:mt-6 max-w-xl text-sm sm:text-base leading-[1.85] text-white/75">
-              我们创造的每一段体验，都帮助学生以自信的姿态表达自我，建立深厚的友谊，并以令人骄傲的方式代表学会。每一个触点，都经过精心雕琢，精致而有温度。
+    <AnimatedSection id="about" className="bg-white py-20 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid items-start gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
+          <div>
+            <h2 className="text-3xl font-semibold sm:text-4xl">关于我们</h2>
+            <p className="mt-5 max-w-2xl text-base leading-[1.85] text-black/70">
+              马来亚大学华文学会由马大学生筹办。学会设有七小组，并通过五项特别活动接触大专生、中学生、华小学生及社区伙伴。活动包括语言学习、相声、辩论、音乐创作、文化表演、升学资讯与社区服务。
             </p>
-            {/* Points: single column on mobile to prevent extreme narrow squishing, 2 cols on sm+ */}
-            <div className="mt-8 sm:mt-9 grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4">
-              {sectionData.aboutPoints.map((point) => (
-                <div key={point.title} className="rounded-[20px] sm:rounded-[22px] border border-white/12 bg-white/10 p-4 sm:p-5 backdrop-blur-md">
-                  <point.icon className="h-5 w-5 text-white/88" />
-                  <h3 className="mt-3 sm:mt-4 text-base font-semibold">{point.title}</h3>
-                  <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-[1.72] text-white/68">{point.description}</p>
+            <a href="#history" className="mt-5 inline-flex min-h-11 items-center gap-2 font-semibold text-umred">
+              阅读学会简史 <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+
+          <section aria-labelledby="society-theme" className="rounded-3xl border border-umred/15 bg-umred/[0.04] p-6 sm:p-8">
+            <h3 id="society-theme" className="text-base font-semibold text-umred">学会主题</h3>
+            <p className="mt-3 text-2xl font-semibold text-ink">{historySource.motto}</p>
+            <dl className="mt-5 space-y-3 text-base leading-relaxed">
+              <div className="flex items-baseline gap-3">
+                <dt className="shrink-0 font-semibold">扎实</dt>
+                <dd className="text-black/70">自我完备，扎下坚实的基础。</dd>
+              </div>
+              <div className="flex items-baseline gap-3">
+                <dt className="shrink-0 font-semibold">回馈</dt>
+                <dd className="text-black/70">面向世界，饮水思源。</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2 sm:gap-6">
+          {[
+            { id: 'society-purposes', title: '三大宗旨', items: societyPurposes },
+            { id: 'society-goals', title: '五大目标', items: societyGoals },
+          ].map(({ id, title, items }) => (
+            <section key={id} aria-labelledby={id} className="rounded-3xl border border-black/10 p-6 sm:p-8">
+              <h3 id={id} className="text-xl font-semibold text-ink">{title}</h3>
+              <ol className="mt-4 list-decimal space-y-2 pl-6 text-base leading-[1.75] text-black/70 marker:font-semibold marker:text-umred">
+                {items.map((item) => <li key={item}>{item}</li>)}
+              </ol>
+            </section>
+          ))}
+        </div>
+
+        <section aria-labelledby="society-emblem" className="mt-8 rounded-3xl border border-black/10 p-6 sm:p-8">
+          <h3 id="society-emblem" className="text-xl font-semibold text-ink">会徽及其含义</h3>
+          <div className="mt-6 grid items-center gap-6 md:grid-cols-[10rem_1fr] lg:gap-10">
+            <img
+              src="/pbcum.jpg"
+              alt="马来亚大学华文学会会徽"
+              width={850}
+              height={850}
+              loading="lazy"
+              decoding="async"
+              className="mx-auto h-36 w-36 object-contain md:h-40 md:w-40"
+            />
+            <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
+              {emblemDetails.map(({ symbol, meaning }) => (
+                <div key={symbol}>
+                  <dt className="font-semibold text-ink">{symbol}</dt>
+                  <dd className="mt-1 leading-[1.75] text-black/70">{meaning}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
           </div>
-        </div>
+        </section>
 
-        {/* Right – stat cards */}
-        <div className="grid gap-4 sm:gap-5 sm:grid-cols-2">
-          {sectionData.aboutStats.map((stat) => (
-            <MotionCard
-              key={stat.label}
-              className="rounded-[28px] sm:rounded-[32px] border border-black/6 bg-[linear-gradient(180deg,#fff,#f8f8f8)] p-6 sm:p-8 shadow-soft transition duration-300 hover:-translate-y-1 hover:shadow-card-hover"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-latin text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest2 text-black/58">
-                    {stat.label}
-                  </p>
-                  <div className="mt-3 sm:mt-4 flex items-end gap-2">
-                    <span className="font-latin text-4xl sm:text-5xl font-bold tracking-[-0.05em] text-ink">
-                      {stat.value}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-umred/10 text-umred">
-                  <stat.icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                </div>
-              </div>
-              <p className="mt-4 sm:mt-6 text-xs sm:text-sm leading-[1.8] text-black/55">{stat.description}</p>
-            </MotionCard>
-          ))}
-        </div>
+        <p className="mt-5 text-sm leading-relaxed text-black/60">
+          据第四十届《马大华文学会简介》第 4–5、10–11 张整理。
+        </p>
       </div>
     </AnimatedSection>
   );
 }
-
-/* ─── WhyJoinSection ────────────────────────────────────────────────── */
-
-function WhyJoinSection() {
-  return (
-    <AnimatedSection id="join-us" className="bg-[#fafafa] py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="为什么加入"
-          title="一个让你感受到用心、充满活力、值得全力投入的学会体验。"
-          description="不只是一个学会，更是通向领导力、文化自信与珍贵校园回忆的跳板。"
-        />
-        <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {sectionData.features.map((feature) => (
-            <IconCard key={feature.title} {...feature} />
-          ))}
-        </div>
-      </div>
-    </AnimatedSection>
-  );
-}
-
-/* ─── ActivitiesSection (五特活 / 七小组) ─────────────────────────────────────────────── */
 
 function ActivitiesSection() {
   return (
@@ -387,7 +305,7 @@ function ActivitiesSection() {
             <SectionHeading
               eyebrow="七大工作小组"
               title="找到属于你的位置，发现你的舞台。"
-              description="七小组涵盖创意、技术、公关等多元领域，总有一个团队等待你的加入。"
+              description="认识七小组的例常活动、演出、比赛与服务项目。"
             />
             <div className="mt-14">
               <QixiaozuSection items={departments} />
@@ -412,9 +330,17 @@ function CommitteeSection() {
             the group-lead cards, rather than twice. */}
         <SectionHeading
           eyebrow="执委会"
-          title="带领学会前行的，是这一群人。"
+          title="执委会架构与成员"
           description="执行委员统筹学会的日常运作与年度活动，七小组则各由一位负责人带领。"
         />
+        <div className="mt-8 rounded-3xl border border-black/10 bg-white p-6">
+          <p className="font-semibold text-ink">马来亚大学华文学会</p>
+          <ul className="mt-3 list-disc space-y-2 pl-6 text-sm text-black/70">
+            <li><a href="#committee-officers" className="underline">执行委员</a>，负责母会事务</li>
+            <li><a href="#committee-leads" className="underline">七小组负责人</a>，统筹各组活动</li>
+            <li><a href="#committee-activity-advisers" className="underline">特别活动咨询委员</a></li>
+          </ul>
+        </div>
         <CommitteeGrid members={sectionData.committee} />
       </div>
     </AnimatedSection>
@@ -450,147 +376,6 @@ function HuiwenWatermark({ className = '' }) {
   );
 }
 
-/* ─── HistorySection — 学会简史 ──────────────────────────────────────────
- * Sits at the foot of the page: a reader who has come this far has seen what
- * the society does, and this is what it came from. The three dated milestones
- * are pulled out of the prose because a closure and a twelve-year fight to
- * reopen carry more weight as a timeline than as a clause.
- * ──────────────────────────────────────────────────────────────────────── */
-
-const HISTORY_MILESTONES = [
-  /* ── 第一章 ──────────────────────────────────────────────────────────── */
-  {
-    era: '1962–1970',
-    chapter: '创立与早期发展',
-    body:
-      '学会于 1962 年创立于马来亚大学，' +
-      '这一年份来自学会内部一份成立史讲稿，' +
-      '为目前所掌握资料中唯一明确记载创立年份的来源，' +
-      '与“第 10 届执委会倒推约 1962 年”这一线索大致吸合。' +
-      '学会创立初期规模不大，' +
-      '活动以文化艺术、文学讲座及出版文学刊物为主。' +
-      '1960 年代的详细记录与创会人名单目前仍待核实，' +
-      '这段空白本身也是历史的一部分：' +
-      '它说明了学生社团在早年依靠口耳相传与零星记录维系的常态。',
-    bullets: [
-      '活动以文化艺术、文学讲座及出版刊物为主',
-      '至 1971 年已具备稳定的年度改选机制',
-    ],
-    note: '1962 年创立目前仅有单一史料记载，1960 年代的会议记录与创会人名单现仍待核实。',
-  },
-  /* ── 第二章 ──────────────────────────────────────────────────────────── */
-  {
-    era: '1971–1973',
-    chapter: '路向转变与健康文艺实践',
-    body:
-      '1971 年 6 月第 10 届执委会改选后，学会明确将“关注社会现实、服务基层”列为方针，' +
-      '活动方向从一般性联谊转向贴近社会基层的文艺实践，' +
-      '与香港銀星艺术团在马演出后激起的“健康文艺”风潮相呼应。' +
-      '这一时期活跃于学会的代表人物为吴建成与杨亚柒。',
-    bullets: [
-      '1971 年 9 月 16 日：《看，生活多美丽》文娱晚会，马大东姑礼堂，约 60—70 人出席',
-      '1972 年 4 月 30 日—5 月 5 日（另 5 月 7 日加演）：《春自人间来》联演，逾 10 个艺术团体参与',
-      '1972 年：约 80 人的南马巡回演出，走访马六甲、新山、鹻势等地',
-      '1973 年 4 月 9—15 日：《春自人间来》大汇演，联合 19 个艺术团体，马大东姑礼堂',
-      '1973 年中：第 13 届改选，杨亚柒当选主席，姚丽芳出任总秘书',
-    ],
-    note: '南马巡回演出的具体月份，现存两份内部记录分别写作 7 月或 8 月，确切日期尚待考证。',
-  },
-  /* ── 第三章 ──────────────────────────────────────────────────────────── */
-  {
-    era: '1974–1985',
-    chapter: '《春雷》、查禁与历史中断',
-    muted: true,
-    body:
-      '1974 年，学会与多个团体联合筹备《春雷》文艺大汇演，' +
-      '计划于 5 月 23—24 日在雪兰莪中华大会堂演出，最终未获当局批准而被迫放弃。' +
-      '同年 12 月，警方突袭八打箃再也一处由学会成员租住的排屋，' +
-      '搜获《春雷》演出道具（仿制木枪与旧军服），官方媒体随即指控学会涉及颜覆活动。' +
-      '吴建成与杨亚柒依据《1960 年内部安全法令》（ISA）被拘捕；' +
-      '其后，马来西亚国会发布《白皮书》，正式下令关闭学会，学会进入长达十余年的中断期。',
-    quoteContext:
-      '杨亚柒被扣留约五年，获释后因长期单独监禁而出现严重精神状况，' +
-      '于 1980 年 7 月 3 日在吉打北部老家辞世，得年二十九岁。' +
-      '家人在其身后发现一封遗书，其中写道：',
-    quote:
-      '「本人对于一切……在心理对于本人的残害表示最严重的抗议……' +
-      '本人严正地要求这一切的残害与束缚刁难即刻地停止。」',
-    quoteAttr: '—— 杨亚柒遗书（转引自学会内部成立史讲稿）',
-    bodyAfterQuote:
-      '吴建成被扣留约八年，至 1982 年获释，其后投身华文教育界，' +
-      '先后出任江沙崇华独中、吉兰丹中华独中及吉隆坡尊孔独中校长。' +
-      '中断期间，一批关心学会存续的成员组成复办笹委会，' +
-      '历经多次签名运动与陈情，啵持争取复办逾六年。',
-    bullets: [
-      '1974 年 12 月 3 日：数千名大专生示威，声援华玲农民',
-      '1974 年 12 月 7—8 日：警方进入马大校园展开搜捕行动',
-      '1974 年 12 月 9 日：警方突袭搜获《春雷》道具，吴建成、杨亚柒依 ISA 被捕',
-      '1974 年 12 月 19 日（另一记录作 29 日）：国会《白皮书》发布，学会遇令关闭',
-      '1979 年 12 月 17 日：复办笹委会提交首封注册申请信',
-      '1981 年 12 月 31 日—1982 年 1 月 10 日：第一次签名运动，收集 2,067 人签名',
-      '1983/1984 年：第二次签名运动，收集 2,316 人签名',
-      '1984/1985 年：复办笹委会获批主办复办后首场活动——中秋晚会',
-    ],
-    note:
-      '《白皮书》发布日期（12 月 19 日或 29 日）两说并存，尚未核实；' +
-      '杨亚柒获释经过及逃世细节，均转引自档案库尚未收录、亦未能核实的外部文件。',
-  },
-  /* ── 第四章 ──────────────────────────────────────────────────────────── */
-  {
-    era: '1986–1990年代',
-    chapter: '复办与组织重建',
-    body:
-      '1986 年 12 月 2 日，Ungku Aziz 皇家教授正式通知执委，' +
-      '学会已获大学理事会批准成立；同月，大学公共关系部于 Rumah Universiti 召开记者招待会，' +
-      '由校长亲自宣布学会复办。首届会员大会于 1987 年 1 月 3 日召开，' +
-      '学会由此进入漫长的重建阶段。',
-    bullets: [
-      '复办初期延续“股长制”：训育、学术、文学、文娱、联谊、编辑各股长分工负责',
-      '1990 年代起增设组织秘书、外务副主席、内务副主席，架构渐趋明确',
-      '1990 年代委员规模有所收缩，学会稳步积累经验，重新站稳脚步',
-    ],
-  },
-  /* ── 第五章 ──────────────────────────────────────────────────────────── */
-  {
-    era: '约 2000–2016',
-    chapter: '延续、调整与公共参与',
-    body:
-      '进入 2000 年代，学会确立了以总秘书处、总财政处为核心，' +
-      '配合辩论组、华文班、社服组、文化组、相声组、摇篮手组等多个组别的运作架构，' +
-      '构成此后近二十年的基本骨架。学会亦在此期间更主动参与公共议题，' +
-      '以第 22 届（2007/2008 年度）为代表：该届就华文学会注册自由、母语教育等议题积极表态，' +
-      '并与多所大专的华文学会联合发声，同时着手推行更规范的内部治理。',
-    bullets: [
-      '2007 年：参与全国大专华文学会注册运动，主张学生组织自由',
-      '2007 年：五校华文学会联合声援遵校方起诉的博大学生李松荣',
-      '年度文化品牌持续运转：辩论、相声观摩会、摇篮手发表会、“全中华”生活营',
-      '废除执委不得兼任其他社团职务的条规；推行更规范的财务与会务制度',
-    ],
-    note:
-      '囿于现有资料，2000 年代其余各届及 2010 年代前期的具体情形暂时未能逐一还原；' +
-      '第 22 届仅作为例证，并不代表其他年度没有类似的公共参与。',
-  },
-  /* ── 第六章 ──────────────────────────────────────────────────────────── */
-  {
-    era: '2017–2026',
-    chapter: '冻结、复苏与制度传承',
-    body:
-      '2017 年，学会遇校方冻结，具体经过（冻结主体、原因、起止日期）现存资料尚未逐一核实。' +
-      '时任总秘书李洲意学长在冻结期间发起联署声明名单，为争取各界声援奠定了基础。' +
-      '学会其后恢复运作，并在第 40 届（2025/2026 年度）任内迎来重要的制度建设：' +
-      '首次系统整理历届执委名录、完成现行《章程》修订，并建立传承档案制度。' +
-      '这部简史本身，也是这一重建工作的产物。',
-    bullets: [
-      '2017 年：学会遇校方冻结（详情尚待核实）',
-      '2025/2026 年：第 40 届任内举办四十周年纪念晚室',
-      '2025/2026 年：首次系统整理《历届执行委员会名录》',
-      '2026 年 7 月 20 日：现行《章程》经会员大会通过，翡日起生效',
-      '建立传承档案制度，为历史延续奠立基础',
-    ],
-    note: '2017 年冻结事件现仅有一份 27 页影像资料，尚待逐页转录及核实。',
-  },
-];
-
 function HistorySection() {
   return (
     <AnimatedSection id="history" className="relative isolate overflow-hidden bg-white py-24 sm:py-32">
@@ -598,17 +383,18 @@ function HistorySection() {
 
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="学会简史"
-          title="六十年，两个阶段，一个学会。"
-          description="马来亚大学华文学会（Persatuan Bahasa Cina Universiti Malaya，缩写 PBCUM）是马大规模最大的华人学生组织。学会不仅致力于推广华文与中华文化，在促进各民族学生交流方面亦扮演着重要角色。"
+          title="学会简史"
+          description="从早期文艺活动、学会复办到档案传承，按时期回顾学会的发展。"
         />
 
-        {/* Timeline — six eras, one node each */}
+        <p className="mt-5 text-sm leading-relaxed text-black/65">
+          据<cite>《{historySource.title}》</cite>整理。该书由{historySource.edition}，下方沿用原文页码。
+        </p>
         <ol className="mt-14 space-y-0">
-          {HISTORY_MILESTONES.map((m, i) => (
+          {historyMilestones.map((m, i) => (
             <li key={m.era} className="relative flex gap-6 pb-12 last:pb-0 sm:gap-8">
               {/* Vertical rail — omitted on the last item so it does not trail past the node */}
-              {i < HISTORY_MILESTONES.length - 1 && (
+              {i < historyMilestones.length - 1 && (
                 <span
                   aria-hidden="true"
                   className={`absolute left-[7px] top-4 h-full w-px bg-gradient-to-b ${m.muted
@@ -639,30 +425,6 @@ function HistorySection() {
                 {/* Body prose */}
                 <p className="mt-3 max-w-2xl text-base leading-[1.9] text-black/62">{m.body}</p>
 
-                {/* Sentence before the blockquote — rendered only when a quote is present */}
-                {m.quoteContext && (
-                  <p className="mt-3 max-w-2xl text-base leading-[1.9] text-black/62">
-                    {m.quoteContext}
-                  </p>
-                )}
-
-                {/* Blockquote — present only in Chapter 3 */}
-                {m.quote && (
-                  <blockquote className="mt-4 border-l-2 border-zinc-300 pl-4">
-                    <p className="text-sm italic leading-[1.85] text-black/55">{m.quote}</p>
-                    {m.quoteAttr && (
-                      <footer className="mt-2 text-xs text-black/38">{m.quoteAttr}</footer>
-                    )}
-                  </blockquote>
-                )}
-
-                {/* Continuation prose after the blockquote */}
-                {m.bodyAfterQuote && (
-                  <p className="mt-3 max-w-2xl text-base leading-[1.9] text-black/62">
-                    {m.bodyAfterQuote}
-                  </p>
-                )}
-
                 {/* Key-event bullet list */}
                 {m.bullets?.length > 0 && (
                   <ul className="mt-4 space-y-1.5">
@@ -682,18 +444,19 @@ function HistorySection() {
                   </ul>
                 )}
 
-                {/* Source note — where the PDF flags uncertainty or single-source records */}
                 {m.note && (
-                  <p className="mt-3.5 text-xs italic leading-[1.75] text-black/38">
-                    ※ {m.note}
+                  <p className="mt-4 max-w-2xl border-l-2 border-umred/25 pl-3 text-sm leading-relaxed text-black/65">
+                    {m.note}
                   </p>
                 )}
+                <p className="mt-3 text-xs text-black/60">
+                  《简史》{m.pages}{m.additionalSource && `、${m.additionalSource}`}
+                </p>
               </div>
             </li>
           ))}
         </ol>
 
-        {/* What the society runs today — the sections above, named in one place. */}
       </div>
     </AnimatedSection>
   );
@@ -730,12 +493,15 @@ function GallerySection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="精彩相册"
-          title="以编辑视角构建的砌砖式相册，支持灯箱浏览。"
-          description="用影像讲述每一个珍贵时刻，以精致的空间节奏展现视觉故事。"
+          title="历届活动照片"
+          description="按活动类别浏览，点击照片可查看说明。"
         />
-        <div className="mt-14">
-          <GalleryLightbox items={sectionData.gallery} />
-        </div>
+        {galleryAlbums.filter(({ items }) => items.length > 0).map(({ title, items }) => (
+          <section key={title} className="mt-10">
+            <h3 className="mb-5 text-2xl font-semibold">{title}</h3>
+            <GalleryLightbox items={items} />
+          </section>
+        ))}
       </div>
     </AnimatedSection>
   );
@@ -744,13 +510,15 @@ function GallerySection() {
 /* ─── TestimonialsSection ───────────────────────────────────────────── */
 
 function TestimonialsSection() {
+  if (sectionData.testimonials.length === 0) return null;
+
   return (
     <AnimatedSection id="testimonials" className="bg-[#fafafa] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="会员心声"
-          title="以优雅的玻璃感轮播，呈现真实的学生故事。"
-          description="简短而有力的真实反馈，让版块保持简洁的同时，依然充满温度。"
+          title="会员分享"
+          description="学长姐和现届会员分享他们参与活动、筹办项目与服务社区的经历。"
         />
         <div className="mt-14">
           <TestimonialsCarousel testimonials={sectionData.testimonials} />
@@ -763,6 +531,8 @@ function TestimonialsSection() {
 /* ─── SponsorsSection ───────────────────────────────────────────────── */
 
 function SponsorsSection() {
+  if (sectionData.partners.length === 0) return null;
+
   return (
     <AnimatedSection id="partners" className="bg-white py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -772,56 +542,11 @@ function SponsorsSection() {
               赞助商 / 合作伙伴
             </p>
             <h2 className="mt-3 text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl">
-              携手前行，共创文化影响力。
+              学会赞助与合作
             </h2>
           </div>
         </div>
         <SponsorMarquee items={sectionData.partners} />
-      </div>
-    </AnimatedSection>
-  );
-}
-
-/* ─── JoinCtaSection ────────────────────────────────────────────────── */
-
-function JoinCtaSection() {
-  return (
-    <AnimatedSection id="join" className="bg-[#fafafa] py-20 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[32px] sm:rounded-[42px] bg-hero-gradient px-6 py-10 text-white shadow-[0_40px_120px_rgba(161,18,23,0.28)] sm:px-14 sm:py-18">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.14),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.09),transparent_34%)]" />
-          <div className="relative grid gap-10 sm:gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div>
-              <p className="font-latin text-[10px] sm:text-[11px] uppercase tracking-widest3 text-white/65">加入我们</p>
-              <h2 className="mt-4 sm:mt-5 max-w-2xl text-3xl font-semibold leading-[1.2] tracking-[-0.04em] sm:text-5xl">
-                带着你的热忱与理想，加入 PBCUM。
-              </h2>
-              <p className="mt-5 sm:mt-7 max-w-xl text-sm sm:text-base leading-[1.85] text-white/75">
-                我们正在建设一个精致、包容、面向未来的学会。如果你希望在推动文化的同时，成长为一名领导者，这里就是你的归属之地。
-              </p>
-              <div className="mt-8 sm:mt-9 flex flex-col gap-3.5 sm:flex-row sm:gap-4">
-                <a href="mailto:pbcum41@gmail.com" className="btn-primary bg-white text-umred hover:bg-white/95 shadow-none">
-                  联系执委会
-                  <MessageCircleMore className="h-4 w-4" />
-                </a>
-                <a href="#footer" className="btn-ghost-white">
-                  查看社交媒体
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
-            <div className="grid gap-3.5 sm:gap-4 sm:grid-cols-2">
-              {joinHighlights.map((item, index) => (
-                <div key={item} className="rounded-[22px] sm:rounded-[28px] border border-white/14 bg-white/10 p-5 sm:p-7 backdrop-blur-md">
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl sm:rounded-2xl bg-white/14 text-white">
-                    <span className="font-latin text-xs sm:text-sm font-bold">0{index + 1}</span>
-                  </div>
-                  <p className="mt-4 sm:mt-6 text-xs sm:text-sm leading-[1.85] text-white/82">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
     </AnimatedSection>
   );
@@ -836,14 +561,12 @@ function HomePage() {
       <main id="main">
         <HeroSection />
         <AboutSection />
-        <WhyJoinSection />
         <ActivitiesSection />
         <CommitteeSection />
         <GallerySection />
         <CalendarSection />
         <TestimonialsSection />
         <SponsorsSection />
-        <JoinCtaSection />
         <HistorySection />
       </main>
       <Footer />

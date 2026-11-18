@@ -194,11 +194,20 @@ export function EventPageLayout({ content }) {
         {event.intro && (
           <Reveal delay={0.05}>
             <div className="mt-16 sm:mt-20">
-              <IntroCard eyebrow="活动简介" accent={event.accentHex}>
+              <IntroCard eyebrow="活动概况" accent={event.accentHex}>
                 {event.intro}
               </IntroCard>
             </div>
           </Reveal>
+        )}
+
+        {event.edition && (
+          <section id="edition" className="mt-10 sm:mt-14" aria-labelledby="edition-title">
+            <IntroCard eyebrow="最新一届" accent={event.accentHex}>
+              <h2 id="edition-title" className="mb-3 text-2xl font-semibold text-ink">{event.edition.title}</h2>
+              <p>{event.edition.description}</p>
+            </IntroCard>
+          </section>
         )}
 
         {/* ── Tour schedule (only for multi-stop / timeline events) ── */}
@@ -312,6 +321,8 @@ export function EventPageLayout({ content }) {
                     <div className="relative h-48 w-full overflow-hidden bg-black/5">
                       <img
                         src={h.image}
+                      loading="lazy"
+                      decoding="async"
                         alt={h.label}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />

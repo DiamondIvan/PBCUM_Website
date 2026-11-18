@@ -280,10 +280,13 @@ export function IntroSplash({ onDone }) {
       {/* Logo — centered exactly on the seam */}
       <img
         src="/pbcum-logo-transparent.png"
-        alt="PBCUM"
+        alt=""
         draggable={false}
         style={logoStyle}
       />
+      <span className="pointer-events-none absolute inset-x-4 top-[calc(50%+86px)] z-20 text-center text-lg font-semibold text-ink sm:text-2xl">
+        马来亚大学华文学会
+      </span>
     </div>
   );
 }

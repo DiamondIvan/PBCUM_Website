@@ -16,10 +16,10 @@ import { CONTENT as boshu } from './BoShu';
 /** Every activity, finished or not. Only the router uses this, to tell a
  *  not-yet-written page apart from a slug that never existed. */
 export const allEvents = [
-  xxy,
-  qzh,
   daxiang,
   quanbian,
+  qzh,
+  xxy,
   boshu,
 ];
 

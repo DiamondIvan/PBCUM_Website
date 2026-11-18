@@ -106,12 +106,14 @@ function startOfToday() {
 /* ─── Entry pill, shared by the day popup and the list view ─────────────── */
 
 function EntryRow({ e, past, onPick }) {
+  const details = [e.parent, e.label, e.time, e.location, past ? "已结束" : null].filter(Boolean);
   return (
     <button
       type="button"
       onClick={() => onPick(e)}
+      disabled={!e.href && (past || !e.registrationHref)}
       className={`flex w-full items-start gap-3 rounded-2xl px-3 py-2.5 text-left transition-colors duration-200 hover:bg-[#EAEDF3] ${
-        past ? 'opacity-55' : ''
+        past ? 'bg-black/[0.025]' : ''
       }`}
     >
       <span
@@ -121,7 +123,7 @@ function EntryRow({ e, past, onPick }) {
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-medium text-ink">{e.title}</span>
         <span className="mt-0.5 block text-[11px] text-black/58">
-          {e.parent ? `${e.parent} · ${e.label}` : e.label}
+          {details.join(" · ")}
         </span>
       </span>
     </button>
@@ -320,7 +322,11 @@ export function EventCalendar() {
 
   const go = (e) => {
     setSelectedKey(null);
-    if (e.href) navigate(e.href);
+    if (e.end >= today && e.registrationHref) {
+      window.location.assign(e.registrationHref);
+    } else if (e.href) {
+      navigate(e.href);
+    }
   };
 
   const selected = selectedKey ? (dayMap[selectedKey] ?? []) : [];
@@ -346,7 +352,7 @@ export function EventCalendar() {
       <div className="h-1.5 w-full bg-gradient-to-r from-[#A11217] via-[#C2477A] to-[#8B5E10]" />
 
       {/* Header — month navigation, and the view toggle */}
-      <div className="flex items-center justify-between gap-3 border-b border-black/6 px-5 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/6 px-3 py-3 sm:gap-3 sm:px-5 sm:py-4">
         <div className={`items-center gap-1 ${showFor('grid', 'flex')}`}>
           <button
             id="cal-prev-month"
@@ -357,7 +363,7 @@ export function EventCalendar() {
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
-          <span className="min-w-[7rem] text-center text-sm font-semibold tracking-[-0.02em] text-ink">
+          <span className="min-w-24 text-center text-sm font-semibold tracking-[-0.02em] text-ink">
             {monthLabel}
           </span>
           <button

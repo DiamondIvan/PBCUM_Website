@@ -90,7 +90,7 @@ export function Footer() {
               className="inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-black/55 transition duration-300 hover:text-umred"
             >
               <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
-              加入我们
+              入会咨询
             </Link>
           </div>
         </div>

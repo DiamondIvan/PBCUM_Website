@@ -1,17 +1,17 @@
-import { ArrowUpRight, ChevronLeft, ChevronRight, Instagram } from 'lucide-react';
+import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { departments } from '../pages/departments';
 
 /**
- * CommitteeGrid — the 执委会, in the two tiers it actually has.
+ * CommitteeGrid — 执行委员、七小组负责人、特别活动咨询委员.
  *
- *   below md       each tier is a strip, stepped with arrows or a swipe — the
+ *   below md       the officer and group-lead lists are strips, stepped with arrows or a swipe — the
  *                  pattern ptum.my uses for its committee. Two people show at
  *                  a time on a phone, three from sm (640px). Fifteen cards
  *                  laid out in full ran to three screens of scrolling before
  *                  the page moved on.
- *   md and up      each tier is laid out whole; there is room to.
+ *   md and up      the lists are laid out in full.
  *
  * Differences from that reference, each on purpose:
  *
@@ -92,25 +92,10 @@ function Avatar({ member, className, tint }) {
 }
 
 /** `relative z-10` keeps it clickable above a card's stretched link. */
-function InstagramLink({ member, className = '' }) {
-  if (!member.instagram) return null;
-  return (
-    <a
-      href={`https://www.instagram.com/${member.instagram}/`}
-      target="_blank"
-      rel="noreferrer"
-      aria-label={`${member.name} 的 Instagram（@${member.instagram}）`}
-      className={`relative z-10 inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border border-black/8 bg-white text-black/58 transition duration-200 hover:border-umred/30 hover:text-umred ${className}`}
-    >
-      <Instagram className="h-4 w-4" />
-    </a>
-  );
-}
-
 function TierHeading({ id, title, note }) {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-black/8 pb-3">
-      <h3 id={id} className="text-lg font-semibold tracking-[-0.02em] text-ink sm:text-xl">
+      <h3 id={id} className="scroll-mt-[8.5rem] text-lg font-semibold tracking-[-0.02em] text-ink sm:text-xl">
         {title}
       </h3>
       <p className="text-sm text-black/58">{note}</p>
@@ -266,10 +251,6 @@ function OfficerCard({ member }) {
         )}
       </h4>
       <p className="mb-3 mt-1 text-sm leading-snug text-black/58">{member.role}</p>
-      {/* mt-auto pins the button to the bottom edge, so cards side by side line
-          up even when one role — 特别活动咨询委员 — wraps and its neighbour's
-          does not. */}
-      <InstagramLink member={member} className="mt-auto" />
     </li>
   );
 }
@@ -351,7 +332,6 @@ function GroupLeadCard({ member, dept }) {
         </p>
       </div>
 
-      <InstagramLink member={member} className="mt-auto" />
     </li>
   );
 }
@@ -362,7 +342,8 @@ const DEPT_BY_SLUG = new Map(departments.map((d) => [d.slug, d]));
 const DEPT_ORDER = new Map(departments.map((d, i) => [d.slug, i]));
 
 export function CommitteeGrid({ members }) {
-  const officers = members.filter((m) => !m.dept);
+  const officers = members.filter((m) => !m.dept && !m.advisesSpecialActivities);
+  const advisers = members.filter((m) => m.advisesSpecialActivities);
   // The 七小组 order, not the order the data happens to be written in, so this
   // row reads left to right exactly like the group grid higher up the page.
   const leads = members
@@ -374,7 +355,6 @@ export function CommitteeGrid({ members }) {
       {officers.length > 0 && (
         <section aria-labelledby="committee-officers">
           <TierHeading id="committee-officers" title="执行委员" note={`${officers.length} 位 · 统筹学会事务`} />
-          {/* From md, four columns: eight officers fill two rows exactly. */}
           <Strip className={`${STRIP} md:grid md:grid-cols-4 md:gap-4`}>
             {officers.map((m) => (
               <OfficerCard key={m.name} member={m} />
@@ -397,6 +377,17 @@ export function CommitteeGrid({ members }) {
               <GroupLeadCard key={m.name} member={m} dept={DEPT_BY_SLUG.get(m.dept)} />
             ))}
           </Strip>
+        </section>
+      )}
+
+      {advisers.length > 0 && (
+        <section aria-labelledby="committee-activity-advisers">
+          <TierHeading id="committee-activity-advisers" title="特别活动咨询委员" note="点击卡片，查看五特活" />
+          <ul className={STRIP_VARS + ' mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 md:gap-4'}>
+            {advisers.map((member) => (
+              <OfficerCard key={member.name} member={member} />
+            ))}
+          </ul>
         </section>
       )}
     </div>

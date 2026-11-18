@@ -1,75 +1,25 @@
-import { ArrowRight, CheckCircle2, ChevronLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Mail } from 'lucide-react';
 import { Footer } from '../components/Footer';
-
-const steps = [
-  '填写会员申请表，分享你的兴趣与期望。',
-  '与委员会成员见面，配对最适合你的活动。',
-  '参与活动、贡献创意，拓展你的人脉圈子。',
-];
+import { Navbar } from '../components/Navbar';
 
 export function JoinPage() {
   return (
     <>
-    {/* id="main" so the skip link in the navbar has a target here too — this
-        is the one page that carries no navbar of its own. */}
-    <main id="main" className="min-h-screen bg-soft-radial px-4 py-8 text-ink sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-4xl pt-18">
-        <Link
-          to="/"
-          className="-ml-3 inline-flex min-h-[44px] items-center gap-2 rounded-full px-3 text-sm font-semibold text-black/58 transition duration-300 hover:bg-black/[0.04] hover:text-umred"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          返回首页
-        </Link>
-
-        <div className="mt-9 rounded-[32px] sm:rounded-[42px] border border-black/6 bg-white p-6 sm:p-14 shadow-soft">
-          <p className="font-latin text-[11px] font-semibold uppercase tracking-widest3 text-umred/68">
-            加入 PBCUM
+      <Navbar />
+      <main id="main" className="min-h-screen bg-soft-radial px-4 pb-16 pt-28 text-ink sm:px-6 sm:pt-36">
+        <section className="mx-auto max-w-3xl rounded-[32px] border border-black/6 bg-white p-6 shadow-soft sm:p-12">
+          <h1 className="text-3xl font-semibold sm:text-5xl">入会咨询</h1>
+          <p className="mt-5 max-w-xl text-base leading-[1.85] text-black/70">
+            有意加入马来亚大学华文学会的同学，可向学会查询本学年的会员登记方式与开放时间。
           </p>
-          <h1 className="mt-4 sm:mt-5 text-3xl font-semibold leading-[1.18] tracking-[-0.05em] sm:text-6xl">
-            开启与马大华文学会的旅程。
-          </h1>
-          <p className="mt-5 sm:mt-7 max-w-2xl text-base leading-[1.85] text-black/58">
-            成为这个精致、以文化为核心的学生社群的一份子，专注于领导力培养、语言传承与校园正面影响力。
-          </p>
-
-          <div className="mt-8 sm:mt-11 grid gap-4 sm:grid-cols-3">
-            {steps.map((step, index) => (
-              <div
-                key={step}
-                className="rounded-[24px] sm:rounded-[28px] border border-black/6 bg-[#fafafa] p-5 sm:p-7 transition duration-300 hover:-translate-y-1 hover:shadow-soft"
-              >
-                <CheckCircle2 className="h-5 w-5 text-umred" />
-                <p className="mt-4 sm:mt-5 text-sm leading-[1.85] text-black/62">
-                  <span className="font-latin mr-1 font-semibold text-ink">0{index + 1}.</span>{step}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-11 flex flex-col gap-4 sm:flex-row">
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href="https://forms.gle/ZdSwMf5yzTZcR3Ma7"
-              className="btn-primary"
-            >
-              立即报名加入
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <Link to="/" className="btn-secondary">
-              浏览学会网站
-            </Link>
-          </div>
-        </div>
-      </div>
-    </main>
-    {/* Someone who reaches this page and decides not to fill the form in has
-        nowhere else to go without it — the contact details and social links
-        are the second-best outcome, and every other page already carries
-        them. */}
-    <Footer />
+          <a href="mailto:pbcum41@gmail.com" className="btn-primary mt-8 inline-flex">
+            <Mail className="h-4 w-4" aria-hidden="true" />
+            电邮学会
+          </a>
+          <p className="mt-4 font-latin text-sm text-black/65">pbcum41@gmail.com</p>
+        </section>
+      </main>
+      <Footer />
     </>
   );
 }
