@@ -1,21 +1,3 @@
-import { motion } from 'framer-motion';
-import { MOTION } from './animations';
-
-export function AnimatedSection({ children, className = '', id }) {
-  return (
-    <motion.section
-      id={id}
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: MOTION.duration, ease: MOTION.ease }}
-      className={className}
-    >
-      {children}
-    </motion.section>
-  );
-}
-
 export function SectionHeading({ eyebrow, title, description }) {
   return (
     <div className="max-w-3xl">

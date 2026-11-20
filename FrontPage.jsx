@@ -10,7 +10,7 @@ import { emblemDetails, societyGoals, societyPurposes } from './src/data/about';
 import { historyMilestones, historySource } from './src/data/history';
 import { departments } from './src/pages/departments';
 import { events } from './src/pages/events';
-import { AnimatedSection, SectionHeading } from './src/components/ui/SectionHeading';
+import { SectionHeading } from './src/components/ui/SectionHeading';
 import { GradientOrbs } from './src/components/ui/GradientOrbs';
 import { GalleryLightbox } from './src/components/GalleryLightbox';
 import { TestimonialsCarousel } from './src/components/TestimonialsCarousel';
@@ -200,7 +200,7 @@ function HeroSection() {
 
 function AboutSection() {
   return (
-    <AnimatedSection id="about" className="bg-white py-20 sm:py-24">
+    <section id="about" className="bg-white py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-start gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
           <div>
@@ -270,7 +270,7 @@ function AboutSection() {
           据第四十届《马大华文学会简介》第 4–5、10–11 张整理。
         </p>
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
 
@@ -284,7 +284,7 @@ function ActivitiesSection() {
           empty grid reads as a page that failed to load rather than one with
           nothing to say yet. */}
       {events.length > 0 && (
-        <AnimatedSection id="activities" className="bg-white py-24 sm:py-32">
+        <section id="activities" className="bg-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SectionHeading
               eyebrow="五大特别活动"
@@ -295,12 +295,12 @@ function ActivitiesSection() {
               <WuteSection items={events} />
             </div>
           </div>
-        </AnimatedSection>
+        </section>
       )}
 
       {/* ── 七小组 ── dense directory grid, tinted background ───────── */}
       {departments.length > 0 && (
-        <AnimatedSection id="groups" className="bg-[#fafafa] py-24 sm:py-32">
+        <section id="groups" className="bg-[#fafafa] py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <SectionHeading
               eyebrow="七大工作小组"
@@ -311,7 +311,7 @@ function ActivitiesSection() {
               <QixiaozuSection items={departments} />
             </div>
           </div>
-        </AnimatedSection>
+        </section>
       )}
     </>
   );
@@ -321,7 +321,7 @@ function ActivitiesSection() {
 
 function CommitteeSection() {
   return (
-    <AnimatedSection id="committee" className="bg-[#fafafa] py-24 sm:py-32">
+    <section id="committee" className="bg-[#fafafa] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* The previous heading and standfirst described the cards ("每张个人
             卡片都经过精心设计，而非仓促拼凑") rather than the people on them. A
@@ -343,7 +343,7 @@ function CommitteeSection() {
         </div>
         <CommitteeGrid members={sectionData.committee} />
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
 
@@ -378,7 +378,7 @@ function HuiwenWatermark({ className = '' }) {
 
 function HistorySection() {
   return (
-    <AnimatedSection id="history" className="relative isolate overflow-hidden bg-white py-24 sm:py-32">
+    <section id="history" className="relative isolate overflow-hidden bg-white py-24 sm:py-32">
       <HuiwenWatermark className="-right-12 top-12 h-44 w-44 opacity-[0.05] sm:h-64 sm:w-64" />
 
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -458,13 +458,13 @@ function HistorySection() {
         </ol>
 
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
 
 function CalendarSection() {
   return (
-    <AnimatedSection id="calendar" className="relative isolate overflow-hidden bg-soft-radial py-24 sm:py-32">
+    <section id="calendar" className="relative isolate overflow-hidden bg-soft-radial py-24 sm:py-32">
       {/* Behind everything, and out of the way of the card itself. overflow-hidden
           on the section keeps them from widening the page. */}
       <HuiwenWatermark className="-left-10 top-8 h-40 w-40 -scale-x-100 opacity-[0.07] sm:h-56 sm:w-56" />
@@ -481,7 +481,7 @@ function CalendarSection() {
           <EventCalendar />
         </div>
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
 
@@ -489,7 +489,7 @@ function CalendarSection() {
 
 function GallerySection() {
   return (
-    <AnimatedSection id="gallery" className="bg-white py-24 sm:py-32">
+    <section id="gallery" className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="精彩相册"
@@ -503,7 +503,7 @@ function GallerySection() {
           </section>
         ))}
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
 
@@ -513,7 +513,7 @@ function TestimonialsSection() {
   if (sectionData.testimonials.length === 0) return null;
 
   return (
-    <AnimatedSection id="testimonials" className="bg-[#fafafa] py-24 sm:py-32">
+    <section id="testimonials" className="bg-[#fafafa] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="会员心声"
@@ -524,7 +524,7 @@ function TestimonialsSection() {
           <TestimonialsCarousel testimonials={sectionData.testimonials} />
         </div>
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
 
@@ -534,7 +534,7 @@ function SponsorsSection() {
   if (sectionData.partners.length === 0) return null;
 
   return (
-    <AnimatedSection id="partners" className="bg-white py-20 sm:py-24">
+    <section id="partners" className="bg-white py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-9 flex items-end justify-between gap-6">
           <div>
@@ -548,7 +548,7 @@ function SponsorsSection() {
         </div>
         <SponsorMarquee items={sectionData.partners} />
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
 
